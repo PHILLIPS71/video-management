@@ -1,14 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Application.Contracts\Giantnodes.Service.Dashboard.Application.Contracts.csproj" />
-      <ProjectReference Include="..\Persistence\Giantnodes.Service.Dashboard.Persistence.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Application.Contracts\Giantnodes.Service.Dashboard.Application.Contracts.csproj" />
+		<ProjectReference Include="..\Persistence\Giantnodes.Service.Dashboard.Persistence.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MassTransit.Abstractions" Version="8.0.14" />
+	</ItemGroup>
 
 </Project>
