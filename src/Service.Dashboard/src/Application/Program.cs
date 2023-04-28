@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Giantnodes.Service.Dashboard.Persistence;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace Giantnodes.Service.Dashboard.Application;
@@ -23,5 +24,8 @@ public class Program
 
                 services
                     .AddApplicationServices(configuration);
+                
+                services
+                    .AddPersistenceServices(configuration);
             });
 }

@@ -1,4 +1,5 @@
-﻿using HotChocolate.AspNetCore;
+﻿using Giantnodes.Service.Dashboard.Persistence;
+using HotChocolate.AspNetCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi;
 
@@ -17,6 +18,9 @@ public class Startup
     {
         services
             .AddHttpApiServices();
+        
+        services
+            .AddPersistenceServices(_configuration);
     }
 
     public void Configure(IApplicationBuilder app)
@@ -26,8 +30,6 @@ public class Startup
 
         app
             .UseRouting()
-            .UseAuthentication()
-            .UseAuthorization()
             .UseEndpoints(endpoint =>
             {
                 endpoint

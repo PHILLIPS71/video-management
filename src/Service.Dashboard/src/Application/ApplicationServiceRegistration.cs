@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using Giantnodes.Service.Dashboard.Persistence;
+using System.Reflection;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,15 +12,21 @@ public static class ApplicationServiceRegistration
     public static void AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.TryAddSingleton<IFileSystem, FileSystem>();
-        
-        services.AddPersistenceServices(configuration);
+
+        services.AddMassTransitServices(configuration);
     }
 
-    private static void AddMassTransitServices(IServiceCollection services)
+    private static void AddMassTransitServices(this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddMassTransit(options =>
             {
+                options
+                    .SetKebabCaseEndpointNameFormatter();
+
+                options
+                    .AddConsumers(Assembly.Load("Giantnodes.Service.Dashboard.Application.Components"));
+                
                 options
                     .UsingRabbitMq((context, config) =>
                     {
