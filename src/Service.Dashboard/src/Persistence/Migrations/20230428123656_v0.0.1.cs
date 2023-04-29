@@ -40,6 +40,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     name = table.Column<string>(type: "text", nullable: false),
                     slug = table.Column<string>(type: "text", nullable: false),
                     full_path = table.Column<string>(type: "text", nullable: false),
+                    drive_status = table.Column<string>(type: "text", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -91,6 +92,18 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 name: "ix_files_parent_directory_id",
                 table: "Files",
                 column: "parent_directory_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_libraries_full_path",
+                table: "libraries",
+                column: "full_path",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_libraries_slug",
+                table: "libraries",
+                column: "slug",
+                unique: true);
         }
 
         /// <inheritdoc />

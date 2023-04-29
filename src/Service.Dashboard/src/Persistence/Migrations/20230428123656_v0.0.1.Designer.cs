@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230423032318_v0.0.1")]
+    [Migration("20230428123656_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -75,6 +75,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("DriveStatus")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("drive_status");
+
                     b.Property<string>("FullPath")
                         .IsRequired()
                         .HasColumnType("text")
@@ -96,6 +101,14 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_libraries");
+
+                    b.HasIndex("FullPath")
+                        .IsUnique()
+                        .HasDatabaseName("ix_libraries_full_path");
+
+                    b.HasIndex("Slug")
+                        .IsUnique()
+                        .HasDatabaseName("ix_libraries_slug");
 
                     b.ToTable("libraries", (string)null);
                 });
