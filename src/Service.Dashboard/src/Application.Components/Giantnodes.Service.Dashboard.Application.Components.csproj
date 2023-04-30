@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\Service.Encoder\src\Application.Contracts\Giantnodes.Service.Encoder.Application.Contracts.csproj" />
 		<ProjectReference Include="..\Application.Contracts\Giantnodes.Service.Dashboard.Application.Contracts.csproj" />
 		<ProjectReference Include="..\Persistence\Giantnodes.Service.Dashboard.Persistence.csproj" />
 	</ItemGroup>
@@ -14,6 +15,8 @@
 	<ItemGroup>
 		<PackageReference Include="FluentValidation" Version="11.5.2" />
 		<PackageReference Include="MassTransit.Abstractions" Version="8.0.15" />
+		<PackageReference Include="Riok.Mapperly" Version="2.8.0" />
+		<PackageReference Include="System.IO.Abstractions" Version="19.2.18" />
 	</ItemGroup>
 
 </Project>

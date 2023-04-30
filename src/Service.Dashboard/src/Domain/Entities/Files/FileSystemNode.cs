@@ -6,9 +6,9 @@ public abstract class FileSystemNode : IEntity, ITimestampableEntity
 {
     public Guid Id { get; set; }
 
-    public string FullPath { get; set; } = string.Empty;
+    public required string FullPath { get; set; } = string.Empty;
     
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; } = string.Empty;
     
     public Guid? ParentDirectoryId { get; set; }
     public FileSystemDirectory? ParentDirectory { get; set; }

@@ -1,6 +1,4 @@
-﻿using Giantnodes.Service.Dashboard.Domain.Entities.Files;
-
-namespace Giantnodes.Service.Dashboard.Domain.Entities;
+﻿namespace Giantnodes.Service.Dashboard.Domain.Entities.Files;
 
 public class FileSystemDirectory : FileSystemNode
 {

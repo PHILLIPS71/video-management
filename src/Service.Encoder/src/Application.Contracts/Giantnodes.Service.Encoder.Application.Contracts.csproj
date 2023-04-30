@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Domain.Shared\Giantnodes.Service.Encoder.Domain.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MassTransit.Abstractions" Version="8.0.15" />
+    </ItemGroup>
+
 </Project>

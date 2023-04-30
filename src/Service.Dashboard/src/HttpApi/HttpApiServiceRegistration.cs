@@ -1,9 +1,7 @@
-﻿using System.IO.Abstractions;
-using Giantnodes.Infrastructure.GraphQL;
+﻿using Giantnodes.Infrastructure.GraphQL;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using HotChocolate.Types.Descriptors;
 using MassTransit;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Giantnodes.Service.Dashboard.HttpApi;
 
@@ -11,8 +9,6 @@ public static class HttpApiServiceRegistration
 {
     public static void AddHttpApiServices(this IServiceCollection services)
     {
-        services.TryAddSingleton<IFileSystem, FileSystem>();
-
         services.AddGraphQLServices();
         services.AddMassTransitServices();
     }

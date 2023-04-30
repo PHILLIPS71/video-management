@@ -2,15 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Giantnodes.Service.Dashboard.Persistence.Configurations.Files
+namespace Giantnodes.Service.Dashboard.Persistence.Configurations.Files;
+
+public class FileSystemFileConfiguration : IEntityTypeConfiguration<FileSystemFile>
 {
-    public class FileSystemFileConfiguration : IEntityTypeConfiguration<FileSystemFile>
+    public void Configure(EntityTypeBuilder<FileSystemFile> builder)
     {
-        public void Configure(EntityTypeBuilder<FileSystemFile> builder)
-        {
-            builder
-                .HasIndex(p => p.FullPath)
-                .IsUnique();
-        }
+        builder
+            .HasIndex(p => p.FullPath)
+            .IsUnique();
     }
 }

@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{27214AD8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.MassTransit", "..\Infrastructure\src\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj", "{572D76F3-7BBA-44C9-99A5-CDDD995DC2EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Encoder.Application.Contracts", "..\Service.Encoder\src\Application.Contracts\Giantnodes.Service.Encoder.Application.Contracts.csproj", "{72E2E043-4377-49B2-9173-D77002AB79EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,7 @@ Global
 		{5A75D2A0-B3FF-4225-977F-2EA92F5D08A1} = {D31480C0-C771-4832-B82F-E3B4EFC84E6C}
 		{82D30D2C-3AB9-415C-9D3D-E74A7BBABCF2} = {D31480C0-C771-4832-B82F-E3B4EFC84E6C}
 		{572D76F3-7BBA-44C9-99A5-CDDD995DC2EB} = {D31480C0-C771-4832-B82F-E3B4EFC84E6C}
+		{72E2E043-4377-49B2-9173-D77002AB79EB} = {D31480C0-C771-4832-B82F-E3B4EFC84E6C}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{41C6A8F1-A1D9-451B-9162-D8A5404A3C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -86,5 +89,9 @@ Global
 		{572D76F3-7BBA-44C9-99A5-CDDD995DC2EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{572D76F3-7BBA-44C9-99A5-CDDD995DC2EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{572D76F3-7BBA-44C9-99A5-CDDD995DC2EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72E2E043-4377-49B2-9173-D77002AB79EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72E2E043-4377-49B2-9173-D77002AB79EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72E2E043-4377-49B2-9173-D77002AB79EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72E2E043-4377-49B2-9173-D77002AB79EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

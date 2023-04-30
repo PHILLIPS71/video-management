@@ -25,6 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
+		<PackageReference Include="MassTransit" Version="8.0.15" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.15" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
             <PrivateAssets>all</PrivateAssets>
@@ -34,6 +35,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Service.Encoder\src\Application.Contracts\Giantnodes.Service.Encoder.Application.Contracts.csproj" />
         <ProjectReference Include="..\Application.Components\Giantnodes.Service.Dashboard.Application.Components.csproj" />
     </ItemGroup>
 

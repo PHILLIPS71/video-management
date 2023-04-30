@@ -22,13 +22,13 @@ public static class CreateLibrary
     
     public sealed record Rejected : IRejected<Rejection>
     {
-        public Guid ConversationId { get; init; }
+        public required Guid ConversationId { get; init; }
        
-        public DateTime TimeStamp { get; init; }
+        public required DateTime TimeStamp { get; init; }
        
-        public Rejection ErrorCode { get; init; }
+        public required Rejection ErrorCode { get; init; }
         
-        public string Reason { get; init; } = string.Empty;
+        public required string Reason { get; init; }
     }
 
     public enum Rejection

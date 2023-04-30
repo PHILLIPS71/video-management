@@ -84,7 +84,7 @@ public class ScanFileSystemConsumer : IConsumer<ScanFileSystem.Command>
 
             if (node == null)
             {
-                node = new FileSystemFile { FullPath = file.FullName, Name = file.Name };
+                node = new FileSystemFile { FullPath = file.FullName, Name = file.Name, Size = file.Length };
                 nodes.Add(node);
             }
 
