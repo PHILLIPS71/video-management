@@ -29,8 +29,8 @@ public static class ApplicationServiceRegistration
                     .AddDelayedMessageScheduler();
 
                 options
-                    .AddConsumers(Assembly.Load("Giantnodes.Service.Encoder.Application.Components"));
-
+                    .AddConsumers(Assembly.Load("Giantnodes.Service.Encoder.Application.Components"), Assembly.Load("Giantnodes.Service.Encoder.Application"));
+                
                 options
                     .UsingRabbitMq((context, config) =>
                     {

@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Giantnodes.Service.Dashboard.Persistence.Sagas;
+namespace Giantnodes.Service.Dashboard.Persistence.Sagas.Configurations;
 
-public class ProbeSagaMap : SagaClassMap<ProbeSaga>
+public class EncodeSagaMap : SagaClassMap<EncodeSaga>
 {
-    protected override void Configure(EntityTypeBuilder<ProbeSaga> builder, ModelBuilder model)
+    protected override void Configure(EntityTypeBuilder<EncodeSaga> builder, ModelBuilder model)
     {
         builder
             .Property(x => x.RowVersion)

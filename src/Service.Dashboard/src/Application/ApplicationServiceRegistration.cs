@@ -77,6 +77,16 @@ public static class ApplicationServiceRegistration
                     });
                 
                 options
+                    .AddSagaRepository<EncodeSaga>()
+                    .EntityFrameworkRepository(r =>
+                    {
+                        r.ConcurrencyMode = ConcurrencyMode.Optimistic;
+                        
+                        r.UsePostgres();
+                        r.ExistingDbContext<ApplicationDbContext>();
+                    });
+                
+                options
                     .UsingRabbitMq((context, config) =>
                     {
                         var options = new ServiceInstanceOptions()

@@ -1,10 +1,12 @@
 ﻿using Giantnodes.Infrastructure.Domain.Entities;
-using Giantnodes.Service.Dashboard.Domain.Entities;
+using Giantnodes.Service.Dashboard.Domain.Entities.Encoding;
 using Giantnodes.Service.Dashboard.Domain.Entities.Files;
 using Giantnodes.Service.Dashboard.Domain.Entities.Files.Streams;
 using Giantnodes.Service.Dashboard.Domain.Entities.Libraries;
+using Giantnodes.Service.Dashboard.Domain.Entities.Presets;
 using Giantnodes.Service.Dashboard.Domain.Entities.Probing;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
+using Giantnodes.Service.Dashboard.Persistence.Sagas.Configurations;
 using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +30,12 @@ public class ApplicationDbContext : SagaDbContext
     public DbSet<FileSystemFileAudioStream> FileAudioStreams => Set<FileSystemFileAudioStream>();
     public DbSet<FileSystemFileSubtitleStream> FileSubtitleStreams => Set<FileSystemFileSubtitleStream>();
 
+    public DbSet<Preset> Presets => Set<Preset>();
+    public DbSet<PresetVideoStream> PresetVideoStreams => Set<PresetVideoStream>();
+    public DbSet<PresetAudioStream> PresetAudioStreams => Set<PresetAudioStream>();
+    public DbSet<PresetSubtitleStream> PresetSubtitleStreams => Set<PresetSubtitleStream>();
+
+    public DbSet<Encode> Encodes => Set<Encode>();
     public DbSet<Probe> Probes => Set<Probe>();
 
     protected override IEnumerable<ISagaClassMap> Configurations
@@ -38,6 +46,7 @@ public class ApplicationDbContext : SagaDbContext
             yield return new JobSagaMap(true);
             yield return new JobAttemptSagaMap(true);
             yield return new ProbeSagaMap();
+            yield return new EncodeSagaMap();
         }
     }
 
@@ -61,7 +70,7 @@ public class ApplicationDbContext : SagaDbContext
         NullifyEmptyStrings();
         return base.SaveChangesAsync(cancellation);
     }
-    
+
     /// <summary>
     /// Sets the <see cref="IEntity.Id" /> to a sequential Guid when the entity is
     /// being adding into the database.
@@ -74,7 +83,7 @@ public class ApplicationDbContext : SagaDbContext
             entry.Entity.Id = NewId.NextGuid();
         }
     }
-    
+
     private void AddTimestamps()
     {
         foreach (var entry in ChangeTracker.Entries<ITimestampableEntity>())
