@@ -1,0 +1,12 @@
+{
+  "root": true,
+  "extends": ["giantnodes"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "settings": {
+    "next": {
+      "rootDir": ["apps/*/"]
+    }
+  }
+}

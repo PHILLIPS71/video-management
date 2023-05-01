@@ -1,0 +1,15 @@
+{
+  "root": ".",
+  "sources": {
+    "src": "giantnodes.com"
+  },
+  "projects": {
+    "giantnodes.com": {
+      "language": "typescript",
+      "schema": "schema.graphql",
+      "output": "__generated__",
+      "useImportTypeSyntax": true,
+      "eagerEsModules": true
+    }
+  }
+}
