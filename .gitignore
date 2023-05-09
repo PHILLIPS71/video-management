@@ -143,6 +143,7 @@ node_modules
 .next/
 /app/out/
 /app/build
+/app/**/dist
 
 # debug
 npm-debug.log*

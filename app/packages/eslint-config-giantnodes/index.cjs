@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   extends: ['airbnb', 'airbnb-typescript', 'airbnb/hooks', 'prettier'],
   rules: {
     'react/jsx-uses-react': 'off',

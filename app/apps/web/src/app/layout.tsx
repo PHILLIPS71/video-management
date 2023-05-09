@@ -6,6 +6,8 @@ import { RelayEnvironmentProvider } from 'react-relay'
 
 import { environment } from '@/libs/relay/environment'
 
+import '@/app/global.css'
+
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500'],

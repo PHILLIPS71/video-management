@@ -2,9 +2,8 @@
   "include": ["src"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "jsx": "preserve",
-
     "target": "esnext",
+    "jsx": "react-jsx",
     "lib": ["dom", "esnext"],
     "outDir": "dist/",
     "checkJs": false,
