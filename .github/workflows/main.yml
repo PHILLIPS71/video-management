@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-infrastructure:
-    name: 🏗️ Build Giantnodes.Infrastructure
+    name: 🏗️ Build Infrastructure
     strategy:
       matrix:
         os: ["ubuntu-latest", "windows-latest"]
@@ -165,10 +165,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: cd to ./app
+        run: cd ./app
+
       - name: setup pnpm
         uses: pnpm/action-setup@v2
-        with:
-          cwd: ./app
 
       - name: setup node.js
         uses: actions/setup-node@v3
@@ -190,10 +191,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: cd to ./app
+        run: cd ./app
+
       - name: setup pnpm
         uses: pnpm/action-setup@v2
-        with:
-          cwd: ./app
 
       - name: setup node.js
         uses: actions/setup-node@v3
@@ -215,10 +217,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: cd to ./app
+        run: cd ./app
+
       - name: setup pnpm
         uses: pnpm/action-setup@v2
-        with:
-          cwd: ./app
 
       - name: setup node.js
         uses: actions/setup-node@v3
@@ -240,10 +243,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: cd to ./app
+        run: cd ./app
+
       - name: setup pnpm
         uses: pnpm/action-setup@v2
-        with:
-          cwd: ./app
 
       - name: setup node.js
         uses: actions/setup-node@v3
