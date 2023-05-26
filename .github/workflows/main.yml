@@ -8,7 +8,10 @@ on:
 jobs:
   build-infrastructure:
     name: 🏗️ Build Giantnodes.Infrastructure
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "windows-latest"]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -28,7 +31,10 @@ jobs:
 
   build-dashboard-service:
     name: 🏗️ Build Service.Dashboard
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "windows-latest"]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -48,7 +54,10 @@ jobs:
 
   build-encoder-service:
     name: 🏗️ Build Service.Encoder
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "windows-latest"]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
