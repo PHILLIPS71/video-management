@@ -28,9 +28,10 @@ const execute = async (request: RequestParameters, variables: Variables): Promis
 
 export const create = () => {
   const fetch = async (params: RequestParameters, variables: Variables, config: CacheConfig) => {
+    const { force } = config
+
     const isQuery = params.operationKind === 'query'
     const key = params.id ?? params.cacheID
-    const { force } = config
 
     if (cache != null && isQuery && !force) {
       const cached = cache.get(key, variables)
