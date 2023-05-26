@@ -173,6 +173,7 @@ jobs:
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
+          cache-dependency-path: ./app/pnpm-lock.yaml
           node-version-file: ./app/.nvmrc
           cache: "pnpm"
 
@@ -201,6 +202,7 @@ jobs:
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
+          cache-dependency-path: ./app/pnpm-lock.yaml
           node-version-file: ./app/.nvmrc
           cache: "pnpm"
 
@@ -229,6 +231,7 @@ jobs:
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
+          cache-dependency-path: ./app/pnpm-lock.yaml
           node-version-file: ./app/.nvmrc
           cache: "pnpm"
 
@@ -257,6 +260,7 @@ jobs:
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
+          cache-dependency-path: ./app/pnpm-lock.yaml
           node-version-file: ./app/.nvmrc
           cache: "pnpm"
 
