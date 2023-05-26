@@ -26,10 +26,49 @@ jobs:
         run: dotnet build -c Release --no-restore
         working-directory: ./src/Infrastructure
 
-  test-infrastructure:
-    name: 🧪 Test Giantnodes.Infrastructure
+  build-dashboard-service:
+    name: 🏗️ Build Service.Dashboard
     runs-on: ubuntu-latest
-    needs: build-infrastructure
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "7.0.x"
+
+      - name: restore packages
+        run: dotnet restore
+        working-directory: ./src/Service.Dashboard
+
+      - name: build
+        run: dotnet build -c Release --no-restore
+        working-directory: ./src/Service.Dashboard
+
+  build-encoder-service:
+    name: 🏗️ Build Service.Encoder
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "7.0.x"
+
+      - name: restore packages
+        run: dotnet restore
+        working-directory: ./src/Service.Encoder
+
+      - name: build
+        run: dotnet build -c Release --no-restore
+        working-directory: ./src/Service.Encoder
+
+  test-infrastructure:
+    name: 🧪 Test Infrastructure
+    runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -51,52 +90,9 @@ jobs:
         run: dotnet test --no-build --verbosity normal
         working-directory: ./src/Infrastructure
 
-  build-dashboard-service:
-    name: 🏗️ Build Giantnodes.Service.Dashboard
-    runs-on: ubuntu-latest
-    needs: test-infrastructure
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-
-      - name: setup
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: "7.0.x"
-
-      - name: restore packages
-        run: dotnet restore
-        working-directory: ./src/Service.Dashboard
-
-      - name: build
-        run: dotnet build -c Release --no-restore
-        working-directory: ./src/Service.Dashboard
-
-  build-encoder-service:
-    name: 🏗️ Build Giantnodes.Service.Encoder
-    runs-on: ubuntu-latest
-    needs: test-infrastructure
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-
-      - name: setup
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: "7.0.x"
-
-      - name: restore packages
-        run: dotnet restore
-        working-directory: ./src/Service.Encoder
-
-      - name: build
-        run: dotnet build -c Release --no-restore
-        working-directory: ./src/Service.Encoder
-
   test-dashboard-service:
-    name: 🧪 Test Giantnodes.Service.Dashboard
+    name: 🧪 Test Service.Dashboard
     runs-on: ubuntu-latest
-    needs: build-dashboard-service
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -119,9 +115,8 @@ jobs:
         working-directory: ./src/Service.Dashboard
 
   test-encoder-service:
-    name: 🧪 Test Giantnodes.Service.Encoder
+    name: 🧪 Test Service.Encoder
     runs-on: ubuntu-latest
-    needs: build-encoder-service
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -146,13 +141,25 @@ jobs:
   build-web-application:
     name: 🏗️ Build Web Application
     runs-on: ubuntu-latest
-    needs: [test-infrastructure, test-dashboard-service, test-encoder-service]
+    needs:
+      [
+        build-infrastructure,
+        test-infrastructure,
+
+        build-dashboard-service,
+        test-dashboard-service,
+
+        build-encoder-service,
+        test-encoder-service,
+      ]
     steps:
       - name: checkout
         uses: actions/checkout@v3
 
       - name: setup pnpm
         uses: pnpm/action-setup@v2
+        with:
+          cwd: ./app
 
       - name: setup node.js
         uses: actions/setup-node@v3
@@ -176,6 +183,8 @@ jobs:
 
       - name: setup pnpm
         uses: pnpm/action-setup@v2
+        with:
+          cwd: ./app
 
       - name: setup node.js
         uses: actions/setup-node@v3
@@ -199,6 +208,8 @@ jobs:
 
       - name: setup pnpm
         uses: pnpm/action-setup@v2
+        with:
+          cwd: ./app
 
       - name: setup node.js
         uses: actions/setup-node@v3
@@ -222,6 +233,8 @@ jobs:
 
       - name: setup pnpm
         uses: pnpm/action-setup@v2
+        with:
+          cwd: ./app
 
       - name: setup node.js
         uses: actions/setup-node@v3
