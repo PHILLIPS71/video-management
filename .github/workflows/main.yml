@@ -177,13 +177,12 @@ jobs:
           node-version-file: ./app/.nvmrc
           cache: "pnpm"
 
-      - name: change directory
-        run: cd ./app
-
       - name: install
+        working-directory: ./app
         run: pnpm install
 
       - name: build
+        working-directory: ./app
         run: pnpm run build
 
   typescript:
@@ -206,13 +205,12 @@ jobs:
           node-version-file: ./app/.nvmrc
           cache: "pnpm"
 
-      - name: change directory
-        run: cd ./app
-
       - name: install
+        working-directory: ./app
         run: pnpm install
 
       - name: type check
+        working-directory: ./app
         run: pnpm run typecheck
 
   lint:
@@ -235,13 +233,12 @@ jobs:
           node-version-file: ./app/.nvmrc
           cache: "pnpm"
 
-      - name: change directory
-        run: cd ./app
-
       - name: install
+        working-directory: ./app
         run: pnpm install
 
       - name: type check
+        working-directory: ./app
         run: pnpm run lint
 
   test:
@@ -264,11 +261,10 @@ jobs:
           node-version-file: ./app/.nvmrc
           cache: "pnpm"
 
-      - name: change directory
-        run: cd ./app
-
       - name: install
+        working-directory: ./app
         run: pnpm install
 
       - name: test
+        working-directory: ./app
         run: pnpm run test
