@@ -170,6 +170,9 @@ jobs:
         with:
           version: 8
 
+      - name: change directory
+        run: cd ./app
+
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
@@ -194,6 +197,9 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 8
+
+      - name: change directory
+        run: cd ./app
 
       - name: setup node.js
         uses: actions/setup-node@v3
@@ -220,6 +226,9 @@ jobs:
         with:
           version: 8
 
+      - name: change directory
+        run: cd ./app
+
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
@@ -244,6 +253,9 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 8
+
+      - name: change directory
+        run: cd ./app
 
       - name: setup node.js
         uses: actions/setup-node@v3
