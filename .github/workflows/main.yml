@@ -260,7 +260,7 @@ jobs:
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version-file: ./app/.nvmrc
           cache: "pnpm"
 
       - name: install
