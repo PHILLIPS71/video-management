@@ -179,7 +179,7 @@ jobs:
 
       - name: install
         working-directory: ./app
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: build
         working-directory: ./app
@@ -207,7 +207,7 @@ jobs:
 
       - name: install
         working-directory: ./app
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: type check
         working-directory: ./app
@@ -235,7 +235,7 @@ jobs:
 
       - name: install
         working-directory: ./app
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: type check
         working-directory: ./app
@@ -263,7 +263,7 @@ jobs:
 
       - name: install
         working-directory: ./app
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: test
         working-directory: ./app
