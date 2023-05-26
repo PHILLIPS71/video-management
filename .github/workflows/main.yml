@@ -170,14 +170,14 @@ jobs:
         with:
           version: 8
 
-      - name: change directory
-        run: cd ./app
-
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version-file: ./app/.nvmrc
           cache: "pnpm"
+
+      - name: change directory
+        run: cd ./app
 
       - name: install
         run: pnpm install
@@ -198,14 +198,14 @@ jobs:
         with:
           version: 8
 
-      - name: change directory
-        run: cd ./app
-
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version-file: ./app/.nvmrc
           cache: "pnpm"
+
+      - name: change directory
+        run: cd ./app
 
       - name: install
         run: pnpm install
@@ -226,14 +226,14 @@ jobs:
         with:
           version: 8
 
-      - name: change directory
-        run: cd ./app
-
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version-file: ./app/.nvmrc
           cache: "pnpm"
+
+      - name: change directory
+        run: cd ./app
 
       - name: install
         run: pnpm install
@@ -254,14 +254,14 @@ jobs:
         with:
           version: 8
 
-      - name: change directory
-        run: cd ./app
-
       - name: setup node.js
         uses: actions/setup-node@v3
         with:
           node-version-file: ./app/.nvmrc
           cache: "pnpm"
+
+      - name: change directory
+        run: cd ./app
 
       - name: install
         run: pnpm install
