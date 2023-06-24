@@ -1,23 +1,23 @@
-'use client'
-
 import '@/styles/global.css'
+
+import { clsx } from 'clsx'
 import { Inter } from 'next/font/google'
 import React from 'react'
-import { RelayEnvironmentProvider } from 'react-relay'
 
-import { environment } from '@/libs/relay/environment'
+import ApplicationProviders from '@/app/providers'
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500'],
+  variable: '--font-inter',
 })
 
 type ApplicationLayoutProps = React.PropsWithChildren
 
 const ApplicationLayout: React.FC<ApplicationLayoutProps> = ({ children }) => (
   <html lang="en">
-    <body className={inter.className}>
-      <RelayEnvironmentProvider environment={environment}>{children}</RelayEnvironmentProvider>
+    <head />
+    <body className={clsx([inter.variable, 'dark:bg-bunker-800'])}>
+      <ApplicationProviders>{children}</ApplicationProviders>
     </body>
   </html>
 )
