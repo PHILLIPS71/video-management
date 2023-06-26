@@ -1,4 +1,4 @@
-﻿namespace Giantnodes.Infrastructure.MassTransit.Validation.Abstractions
+﻿namespace Giantnodes.Infrastructure.MassTransit.Validation.Contracts
 {
     public sealed record InvalidValidationProperty
     {

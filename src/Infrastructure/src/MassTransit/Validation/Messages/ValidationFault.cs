@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure.MassTransit.Validation.Abstractions;
+﻿using Giantnodes.Infrastructure.MassTransit.Validation.Contracts;
 
 namespace Giantnodes.Infrastructure.MassTransit.Validation.Messages
 {

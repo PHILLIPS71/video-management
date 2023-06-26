@@ -1,5 +1,5 @@
 ﻿using FluentValidation.Results;
-using Giantnodes.Infrastructure.MassTransit.Validation.Abstractions;
+using Giantnodes.Infrastructure.MassTransit.Validation.Contracts;
 using Giantnodes.Infrastructure.MassTransit.Validation.Exceptions;
 using Giantnodes.Infrastructure.MassTransit.Validation.Messages;
 
