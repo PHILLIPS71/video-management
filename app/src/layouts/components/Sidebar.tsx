@@ -1,7 +1,7 @@
 import type { NavigationProps } from '@giantnodes/design-system-react'
 
 import { Navigation } from '@giantnodes/design-system-react'
-import { IconAlertTriangle, IconHome, IconSettings } from '@tabler/icons-react'
+import { IconAlertCircle, IconFolders, IconGauge, IconSettings } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -17,15 +17,15 @@ const Sidebar: React.FC<SidebarProps> = (props) => (
       <Navigation.Item>
         <Link legacyBehavior passHref href="/">
           <Navigation.Link>
-            <IconHome strokeWidth={1.5} /> Home
+            <IconGauge strokeWidth={1.5} /> Dashboard
           </Navigation.Link>
         </Link>
       </Navigation.Item>
 
       <Navigation.Item>
-        <Link legacyBehavior passHref href="/">
+        <Link legacyBehavior passHref href="/explore">
           <Navigation.Link>
-            <IconAlertTriangle strokeWidth={1.5} /> Alerts
+            <IconFolders strokeWidth={1.5} /> Explore
           </Navigation.Link>
         </Link>
       </Navigation.Item>
