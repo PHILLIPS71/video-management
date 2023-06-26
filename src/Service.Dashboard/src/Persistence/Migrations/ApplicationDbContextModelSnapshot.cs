@@ -22,6 +22,68 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Encoding.Encode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("completed_at");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("FailedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("failed_at");
+
+                    b.Property<string>("FailedReason")
+                        .HasColumnType("text")
+                        .HasColumnName("failed_reason");
+
+                    b.Property<string>("FullPath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("full_path");
+
+                    b.Property<int>("Percent")
+                        .HasColumnType("integer")
+                        .HasColumnName("percent");
+
+                    b.Property<Guid>("PresetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("preset_id");
+
+                    b.Property<DateTime?>("StartedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("started_at");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_encodes");
+
+                    b.HasIndex("PresetId")
+                        .HasDatabaseName("ix_encodes_preset_id");
+
+                    b.ToTable("encodes", (string)null);
+                });
+
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Files.FileSystemNode", b =>
                 {
                     b.Property<Guid>("Id")
@@ -145,6 +207,160 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.ToTable("libraries", (string)null);
                 });
 
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Presets.Preset", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Container")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("container");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("EncodePreset")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("encode_preset");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_presets");
+
+                    b.ToTable("presets", (string)null);
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Presets.PresetAudioStream", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<long?>("Bitrate")
+                        .HasColumnType("bigint")
+                        .HasColumnName("bitrate");
+
+                    b.Property<int>("Channels")
+                        .HasColumnType("integer")
+                        .HasColumnName("channels");
+
+                    b.Property<string>("Codec")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("codec");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("EncodePresetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("encode_preset_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_preset_audio_streams");
+
+                    b.HasIndex("EncodePresetId")
+                        .HasDatabaseName("ix_preset_audio_streams_encode_preset_id");
+
+                    b.ToTable("preset_audio_streams", (string)null);
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Presets.PresetSubtitleStream", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Codec")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("codec");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("EncodePresetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("encode_preset_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_preset_subtitle_streams");
+
+                    b.HasIndex("EncodePresetId")
+                        .HasDatabaseName("ix_preset_subtitle_streams_encode_preset_id");
+
+                    b.ToTable("preset_subtitle_streams", (string)null);
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Presets.PresetVideoStream", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<long?>("Bitrate")
+                        .HasColumnType("bigint")
+                        .HasColumnName("bitrate");
+
+                    b.Property<string>("Codec")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("codec");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("EncodePresetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("encode_preset_id");
+
+                    b.Property<double?>("Framerate")
+                        .HasColumnType("double precision")
+                        .HasColumnName("framerate");
+
+                    b.Property<int?>("Height")
+                        .HasColumnType("integer")
+                        .HasColumnName("height");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<int?>("Width")
+                        .HasColumnType("integer")
+                        .HasColumnName("width");
+
+                    b.HasKey("Id")
+                        .HasName("pk_preset_video_streams");
+
+                    b.HasIndex("EncodePresetId")
+                        .HasDatabaseName("ix_preset_video_streams_encode_preset_id");
+
+                    b.ToTable("preset_video_streams", (string)null);
+                });
+
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Probing.Probe", b =>
                 {
                     b.Property<Guid>("Id")
@@ -194,6 +410,62 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasName("pk_probes");
 
                     b.ToTable("probes", (string)null);
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Persistence.Sagas.EncodeSaga", b =>
+                {
+                    b.Property<Guid>("CorrelationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
+                    b.Property<string>("CurrentState")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("current_state");
+
+                    b.Property<string>("FullPath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("full_path");
+
+                    b.Property<Guid>("JobId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("job_id");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea")
+                        .HasColumnName("row_version");
+
+                    b.Property<DateTime?>("StartedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("started_at");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("submitted_at");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("CorrelationId")
+                        .HasName("pk_encode_saga");
+
+                    b.HasIndex("FullPath")
+                        .IsUnique()
+                        .HasDatabaseName("ix_encode_saga_full_path");
+
+                    b.HasIndex("JobId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_encode_saga_job_id");
+
+                    b.ToTable("encode_saga", (string)null);
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Persistence.Sagas.ProbeSaga", b =>
@@ -581,6 +853,18 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.ToTable("FileVideoStreams");
                 });
 
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Encoding.Encode", b =>
+                {
+                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Entities.Presets.Preset", "Preset")
+                        .WithMany()
+                        .HasForeignKey("PresetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_encodes_presets_preset_id");
+
+                    b.Navigation("Preset");
+                });
+
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Files.FileSystemNode", b =>
                 {
                     b.HasOne("Giantnodes.Service.Dashboard.Domain.Entities.Files.FileSystemDirectory", "ParentDirectory")
@@ -589,6 +873,42 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasConstraintName("fk_nodes_directories_parent_directory_id");
 
                     b.Navigation("ParentDirectory");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Presets.PresetAudioStream", b =>
+                {
+                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Entities.Presets.Preset", "EncodePreset")
+                        .WithMany("AudioStreams")
+                        .HasForeignKey("EncodePresetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_preset_audio_streams_presets_encode_preset_id");
+
+                    b.Navigation("EncodePreset");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Presets.PresetSubtitleStream", b =>
+                {
+                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Entities.Presets.Preset", "EncodePreset")
+                        .WithMany("SubtitleStreams")
+                        .HasForeignKey("EncodePresetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_preset_subtitle_streams_presets_encode_preset_id");
+
+                    b.Navigation("EncodePreset");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Presets.PresetVideoStream", b =>
+                {
+                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Entities.Presets.Preset", "EncodePreset")
+                        .WithMany("VideoStreams")
+                        .HasForeignKey("EncodePresetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_preset_video_streams_presets_encode_preset_id");
+
+                    b.Navigation("EncodePreset");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Files.Streams.FileSystemFileAudioStream", b =>
@@ -625,6 +945,15 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasConstraintName("fk_file_video_streams_files_file_system_file_id");
 
                     b.Navigation("FileSystemFile");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Presets.Preset", b =>
+                {
+                    b.Navigation("AudioStreams");
+
+                    b.Navigation("SubtitleStreams");
+
+                    b.Navigation("VideoStreams");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Entities.Files.FileSystemDirectory", b =>
