@@ -4,8 +4,8 @@ using Giantnodes.Service.Dashboard.Domain.Entities.Files;
 using Giantnodes.Service.Dashboard.Domain.Entities.Files.Streams;
 using Giantnodes.Service.Dashboard.Domain.Entities.Libraries;
 using Giantnodes.Service.Dashboard.Domain.Entities.Presets;
+using Giantnodes.Service.Dashboard.Domain.Entities.Presets.Streams;
 using Giantnodes.Service.Dashboard.Domain.Entities.Probing;
-using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Dashboard.Persistence.Sagas.Configurations;
 using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
@@ -30,13 +30,13 @@ public class ApplicationDbContext : SagaDbContext
     public DbSet<FileSystemFileAudioStream> FileAudioStreams => Set<FileSystemFileAudioStream>();
     public DbSet<FileSystemFileSubtitleStream> FileSubtitleStreams => Set<FileSystemFileSubtitleStream>();
 
-    public DbSet<Preset> Presets => Set<Preset>();
-    public DbSet<PresetVideoStream> PresetVideoStreams => Set<PresetVideoStream>();
-    public DbSet<PresetAudioStream> PresetAudioStreams => Set<PresetAudioStream>();
-    public DbSet<PresetSubtitleStream> PresetSubtitleStreams => Set<PresetSubtitleStream>();
-
     public DbSet<Encode> Encodes => Set<Encode>();
     public DbSet<Probe> Probes => Set<Probe>();
+
+    public DbSet<Preset> Presets => Set<Preset>();
+    public DbSet<VideoStreamPreset> VideoStreamPresets => Set<VideoStreamPreset>();
+    public DbSet<AudioStreamPreset> AudioStreamPresets => Set<AudioStreamPreset>();
+    public DbSet<SubtitleStreamPreset> SubtitleStreamPresets => Set<SubtitleStreamPreset>();
 
     protected override IEnumerable<ISagaClassMap> Configurations
     {
