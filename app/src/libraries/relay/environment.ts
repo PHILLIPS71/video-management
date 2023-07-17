@@ -1,6 +1,6 @@
 import { Environment, RecordSource, Store } from 'relay-runtime'
 
-import * as network from '@/libs/relay/network'
+import * as network from '@/libraries/relay/network'
 
 const IS_SERVER = typeof window === typeof undefined
 

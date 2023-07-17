@@ -1,3 +1,5 @@
+'use client'
+
 import type { NavigationProps } from '@giantnodes/design-system-react'
 
 import { Navigation } from '@giantnodes/design-system-react'

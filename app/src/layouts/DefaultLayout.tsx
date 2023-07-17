@@ -1,11 +1,9 @@
-'use client'
-
 import React from 'react'
 
-import Navbar from '@/layouts/components/Navbar'
-import NavigationMobile from '@/layouts/components/Navbar.mobile'
-import Sidebar from '@/layouts/components/Sidebar'
-import SidebarMobile from '@/layouts/components/Sidebar.mobile'
+import Navbar from '@/layouts/components/navbar/Navbar'
+import NavigationMobile from '@/layouts/components/navbar/Navbar.mobile'
+import Sidebar from '@/layouts/components/sidebar/Sidebar'
+import SidebarMobile from '@/layouts/components/sidebar/Sidebar.mobile'
 
 type DefaultLayoutProps = React.PropsWithChildren
 

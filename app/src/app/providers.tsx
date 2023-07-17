@@ -3,7 +3,7 @@
 import { ThemeProvider } from 'next-themes'
 import { RelayEnvironmentProvider } from 'react-relay'
 
-import { environment } from '@/libs/relay/environment'
+import { environment } from '@/libraries/relay/environment'
 
 type ApplicationProvidersProps = React.PropsWithChildren
 

@@ -9,7 +9,6 @@ const HomePage = () => (
       sem odio, venenatis sed orci eu, tempus tristique justo. Curabitur eget dolor nibh. Aliquam ut nunc in eros
       efficitur faucibus eget non mauris.
     </p>
-
     <p>
       Maecenas nec enim massa. Donec iaculis eros leo, ac rhoncus enim accumsan a. Donec ac sagittis lorem, non molestie
       arcu. Morbi in suscipit est. Praesent rhoncus elementum massa, laoreet dapibus nisi iaculis sed. Integer dictum
@@ -19,7 +18,6 @@ const HomePage = () => (
       sem odio, venenatis sed orci eu, tempus tristique justo. Curabitur eget dolor nibh. Aliquam ut nunc in eros
       efficitur faucibus eget non mauris.
     </p>
-
     <p>
       Maecenas nec enim massa. Donec iaculis eros leo, ac rhoncus enim accumsan a. Donec ac sagittis lorem, non molestie
       arcu. Morbi in suscipit est. Praesent rhoncus elementum massa, laoreet dapibus nisi iaculis sed. Integer dictum
@@ -29,7 +27,6 @@ const HomePage = () => (
       sem odio, venenatis sed orci eu, tempus tristique justo. Curabitur eget dolor nibh. Aliquam ut nunc in eros
       efficitur faucibus eget non mauris.
     </p>
-
     <p>
       Maecenas nec enim massa. Donec iaculis eros leo, ac rhoncus enim accumsan a. Donec ac sagittis lorem, non molestie
       arcu. Morbi in suscipit est. Praesent rhoncus elementum massa, laoreet dapibus nisi iaculis sed. Integer dictum
@@ -39,7 +36,6 @@ const HomePage = () => (
       sem odio, venenatis sed orci eu, tempus tristique justo. Curabitur eget dolor nibh. Aliquam ut nunc in eros
       efficitur faucibus eget non mauris.
     </p>
-
     <p>
       Maecenas nec enim massa. Donec iaculis eros leo, ac rhoncus enim accumsan a. Donec ac sagittis lorem, non molestie
       arcu. Morbi in suscipit est. Praesent rhoncus elementum massa, laoreet dapibus nisi iaculis sed. Integer dictum
@@ -49,7 +45,6 @@ const HomePage = () => (
       sem odio, venenatis sed orci eu, tempus tristique justo. Curabitur eget dolor nibh. Aliquam ut nunc in eros
       efficitur faucibus eget non mauris.
     </p>
-
     <p>
       Maecenas nec enim massa. Donec iaculis eros leo, ac rhoncus enim accumsan a. Donec ac sagittis lorem, non molestie
       arcu. Morbi in suscipit est. Praesent rhoncus elementum massa, laoreet dapibus nisi iaculis sed. Integer dictum
@@ -59,7 +54,6 @@ const HomePage = () => (
       sem odio, venenatis sed orci eu, tempus tristique justo. Curabitur eget dolor nibh. Aliquam ut nunc in eros
       efficitur faucibus eget non mauris.
     </p>
-
     <p>
       Maecenas nec enim massa. Donec iaculis eros leo, ac rhoncus enim accumsan a. Donec ac sagittis lorem, non molestie
       arcu. Morbi in suscipit est. Praesent rhoncus elementum massa, laoreet dapibus nisi iaculis sed. Integer dictum
@@ -69,7 +63,6 @@ const HomePage = () => (
       sem odio, venenatis sed orci eu, tempus tristique justo. Curabitur eget dolor nibh. Aliquam ut nunc in eros
       efficitur faucibus eget non mauris.
     </p>
-
     <p>
       Maecenas nec enim massa. Donec iaculis eros leo, ac rhoncus enim accumsan a. Donec ac sagittis lorem, non molestie
       arcu. Morbi in suscipit est. Praesent rhoncus elementum massa, laoreet dapibus nisi iaculis sed. Integer dictum

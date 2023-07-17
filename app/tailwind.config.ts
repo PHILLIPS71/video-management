@@ -1,29 +1,12 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
-  content: [
-    './src/**/*.{ts,tsx}',
-    './node_modules/@giantnodes/design-system/**/*.js',
-    './node_modules/@giantnodes/design-system-react/**/*.js',
-  ],
+  content: ['./src/**/*.{ts,tsx}', './node_modules/@giantnodes/design-system-react/**/*.js'],
   plugins: [],
   darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        primary: {
-          '50': '#f4fcf8',
-          '100': '#eaf9f0',
-          '200': '#caf1da',
-          '300': '#aae8c4',
-          '400': '#6ad797',
-          '500': '#2ac66b',
-          '600': '#26b260',
-          '700': '#209550',
-          '800': '#197740',
-          '900': '#156134',
-          DEFAULT: '#2ac66b',
-        },
         bunker: {
           '50': '#f3f4f4',
           '100': '#e8e8e9',

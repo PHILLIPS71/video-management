@@ -6,7 +6,7 @@ const config = {
     relay: {
       src: './src',
       language: 'typescript',
-      artifactDirectory: '__generated__',
+      artifactDirectory: 'src/__generated__',
     },
   },
   experimental: {

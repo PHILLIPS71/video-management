@@ -7,11 +7,12 @@ const CACHE_TTL = 5 * 1000
 
 const IS_SERVER = typeof window === typeof undefined
 
-const cache: QueryResponseCache | null = IS_SERVER ? null : new QueryResponseCache({ size: 100, ttl: CACHE_TTL })
+export const cache: QueryResponseCache | null = IS_SERVER ? null : new QueryResponseCache({ size: 100, ttl: CACHE_TTL })
 
-const execute = async (request: RequestParameters, variables: Variables): Promise<GraphQLResponse> => {
+export const execute = async (request: RequestParameters, variables: Variables): Promise<GraphQLResponse> => {
   const response = await fetch(HTTP_ENDPOINT, {
     method: 'POST',
+    cache: 'no-store',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -23,6 +24,7 @@ const execute = async (request: RequestParameters, variables: Variables): Promis
   })
 
   const json = await response.json()
+
   return json
 }
 
@@ -45,5 +47,6 @@ export const create = () => {
   }
 
   const network = Network.create(fetch)
+
   return network
 }
