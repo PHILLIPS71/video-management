@@ -11,4 +11,8 @@
 		<ProjectReference Include="..\Domain.Shared\Giantnodes.Service.Dashboard.Domain.Shared.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="System.IO.Abstractions" Version="19.2.29" />
+	</ItemGroup>
+
 </Project>

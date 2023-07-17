@@ -1,4 +1,5 @@
-﻿using Giantnodes.Service.Dashboard.Persistence;
+﻿using Giantnodes.Service.Dashboard.Application.Components;
+using Giantnodes.Service.Dashboard.Persistence;
 using HotChocolate.AspNetCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi;
@@ -17,10 +18,9 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services
-            .AddHttpApiServices();
-        
-        services
-            .AddPersistenceServices(_configuration);
+            .AddPersistenceServices(_configuration)
+            .AddApplicationServices(_configuration, _environment)
+            .AddHttpApiServices(_configuration, _environment);
     }
 
     public void Configure(IApplicationBuilder app)
@@ -30,6 +30,7 @@ public class Startup
 
         app
             .UseRouting()
+            .UseCors()
             .UseEndpoints(endpoint =>
             {
                 endpoint

@@ -3,5 +3,6 @@
 public enum DriveStatus
 {
     Online,
+    Degraded,
     Offline
 }

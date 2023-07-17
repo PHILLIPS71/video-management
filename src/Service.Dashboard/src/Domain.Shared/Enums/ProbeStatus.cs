@@ -5,7 +5,7 @@ public enum ProbeStatus
     Submitted,
     Pending,
     Processing,
-    Cancelled,
     Completed,
+    Cancelled,
     Failed
 }
