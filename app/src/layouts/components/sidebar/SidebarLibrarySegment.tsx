@@ -15,7 +15,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 export const SidebarLibrarySegmentFragment = graphql`
   fragment SidebarLibrarySegmentFragment on Query
   @refetchable(queryName: "SidebarLibrarySegmentPaginationQuery")
-  @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: 5 }) {
+  @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int" }) {
     libraries(after: $cursor, first: $count) @connection(key: "SidebarLibrarySegment_libraries") {
       edges {
         node {
@@ -32,14 +32,14 @@ export const SidebarLibrarySegmentFragment = graphql`
 `
 
 type SidebarLibrarySegmentProps = {
-  libraries: SidebarLibrarySegmentFragment$key
+  $key: SidebarLibrarySegmentFragment$key
 }
 
-const SidebarLibrarySegment = ({ libraries }: SidebarLibrarySegmentProps) => {
+const SidebarLibrarySegment = ({ $key }: SidebarLibrarySegmentProps) => {
   const { data, loadNext, hasNext } = usePaginationFragment<
     SidebarLibrarySegmentPaginationQuery,
     SidebarLibrarySegmentFragment$key
-  >(SidebarLibrarySegmentFragment, libraries)
+  >(SidebarLibrarySegmentFragment, $key)
 
   const getDriveStatusIcon = (status: DriveStatus) => {
     switch (status) {

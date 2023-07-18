@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<013430796dfa078b269c90576b4553d6>>
+ * @generated SignedSource<<8b0d1c816cc04c97596d78831b90f330>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,32 +10,30 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SidebarLibrarySegmentPaginationQuery$variables = {
+export type DefaultLayoutQuery$variables = {
   count?: number | null;
   cursor?: string | null;
 };
-export type SidebarLibrarySegmentPaginationQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"SidebarLibrarySegmentFragment">;
+export type DefaultLayoutQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"SidebarQuery">;
 };
-export type SidebarLibrarySegmentPaginationQuery = {
-  response: SidebarLibrarySegmentPaginationQuery$data;
-  variables: SidebarLibrarySegmentPaginationQuery$variables;
+export type DefaultLayoutQuery = {
+  response: DefaultLayoutQuery$data;
+  variables: DefaultLayoutQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "count"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "cursor"
-  }
-],
-v1 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "count"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "cursor"
+},
+v2 = [
   {
     "kind": "Variable",
     "name": "after",
@@ -49,10 +47,13 @@ v1 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "SidebarLibrarySegmentPaginationQuery",
+    "name": "DefaultLayoutQuery",
     "selections": [
       {
         "args": [
@@ -68,7 +69,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "SidebarLibrarySegmentFragment"
+        "name": "SidebarQuery"
       }
     ],
     "type": "Query",
@@ -76,13 +77,16 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
-    "name": "SidebarLibrarySegmentPaginationQuery",
+    "name": "DefaultLayoutQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v2/*: any*/),
         "concreteType": "LibrariesConnection",
         "kind": "LinkedField",
         "name": "libraries",
@@ -175,7 +179,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v2/*: any*/),
         "filters": null,
         "handle": "connection",
         "key": "SidebarLibrarySegment_libraries",
@@ -185,16 +189,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5523977dcd47e50a8a7967261df7d240",
+    "cacheID": "b39e4b9268ea25bfc73d8a68b26b7cf0",
     "id": null,
     "metadata": {},
-    "name": "SidebarLibrarySegmentPaginationQuery",
+    "name": "DefaultLayoutQuery",
     "operationKind": "query",
-    "text": "query SidebarLibrarySegmentPaginationQuery(\n  $count: Int\n  $cursor: String\n) {\n  ...SidebarLibrarySegmentFragment_1G22uz\n}\n\nfragment SidebarLibrarySegmentFragment_1G22uz on Query {\n  libraries(after: $cursor, first: $count) {\n    edges {\n      node {\n        id\n        name\n        drive_status\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
+    "text": "query DefaultLayoutQuery(\n  $cursor: String\n  $count: Int\n) {\n  ...SidebarQuery_1G22uz\n}\n\nfragment SidebarLibrarySegmentFragment_1G22uz on Query {\n  libraries(after: $cursor, first: $count) {\n    edges {\n      node {\n        id\n        name\n        drive_status\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment SidebarQuery_1G22uz on Query {\n  ...SidebarLibrarySegmentFragment_1G22uz\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2fdc9d699c738dd62b0aa79cac9f989c";
+(node as any).hash = "9b83b17532f986b841f0922da2d63445";
 
 export default node;
