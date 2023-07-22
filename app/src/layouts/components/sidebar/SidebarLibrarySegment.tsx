@@ -7,8 +7,8 @@ import type {
 import type { SidebarLibrarySegmentPaginationQuery } from '@/__generated__/SidebarLibrarySegmentPaginationQuery.graphql'
 import type { AvatarVariantProps } from '@giantnodes/design-system-react'
 
-import { Avatar, Navigation } from '@giantnodes/design-system-react'
-import { IconFolderCheck, IconFolderExclamation, IconFolderQuestion, IconFolderX } from '@tabler/icons-react'
+import { Avatar, Button, Navigation } from '@giantnodes/design-system-react'
+import { IconAlbum, IconFolderCheck, IconFolderExclamation, IconFolderQuestion, IconFolderX } from '@tabler/icons-react'
 import Link from 'next/link'
 import { graphql, usePaginationFragment } from 'react-relay'
 
@@ -69,7 +69,14 @@ const SidebarLibrarySegment: React.FC<SidebarLibrarySegmentProps> = ({ $key }) =
 
   return (
     <Navigation.Segment>
-      <Navigation.Title>Your Libraries</Navigation.Title>
+      <Navigation.Title className="flex justify-between items-center">
+        Your Libraries
+        <Link passHref href="/new">
+          <Button color="success" size="xs">
+            <IconAlbum size={16} /> New
+          </Button>
+        </Link>
+      </Navigation.Title>
 
       {data?.libraries?.edges?.map((edge) => (
         <Navigation.Item key={edge.node.id}>
