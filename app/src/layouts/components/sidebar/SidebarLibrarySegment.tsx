@@ -35,7 +35,7 @@ type SidebarLibrarySegmentProps = {
   $key: SidebarLibrarySegmentFragment$key
 }
 
-const SidebarLibrarySegment = ({ $key }: SidebarLibrarySegmentProps) => {
+const SidebarLibrarySegment: React.FC<SidebarLibrarySegmentProps> = ({ $key }) => {
   const { data, loadNext, hasNext } = usePaginationFragment<
     SidebarLibrarySegmentPaginationQuery,
     SidebarLibrarySegmentFragment$key

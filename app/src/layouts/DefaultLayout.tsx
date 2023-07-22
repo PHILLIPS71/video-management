@@ -8,7 +8,6 @@ import { graphql, useLazyLoadQuery } from 'react-relay'
 import Navbar from '@/layouts/components/navbar/Navbar'
 import NavigationMobile from '@/layouts/components/navbar/Navbar.mobile'
 import Sidebar from '@/layouts/components/sidebar/Sidebar'
-import SidebarMobile from '@/layouts/components/sidebar/Sidebar.mobile'
 
 type DefaultLayoutProps = React.PropsWithChildren
 
@@ -27,7 +26,6 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
   return (
     <div className="flex h-screen">
       <Sidebar $key={query} className="max-md:hidden" />
-      <SidebarMobile className="hidden sm:max-md:flex" />
 
       <div className="flex flex-col flex-grow overflow-x-hidden">
         <Navbar className="max-sm:hidden" />

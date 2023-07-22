@@ -27,7 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
   )
 
   return (
-    <Navigation orientation="vertical" {...rest}>
+    <Navigation orientation="vertical" size="lg" {...rest}>
       <Navigation.Brand>
         <Image priority alt="giantnodes logo" height={40} src="/images/giantnodes-logo.png" width={128} />
       </Navigation.Brand>
@@ -37,14 +37,6 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
           <Link legacyBehavior passHref href="/">
             <Navigation.Link>
               <IconGauge strokeWidth={1.5} /> Dashboard
-            </Navigation.Link>
-          </Link>
-        </Navigation.Item>
-
-        <Navigation.Item>
-          <Link legacyBehavior passHref href="/explore">
-            <Navigation.Link>
-              <IconFolders strokeWidth={1.5} /> Explore
             </Navigation.Link>
           </Link>
         </Navigation.Item>
