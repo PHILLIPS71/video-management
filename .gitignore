@@ -162,3 +162,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# relay
+__generated__/
