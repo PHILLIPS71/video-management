@@ -14,12 +14,13 @@ type DefaultLayoutProps = React.PropsWithChildren
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
   const query = useLazyLoadQuery<DefaultLayoutQuery>(
     graphql`
-      query DefaultLayoutQuery($cursor: String, $count: Int) {
-        ...SidebarQuery @arguments(cursor: $cursor, count: $count)
+      query DefaultLayoutQuery($first: Int, $after: String, $order: [LibrarySortInput!]) {
+        ...SidebarQuery @arguments(first: $first, after: $after, order: $order)
       }
     `,
     {
-      count: 8,
+      first: 8,
+      order: [{ name: 'ASC' }],
     }
   )
 
@@ -31,7 +32,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
         <Navbar className="max-sm:hidden" />
         <NavigationMobile className="sm:hidden" />
 
-        <main className="flex-grow py-6 md:py-8 px-6 overflow-y-auto">{children}</main>
+        <main className="flex-grow py-6 md:py-8 px-4 md:px-6 overflow-y-auto">{children}</main>
       </div>
     </div>
   )

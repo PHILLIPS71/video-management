@@ -9,12 +9,14 @@ export type NavbarProps = NavigationProps
 
 const Navbar: React.FC<NavbarProps> = (props) => (
   <Navigation orientation="horizontal" {...props}>
-    <Input.Control className="h-full">
-      <Input.Addon>
-        <IconSearch size={20} />
-      </Input.Addon>
-      <Input className="h-full" placeholder="Search..." type="text" />
-    </Input.Control>
+    <Input.Group>
+      <Input.Control>
+        <Input.Addon>
+          <IconSearch size={20} />
+        </Input.Addon>
+        <Input placeholder="Search..." type="text" />
+      </Input.Control>
+    </Input.Group>
 
     <Navigation.Segment className="ml-auto">
       <Navigation.Item>

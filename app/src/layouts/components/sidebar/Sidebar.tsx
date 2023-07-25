@@ -19,8 +19,9 @@ export type SidebarProps = NavigationProps & {
 const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
   const fragment = useFragment<SidebarQuery$key>(
     graphql`
-      fragment SidebarQuery on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int" }) {
-        ...SidebarLibrarySegmentFragment @arguments(cursor: $cursor, count: $count)
+      fragment SidebarQuery on Query
+      @argumentDefinitions(first: { type: "Int" }, after: { type: "String" }, order: { type: "[LibrarySortInput!]" }) {
+        ...SidebarLibrarySegmentFragment @arguments(first: $first, after: $after, order: $order)
       }
     `,
     $key
