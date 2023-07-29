@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --color-backdrop: 250 250 250;
+    --color-background: 255 255 255;
+    --color-middleground: 250 250 250;
+    --color-foreground: 212 212 216;
+    --color-title: 39 39 42;
+    --color-subtitle: 82 82 91;
+  }
+
+  :root[class~='dark'] {
+    --color-backdrop: 18 18 18;
+    --color-background: 24 24 27;
+    --color-middleground: 39 39 42;
+    --color-foreground: 63 63 70;
+    --color-title: 244 244 245;
+    --color-subtitle: 161 161 170;
+  }
+}
