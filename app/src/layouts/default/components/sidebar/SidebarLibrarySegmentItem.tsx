@@ -2,8 +2,8 @@
 
 import type {
   DriveStatus,
-  SidebarLibrarySegmentItem_library$key,
-} from '@/__generated__/SidebarLibrarySegmentItem_library.graphql'
+  SidebarLibrarySegmentItemFragment$key,
+} from '@/__generated__/SidebarLibrarySegmentItemFragment.graphql'
 import type { AvatarVariantProps } from '@giantnodes/design-system-react'
 
 import { Avatar, Navigation } from '@giantnodes/design-system-react'
@@ -12,15 +12,16 @@ import Link from 'next/link'
 import { graphql, useFragment } from 'react-relay'
 
 type SidebarLibrarySegmentItemProps = {
-  $key: SidebarLibrarySegmentItem_library$key
+  $key: SidebarLibrarySegmentItemFragment$key
 }
 
 const SidebarLibrarySegmentItem: React.FC<SidebarLibrarySegmentItemProps> = ({ $key }) => {
   const data = useFragment(
     graphql`
-      fragment SidebarLibrarySegmentItem_library on Library {
+      fragment SidebarLibrarySegmentItemFragment on Library {
         id
         name
+        slug
         drive_status
       }
     `,
@@ -43,22 +44,22 @@ const SidebarLibrarySegmentItem: React.FC<SidebarLibrarySegmentItemProps> = ({ $
   const getDriveStatusColor = (status: DriveStatus): AvatarVariantProps['status'] => {
     switch (status) {
       case 'ONLINE':
-        return 'green'
+        return 'success'
       case 'DEGRADED':
-        return 'yellow'
+        return 'warning'
       case 'OFFLINE':
-        return 'red'
+        return 'danger'
       default:
-        return 'gray'
+        return 'neutral'
     }
   }
 
   return (
     <Navigation.Item>
-      <Link legacyBehavior passHref href="/">
+      <Link legacyBehavior passHref href={`/library/${data.slug}`}>
         <Navigation.Link>
           <Avatar radius="md" size="xs">
-            <Avatar.Notification status={getDriveStatusColor(data.drive_status)} />
+            <Avatar.Notification color={getDriveStatusColor(data.drive_status)} />
             <Avatar.Icon icon={getDriveStatusIcon(data.drive_status)} />
           </Avatar>
 

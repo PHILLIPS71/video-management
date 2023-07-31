@@ -7,13 +7,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        backdrop: 'rgb(var(--color-backdrop) / 1)',
-        background: 'rgb(var(--color-background) / 1)',
-        middleground: 'rgb(var(--color-middleground) / 1)',
-        foreground: 'rgb(var(--color-foreground) / 1)',
         title: 'rgb(var(--color-title) / 1)',
         subtitle: 'rgb(var(--color-subtitle) / 1)',
-        primary: {
+        brand: {
           50: '#f1fcf4',
           100: '#defae8',
           200: '#bef4d3',
@@ -27,19 +23,19 @@ const config: Config = {
           950: '#072c17',
           DEFAULT: '#2cc76a',
         },
-        secondary: {
-          50: '#eefbfd',
-          100: '#d5f2f8',
-          200: '#b0e5f1',
-          300: '#6ccce4',
-          400: '#3cb3d4',
-          500: '#2096ba',
-          600: '#1e799c',
-          700: '#1e6380',
-          800: '#215269',
-          900: '#204559',
-          950: '#102c3c',
-          DEFAULT: '#2096ba',
+        shark: {
+          50: '#f4f4f5',
+          100: '#e9eaea',
+          200: '#c8cacc',
+          300: '#a7aaad',
+          400: '#656a6f',
+          500: '#232a31',
+          600: '#20262c',
+          700: '#1a2025',
+          800: '#15191d',
+          900: '#111518',
+          950: '#0e1114',
+          DEFAULT: '#232a31',
         },
       },
     },

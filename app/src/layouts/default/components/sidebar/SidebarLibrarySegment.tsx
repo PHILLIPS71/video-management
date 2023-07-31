@@ -8,16 +8,17 @@ import { IconAlbum } from '@tabler/icons-react'
 import Link from 'next/link'
 import { graphql, usePaginationFragment } from 'react-relay'
 
-import SidebarLibrarySegmentItem from '@/layouts/components/sidebar/SidebarLibrarySegmentItem'
+import SidebarLibrarySegmentItem from '@/layouts/default/components/sidebar/SidebarLibrarySegmentItem'
 
 export const SidebarLibrarySegmentFragment = graphql`
   fragment SidebarLibrarySegmentFragment on Query
   @refetchable(queryName: "SidebarLibrarySegmentPaginationQuery")
   @argumentDefinitions(first: { type: "Int" }, after: { type: "String" }, order: { type: "[LibrarySortInput!]" }) {
-    libraries(first: $first, after: $after, order: $order) @connection(key: "SidebarLibrarySegment_libraries") {
+    libraries(first: $first, after: $after, order: $order)
+      @connection(key: "SidebarLibrarySegmentFragment_libraries", filters: []) {
       edges {
         node {
-          ...SidebarLibrarySegmentItem_library
+          ...SidebarLibrarySegmentItemFragment
         }
       }
       pageInfo {
@@ -42,7 +43,7 @@ const SidebarLibrarySegment: React.FC<SidebarLibrarySegmentProps> = ({ $key }) =
       <Navigation.Title className="flex justify-between items-center">
         Your Libraries
         <Link passHref href="/new">
-          <Button color="success" size="xs">
+          <Button color="primary" size="xs">
             <IconAlbum size={16} /> New
           </Button>
         </Link>
