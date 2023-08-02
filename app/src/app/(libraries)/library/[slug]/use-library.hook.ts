@@ -12,9 +12,11 @@ export const useLibrary = ({ $key }: UseLibraryProps) => {
     graphql`
       fragment useLibraryFragment on Library {
         id
-        name
         slug
-        drive_status
+        name
+        path_info {
+          full_name
+        }
       }
     `,
     $key

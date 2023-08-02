@@ -1,7 +1,7 @@
 import React from 'react'
 
-import Navbar from '@/layouts/default/components/navbar/Navbar'
 import NavigationMobile from '@/layouts/default/components/navbar/Navbar.mobile'
+import Navbar from '@/layouts/library/components/Navbar'
 import Sidebar from '@/layouts/library/components/Sidebar'
 
 type LibraryLayoutProps = React.PropsWithChildren
