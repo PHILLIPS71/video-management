@@ -10,7 +10,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 
 import SidebarLibrarySegmentItem from '@/layouts/default/components/sidebar/SidebarLibrarySegmentItem'
 
-export const SidebarLibrarySegmentFragment = graphql`
+const SidebarLibrarySegmentFragment = graphql`
   fragment SidebarLibrarySegmentFragment on Query
   @refetchable(queryName: "SidebarLibrarySegmentPaginationQuery")
   @argumentDefinitions(first: { type: "Int" }, after: { type: "String" }, order: { type: "[LibrarySortInput!]" }) {

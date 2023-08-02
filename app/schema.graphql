@@ -10,7 +10,7 @@ union FileSystemEntry = FileSystemDirectory | FileSystemFile
 type PathInfo {
   name: String!
   full_name: String!
-  extension: String!
+  extension: String
   directory_path: String
 }
 
@@ -20,10 +20,7 @@ type Library implements Node {
   slug: String!
   drive_status: DriveStatus!
   path_info: PathInfo!
-  entries(
-    where: FileSystemEntryFilterInput
-    order: [FileSystemEntrySortInput!]
-  ): [FileSystemEntry!]!
+  entries(where: FileSystemEntryFilterInput, order: [FileSystemEntrySortInput!]): [FileSystemEntry!]!
 }
 
 type FileSystemFile implements Node {
@@ -81,6 +78,29 @@ type Query {
     where: LibraryFilterInput
     order: [LibrarySortInput!]
   ): LibrariesConnection
+  file_system_entries(
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+    where: FileSystemFileFilterInput
+    order: [FileSystemFileSortInput!]
+  ): File_system_entriesConnection
 }
 
 type Mutation {
@@ -219,6 +239,42 @@ type LibrariesConnection {
   nodes: [Library!]
 }
 
+input FileSystemFileFilterInput {
+  and: [FileSystemFileFilterInput!]
+  or: [FileSystemFileFilterInput!]
+  size: LongOperationFilterInput
+  path_info: PathInfoFilterInput
+  parent_directory: FileSystemDirectoryFilterInput
+  id: UuidOperationFilterInput
+}
+
+input FileSystemFileSortInput {
+  size: SortEnumType
+  path_info: PathInfoSortInput
+  parent_directory: FileSystemDirectorySortInput
+  id: SortEnumType
+}
+
+"""
+A connection to a list of items.
+"""
+type File_system_entriesConnection {
+  """
+  Information to aid in pagination.
+  """
+  pageInfo: PageInfo!
+
+  """
+  A list of edges.
+  """
+  edges: [File_system_entriesEdge!]
+
+  """
+  A flattened list of the nodes.
+  """
+  nodes: [FileSystemFile!]
+}
+
 input DriveStatusOperationFilterInput {
   eq: DriveStatus
   neq: DriveStatus
@@ -278,6 +334,36 @@ type LibrariesEdge {
   The item at the end of the edge.
   """
   node: Library!
+}
+
+input LongOperationFilterInput {
+  eq: Long
+  neq: Long
+  in: [Long]
+  nin: [Long]
+  gt: Long
+  ngt: Long
+  gte: Long
+  ngte: Long
+  lt: Long
+  nlt: Long
+  lte: Long
+  nlte: Long
+}
+
+"""
+An edge in a connection.
+"""
+type File_system_entriesEdge {
+  """
+  A cursor for use in pagination.
+  """
+  cursor: String!
+
+  """
+  The item at the end of the edge.
+  """
+  node: FileSystemFile!
 }
 
 input ByteOperationFilterInput {
