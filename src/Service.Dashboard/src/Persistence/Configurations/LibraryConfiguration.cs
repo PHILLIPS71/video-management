@@ -25,7 +25,7 @@ public class LibraryConfiguration : IEntityTypeConfiguration<Library>
             .OwnsOne<PathInfo>(p => p.PathInfo);
 
         builder
-            .HasMany(e => e.Entries)
+            .HasMany(p => p.Entries)
             .WithOne()
             .IsRequired();
     }

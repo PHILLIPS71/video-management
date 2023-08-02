@@ -10,7 +10,7 @@ public class LibraryObjectType : ObjectType<Library>
     {
         descriptor
             .ImplementsNode()
-            .IdField(f => f.Id)
+            .IdField(p => p.Id)
             .ResolveNode((context, id) =>
                 context.Service<ApplicationDbContext>().Libraries.SingleOrDefaultAsync(x => x.Id == id));
 

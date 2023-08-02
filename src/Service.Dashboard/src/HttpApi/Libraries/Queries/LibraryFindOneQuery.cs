@@ -13,6 +13,6 @@ public class LibraryFindOneQuery
     [UseSorting]
     public IQueryable<Library> Library([Service] ApplicationDbContext database)
     {
-        return database.Libraries.Include(x => x.Entries).AsNoTracking();
+        return database.Libraries.AsNoTracking();
     }
 }

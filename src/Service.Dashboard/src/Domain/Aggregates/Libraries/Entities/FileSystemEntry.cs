@@ -14,9 +14,9 @@ public abstract class FileSystemEntry : Entity<Guid>
     {
     }
 
-    protected FileSystemEntry(IFileSystemInfo node)
+    protected FileSystemEntry(IFileSystemInfo entry)
     {
-        PathInfo = new PathInfo(node);
+        PathInfo = new PathInfo(entry);
     }
 
     public void SetParentDirectory(FileSystemDirectory? directory)

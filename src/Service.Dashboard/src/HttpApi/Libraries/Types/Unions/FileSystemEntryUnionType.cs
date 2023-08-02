@@ -2,7 +2,7 @@
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Unions;
 
-public class FileSystemNodeUnionType : UnionType<FileSystemEntry>
+public class FileSystemEntryUnionType : UnionType<FileSystemEntry>
 {
     protected override void Configure(IUnionTypeDescriptor descriptor)
     {

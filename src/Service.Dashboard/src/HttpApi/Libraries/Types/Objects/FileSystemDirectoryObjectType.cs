@@ -8,7 +8,7 @@ public class FileSystemDirectoryObjectType : ObjectType<FileSystemDirectory>
     {
         descriptor
             .ImplementsNode()
-            .IdField(f => f.Id);
+            .IdField(p => p.Id);
 
         descriptor
             .Field(p => p.Id);
