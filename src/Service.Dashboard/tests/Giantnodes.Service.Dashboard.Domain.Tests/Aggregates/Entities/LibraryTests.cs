@@ -48,8 +48,8 @@ public class LibraryTests
         // assert
         Assert.Equal(library.PathInfo.Name, directory.Name);
         Assert.Equal(library.PathInfo.FullName, directory.FullName);
-        Assert.Equal(library.PathInfo.Extension, directory.Extension);
         Assert.Equal(library.PathInfo.DirectoryPath, Path.GetDirectoryName(directory.FullName));
+        Assert.Null(library.PathInfo.Extension);
     }
 
     [Fact]
