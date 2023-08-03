@@ -22,7 +22,7 @@ public abstract class FileSystemEntry : Entity<Guid>
     public void SetParentDirectory(FileSystemDirectory? directory)
     {
         if (PathInfo.DirectoryPath != directory?.PathInfo.FullName)
-            throw new ArgumentException();
+            throw new ArgumentException($"'{PathInfo.DirectoryPath}' is not a parent directory of '{directory?.PathInfo.FullName}'");
 
         ParentDirectory = directory;
     }

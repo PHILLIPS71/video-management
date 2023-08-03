@@ -15,11 +15,11 @@ public class ApplicationDbContext : DbContext
     protected DbSet<FileSystemDirectory> FileSystemDirectories => Set<FileSystemDirectory>();
     protected DbSet<FileSystemFile> FileSystemFiles => Set<FileSystemFile>();
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(builder);
+        base.OnModelCreating(modelBuilder);
 
-        builder.HasDefaultSchema("public");
-        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        modelBuilder.HasDefaultSchema("public");
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }

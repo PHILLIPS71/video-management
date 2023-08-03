@@ -43,7 +43,7 @@ public class Library : AggregateRoot<Guid>
             var entries = service.GetFileSystemInfos(this);
 
             // remove any nodes that no longer exist within the scanned path
-            _entries.RemoveAll(x => entries.Any(y => y.FullName == x.PathInfo.FullName) == false);
+            _entries.RemoveAll(x => entries.All(y => y.FullName != x.PathInfo.FullName));
 
             foreach (var entry in entries)
             {

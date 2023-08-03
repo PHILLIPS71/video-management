@@ -16,14 +16,12 @@ public class LibraryService : ILibraryService
     public IReadOnlyCollection<IFileSystemInfo> GetFileSystemInfos(Library library)
     {
         var root = _fs.DirectoryInfo.New(library.PathInfo.FullName);
-        if (root.Exists == false)
+        if (!root.Exists)
             throw new DirectoryNotFoundException();
 
         var entries = root
             .GetFileSystemInfos("*", SearchOption.AllDirectories)
             .ToList();
-        
-        // todo: check permissions on files etc...
 
         return entries.AsReadOnly();
     }
