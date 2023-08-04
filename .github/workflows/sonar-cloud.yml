@@ -77,7 +77,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -Path ./.jetbrains/dotcover -ItemType Directory
-          dotnet tool update --global JetBrains.dotCover.GlobalTool --tool-path ./.jetbrains/dotcover
+          dotnet tool update JetBrains.dotCover.GlobalTool --tool-path ./.jetbrains/dotcover
 
       - name: build and analyze
         env:
