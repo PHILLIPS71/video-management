@@ -11,11 +11,11 @@ public class Library : AggregateRoot<Guid>
 {
     private readonly List<FileSystemEntry> _entries;
 
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
 
-    public string Slug { get; private set; }
+    public string Slug { get; private set; } = null!;
 
-    public PathInfo PathInfo { get; private set; }
+    public PathInfo PathInfo { get; private set; } = null!;
 
     public DriveStatus DriveStatus { get; private set; } = DriveStatus.Offline;
 

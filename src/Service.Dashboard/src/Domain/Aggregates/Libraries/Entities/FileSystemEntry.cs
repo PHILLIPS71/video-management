@@ -6,7 +6,7 @@ namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 
 public abstract class FileSystemEntry : Entity<Guid>
 {
-    public PathInfo PathInfo { get; private set; }
+    public PathInfo PathInfo { get; private set; } = null!;
 
     public FileSystemDirectory? ParentDirectory { get; private set; }
 
