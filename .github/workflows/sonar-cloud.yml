@@ -64,20 +64,10 @@ jobs:
           New-Item -Path ./.sonar/scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
 
-      - name: cache dot cover
-        id: cache-jetbrains-dotcover
-        uses: actions/cache@v3
-        with:
-          path: ./.jetbrains/dotcover
-          key: ${{ runner.os }}-jetbrains-dotcover
-          restore-keys: ${{ runner.os }}-jetbrains-dotcover
-
       - name: install dot cover
-        if: steps.cache-jetbrains-dotcover.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
-          New-Item -Path ./.jetbrains/dotcover -ItemType Directory
-          dotnet tool update JetBrains.dotCover.GlobalTool --tool-path ./.jetbrains/dotcover
+          dotnet tool install --global JetBrains.dotCover.GlobalTool
 
       - name: build and analyze
         env:
