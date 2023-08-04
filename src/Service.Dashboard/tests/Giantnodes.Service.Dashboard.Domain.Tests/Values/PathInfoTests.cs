@@ -7,23 +7,23 @@ namespace Giantnodes.Service.Dashboard.Domain.Tests.Values;
 public class PathInfoTests
 {
     private readonly MockFileSystem _fs = new MockFileSystem(new Dictionary<string, MockFileData> {
-        { @"/media/tvshows/Silicon Valley", new MockDirectoryData() },
-        { @"/media/tvshows/Silicon Valley/Season 1", new MockDirectoryData() },
-        { @"/media/tvshows/Silicon Valley/Season 1/.DS_Store", new MockFileData(string.Empty) },
-        { @"/media/tvshows/Silicon Valley/Season 1/poster.png", new MockFileData(string.Empty) },
-        { @"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E01 - Minimum Viable Product.mp4", new MockFileData(string.Empty) },
-        { @"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E02 - The Cap Table.mp4", new MockFileData(string.Empty) },
-        { @"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E03 - Articles of Incorporation.mkv", new MockFileData(string.Empty) },
-        { @"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E04 - Fiduciary Duties.mkv", new MockFileData(string.Empty) },
-        { @"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E05 - Signaling Risk.avi", new MockFileData(string.Empty) },
-        { @"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E06 - Third Party Insourcing.avi", new MockFileData(string.Empty) },
-        { @"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E07 - Proof of Concept.mov", new MockFileData(string.Empty) },
-        { @"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E08 - Optimal Tip-to-Tip Efficiency.mov", new MockFileData(string.Empty) }
+        { @"C:\tv-shows\Silicon Valley", new MockDirectoryData() },
+        { @"C:\tv-shows\Silicon Valley\Season 1", new MockDirectoryData() },
+        { @"C:\tv-shows\Silicon Valley\Season 1\.DS_Store", new MockFileData(string.Empty) },
+        { @"C:\tv-shows\Silicon Valley\Season 1\poster.png", new MockFileData(string.Empty) },
+        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4", new MockFileData(string.Empty) },
+        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E02 - The Cap Table.mp4", new MockFileData(string.Empty) },
+        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E03 - Articles of Incorporation.mkv", new MockFileData(string.Empty) },
+        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E04 - Fiduciary Duties.mkv", new MockFileData(string.Empty) },
+        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E05 - Signaling Risk.avi", new MockFileData(string.Empty) },
+        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E06 - Third Party Insourcing.avi", new MockFileData(string.Empty) },
+        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E07 - Proof of Concept.mov", new MockFileData(string.Empty) },
+        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E08 - Optimal Tip-to-Tip Efficiency.mov", new MockFileData(string.Empty) }
     });
 
     [Theory]
-    [InlineData(@"/media/tvshows/Silicon Valley")]
-    [InlineData(@"/media/tvshows/Silicon Valley/Season 1")]
+    [InlineData(@"C:\tv-shows\Silicon Valley")]
+    [InlineData(@"C:\tv-shows\Silicon Valley\Season 1")]
     public void Should_Construct_Directories(string path)
     {
         // arrange
@@ -40,10 +40,10 @@ public class PathInfoTests
     }
     
     [Theory]
-    [InlineData(@"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E01 - Minimum Viable Product.mp4")]
-    [InlineData(@"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E04 - Fiduciary Duties.mkv")]
-    [InlineData(@"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E06 - Third Party Insourcing.avi")]
-    [InlineData(@"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E08 - Optimal Tip-to-Tip Efficiency.mov")]
+    [InlineData(@"C:\tv-shows\Silicon Valley/Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4")]
+    [InlineData(@"C:\tv-shows\Silicon Valley/Season 1\Silicon Valley - S01E04 - Fiduciary Duties.mkv")]
+    [InlineData(@"C:\tv-shows\Silicon Valley/Season 1\Silicon Valley - S01E06 - Third Party Insourcing.avi")]
+    [InlineData(@"C:\tv-shows\Silicon Valley/Season 1\Silicon Valley - S01E08 - Optimal Tip-to-Tip Efficiency.mov")]
     public void Should_Construct_Media_Files(string path)
     {
         // arrange
@@ -56,6 +56,6 @@ public class PathInfoTests
         Assert.Equal(info.Name, file.Name);
         Assert.Equal(info.FullName, file.FullName);
         Assert.Equal(info.DirectoryPath, Path.GetDirectoryName(file.FullName));
-        Assert.Equal(info.Extension?.ToString(), file.Extension);
+        Assert.Equal(info.Extension, file.Extension);
     }
 }

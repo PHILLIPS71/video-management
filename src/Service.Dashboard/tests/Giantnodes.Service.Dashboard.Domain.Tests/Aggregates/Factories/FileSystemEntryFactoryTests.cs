@@ -8,16 +8,16 @@ namespace Giantnodes.Service.Dashboard.Domain.Tests.Aggregates.Factories;
 public class FileSystemEntryFactoryTests
 {
     private readonly MockFileSystem _fs = new MockFileSystem(new Dictionary<string, MockFileData> {
-        { @"/media/tvshows/Silicon Valley", new MockDirectoryData() },
-        { @"/media/tvshows/Silicon Valley/Season 1", new MockDirectoryData() },
-        { @"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E01 - Minimum Viable Product.mp4", new MockFileData(string.Empty) },
+        { @"C:\tv-shows\Silicon Valley", new MockDirectoryData() },
+        { @"C:\tv-shows\Silicon Valley\Season 1", new MockDirectoryData() },
+        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4", new MockFileData(string.Empty) },
     });
 
     [Fact]
     public void Should_Build_FileSystemFile()
     {
         // arrange
-        var file = _fs.FileInfo.New(@"/media/tvshows/Silicon Valley/Season 1/Silicon Valley - S01E01 - Minimum Viable Product.mp4");
+        var file = _fs.FileInfo.New(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4");
 
         // act
         var entry = FileSystemEntryFactory.Build(file);
@@ -30,7 +30,7 @@ public class FileSystemEntryFactoryTests
     public void Should_Build_FileSystemDirectory()
     {
         // arrange
-        var directory = _fs.DirectoryInfo.New(@"/media/tvshows/Silicon Valley");
+        var directory = _fs.DirectoryInfo.New(@"C:\tv-shows\Silicon Valley");
 
         // act
         var entry = FileSystemEntryFactory.Build(directory);
