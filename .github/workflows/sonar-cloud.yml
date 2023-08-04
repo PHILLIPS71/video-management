@@ -83,7 +83,7 @@ jobs:
           /d:sonar.cpd.exclusions="./src/Service.Dashboard/**/Migrations/*.*" \
           /d:sonar.coverage.exclusions="./src/Service.Dashboard/**/Migrations/*.*" \
 
-          dotnet build ./src/Service.Dashboard -c Release --no-restore \
-          dotnet dotcover test ./src/Service.Dashboard --dcReportType=HTML -c Release \
+          dotnet build ./src/Service.Dashboard -c Release --no-restore
+          dotnet dotcover test ./src/Service.Dashboard --dcReportType=HTML -c Release
 
           ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
