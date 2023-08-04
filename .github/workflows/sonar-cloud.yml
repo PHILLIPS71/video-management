@@ -87,5 +87,5 @@ jobs:
         run: |
           ./.sonar/scanner/dotnet-sonarscanner begin /k:"PHILLIPS71_video-management" /o:"phillips71" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html
           dotnet build ./src/Service.Dashboard -c Release --no-restore
-          dotnet dotcover test --dcReportType=HTML -c Release
+          dotnet dotcover test ./src/Service.Dashboard --dcReportType=HTML -c Release
           ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
