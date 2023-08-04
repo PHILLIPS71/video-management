@@ -75,7 +75,13 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: pwsh
         run: |
-          ./.sonar/scanner/dotnet-sonarscanner begin /k:"PHILLIPS71_video-management /o:"phillips71" /d:sonar.token="${{ secrets.SONAR_TOKEN }} /d:sonar.host.url="https://sonarcloud.io" /d:sonar.sources="./src/Service.Dashboard" /d:sonar.coverage.exclusions="./src/Service.Dashboard/**/Migrations/*.*" /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html
+          ./.sonar/scanner/dotnet-sonarscanner begin /k:"PHILLIPS71_video-management \
+          /o:"phillips71" /d:sonar.token="${{ secrets.SONAR_TOKEN }} \
+          /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html \
+          /d:sonar.sources="./src/Service.Dashboard" \
+          /d:sonar.cpd.exclusions="./src/Service.Dashboard/**/Migrations/*.*" \
+          /d:sonar.coverage.exclusions="./src/Service.Dashboard/**/Migrations/*.*" \
 
           dotnet build ./src/Service.Dashboard -c Release --no-restor
           dotnet dotcover test ./src/Service.Dashboard --dcReportType=HTML -c Release
