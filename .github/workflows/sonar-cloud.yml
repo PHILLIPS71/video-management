@@ -80,8 +80,8 @@ jobs:
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html \
           /d:sonar.sources="src/Service.Dashboard" \
-          /d:sonar.cpd.exclusions="src/Service.Dashboard/**/Migrations/*.*" \
-          /d:sonar.coverage.exclusions="src/Service.Dashboard/**/Migrations/*.*" \
+          /d:sonar.cpd.exclusions="src/Service.Dashboard/**/Migrations/*" \
+          /d:sonar.coverage.exclusions="src/Service.Dashboard/**/Migrations/*" \
 
           dotnet build ./src/Service.Dashboard -c Release --no-restore
 
