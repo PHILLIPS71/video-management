@@ -11,9 +11,9 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Library> Libraries => Set<Library>();
-    protected DbSet<FileSystemEntry> FileSystemEntries => Set<FileSystemEntry>();
-    protected DbSet<FileSystemDirectory> FileSystemDirectories => Set<FileSystemDirectory>();
-    protected DbSet<FileSystemFile> FileSystemFiles => Set<FileSystemFile>();
+    public DbSet<FileSystemEntry> FileSystemEntries => Set<FileSystemEntry>();
+    public DbSet<FileSystemDirectory> FileSystemDirectories => Set<FileSystemDirectory>();
+    public DbSet<FileSystemFile> FileSystemFiles => Set<FileSystemFile>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

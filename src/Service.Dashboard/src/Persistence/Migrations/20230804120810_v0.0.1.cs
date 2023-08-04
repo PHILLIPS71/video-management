@@ -24,7 +24,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     slug = table.Column<string>(type: "text", nullable: false),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
-                    path_info_extension = table.Column<string>(type: "text", nullable: false),
+                    path_info_extension = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
                     drive_status = table.Column<string>(type: "text", nullable: false),
                     concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
@@ -44,7 +44,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     library_id = table.Column<Guid>(type: "uuid", nullable: false),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
-                    path_info_extension = table.Column<string>(type: "text", nullable: false),
+                    path_info_extension = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -76,7 +76,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     size = table.Column<long>(type: "bigint", nullable: false),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
-                    path_info_extension = table.Column<string>(type: "text", nullable: false),
+                    path_info_extension = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>

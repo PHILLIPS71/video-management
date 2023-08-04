@@ -137,7 +137,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasColumnName("path_info_directory_path");
 
                             b1.Property<string>("Extension")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_extension");
 
@@ -177,7 +176,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasColumnName("path_info_directory_path");
 
                             b1.Property<string>("Extension")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_extension");
 
@@ -217,7 +215,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasColumnName("path_info_directory_path");
 
                             b1.Property<string>("Extension")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_extension");
 

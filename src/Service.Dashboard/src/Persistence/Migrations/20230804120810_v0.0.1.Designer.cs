@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230710121508_v0.0.1")]
+    [Migration("20230804120810_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -140,7 +140,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasColumnName("path_info_directory_path");
 
                             b1.Property<string>("Extension")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_extension");
 
@@ -180,7 +179,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasColumnName("path_info_directory_path");
 
                             b1.Property<string>("Extension")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_extension");
 
@@ -220,7 +218,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasColumnName("path_info_directory_path");
 
                             b1.Property<string>("Extension")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_extension");
 
