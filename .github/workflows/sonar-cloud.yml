@@ -73,7 +73,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: pwsh
+        shell: bash
         run: |
           ./.sonar/scanner/dotnet-sonarscanner begin /k:"PHILLIPS71_video-management" \
           /o:"phillips71" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
