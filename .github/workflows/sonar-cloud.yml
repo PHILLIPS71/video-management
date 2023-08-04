@@ -3,8 +3,16 @@ name: sonar cloud
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/**'
+      - 'app/**'
+      - '.github/workflows/sonar-cloud.yml'
   pull_request:
-    branches: [main]
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'src/**'
+      - 'app/**'
+      - '.github/workflows/sonar-cloud.yml'
   workflow_dispatch:
 
 permissions:
@@ -12,7 +20,7 @@ permissions:
 
 jobs:
   build:
-    name: 🧐 Build and analyze
+    name: 🧐 Analyze Service.Dashboard
     runs-on: windows-latest
 
     steps:
@@ -66,5 +74,5 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"PHILLIPS71_video-management" /o:"phillips71" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build .\src\Service.Dashboard -c Release --no-restore
-          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+          dotnet test --collect "Code Coverage"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
