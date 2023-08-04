@@ -57,4 +57,4 @@ jobs:
             -Dsonar.projectKey=PHILLIPS71_video-management
             -Dsonar.organization=phillips71
             -Dsonar.projectBaseDir=./src/Service.Dashboard/src
-            -Dsonar.tests=./src/Service.Dashboard
+            -Dsonar.tests=./src/Service.Dashboard/src
