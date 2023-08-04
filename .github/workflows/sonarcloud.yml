@@ -30,26 +30,31 @@ name: SonarCloud
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   pull-requests: read
 
 jobs:
-  Analysis:
+  analyze:
+    name: 🧐 Analyze
     runs-on: ubuntu-latest
 
     steps:
-      - name: Analyze
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: analyze
         uses: SonarSource/sonarcloud-github-action@v2.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          projectBaseDir: src/Service.Dashboard
           args: >
             -Dsonar.projectKey=PHILLIPS71_video-management
             -Dsonar.organization=phillips71
+            -Dsonar.projectBaseDir=./src/Service.Dashboard/src
+            -Dsonar.tests=./src/Service.Dashboard/tests
