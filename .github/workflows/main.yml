@@ -23,7 +23,7 @@ jobs:
         working-directory: ./src/Infrastructure
 
       - name: test
-        run: dotnet test --verbosity normal
+        run: dotnet test --verbosity quiet
         working-directory: ./src/Infrastructure
 
   test-dashboard-service:
@@ -43,7 +43,7 @@ jobs:
         working-directory: ./src/Service.Dashboard
 
       - name: test
-        run: dotnet test --verbosity normal
+        run: dotnet test --verbosity quiet
         working-directory: ./src/Service.Dashboard
 
   test-encoder-service:
@@ -63,7 +63,7 @@ jobs:
         working-directory: ./src/Service.Encoder
 
       - name: test
-        run: dotnet test --verbosity normal
+        run: dotnet test --verbosity quiet
         working-directory: ./src/Service.Encoder
 
   build-web-app:
