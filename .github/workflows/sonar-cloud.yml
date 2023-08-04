@@ -75,8 +75,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: bash
         run: |
-          ./.sonar/scanner/dotnet-sonarscanner begin /k:"PHILLIPS71_video-management \
-          /o:"phillips71" /d:sonar.token="${{ secrets.SONAR_TOKEN }} \
+          ./.sonar/scanner/dotnet-sonarscanner begin /k:"PHILLIPS71_video-management" \
+          /o:"phillips71" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html \
           /d:sonar.sources="./src/Service.Dashboard" \
