@@ -1,5 +1,8 @@
 ﻿using System.IO.Abstractions;
+using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.Domain.Values;
+using Giantnodes.Service.Dashboard.Domain.Enumerations;
+using Giantnodes.Service.Dashboard.Domain.Shared;
 
 namespace Giantnodes.Service.Dashboard.Domain.Values;
 
@@ -9,7 +12,7 @@ public class PathInfo : ValueObject
     
     public string FullName { get; init; }
 
-    public string? Extension { get; init; }
+    public MediaFileExtension? Extension { get; init; }
 
     public string? DirectoryPath { get; init; }
 
@@ -27,7 +30,7 @@ public class PathInfo : ValueObject
     {
         Name = info.Name;
         FullName = info.FullName;
-        Extension = info.Extension;
+        Extension = Enumeration.TryParse<MediaFileExtension>(info.Extension);
         DirectoryPath = Path.GetDirectoryName(info.FullName);
     }
 }
