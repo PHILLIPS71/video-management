@@ -81,9 +81,9 @@ jobs:
           /d:sonar.host.url="https://sonarcloud.io"
           /d:sonar.sources="./src/Service.Dashboard"
           /d:sonar.coverage.exclusions="./src/Service.Dashboard/**/Migrations/*.*"
-          /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html \
+          /d:sonar.cs.dotcover.reportsPaths=dotCover.Output.html \n
 
-          dotnet build ./src/Service.Dashboard -c Release --no-restore \
-          dotnet dotcover test ./src/Service.Dashboard --dcReportType=HTML -c Release \
+          dotnet build ./src/Service.Dashboard -c Release --no-restore \n
+          dotnet dotcover test ./src/Service.Dashboard --dcReportType=HTML -c Release \n
 
           ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
