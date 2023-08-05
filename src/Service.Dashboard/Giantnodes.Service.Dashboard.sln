@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{27214AD8-98E7-4A7D-B67B-575AC944C369}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Application.Components.Tests", "tests\Giantnodes.Service.Dashboard.Application.Components.Tests\Giantnodes.Service.Dashboard.Application.Components.Tests.csproj", "{2120E351-42AA-4478-86C6-DC35AB4E47DA}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Domain.Tests", "tests\Giantnodes.Service.Dashboard.Domain.Tests\Giantnodes.Service.Dashboard.Domain.Tests.csproj", "{B170206F-710A-4314-9255-EF861FD3A135}"
 EndProject
 Global
@@ -44,6 +46,7 @@ Global
 		{82D30D2C-3AB9-415C-9D3D-E74A7BBABCF2} = {D31480C0-C771-4832-B82F-E3B4EFC84E6C}
 		{572D76F3-7BBA-44C9-99A5-CDDD995DC2EB} = {D31480C0-C771-4832-B82F-E3B4EFC84E6C}
 		{B170206F-710A-4314-9255-EF861FD3A135} = {27214AD8-98E7-4A7D-B67B-575AC944C369}
+		{2120E351-42AA-4478-86C6-DC35AB4E47DA} = {27214AD8-98E7-4A7D-B67B-575AC944C369}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{41C6A8F1-A1D9-451B-9162-D8A5404A3C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -86,5 +89,9 @@ Global
 		{B170206F-710A-4314-9255-EF861FD3A135}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B170206F-710A-4314-9255-EF861FD3A135}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B170206F-710A-4314-9255-EF861FD3A135}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2120E351-42AA-4478-86C6-DC35AB4E47DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2120E351-42AA-4478-86C6-DC35AB4E47DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2120E351-42AA-4478-86C6-DC35AB4E47DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2120E351-42AA-4478-86C6-DC35AB4E47DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
