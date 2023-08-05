@@ -46,7 +46,7 @@ public class LibraryServiceTests
         var infos = service.GetFileSystemInfos(library);
 
         // assert
-        var paths = infos.Select(x => x.FullName).ToList();
+        var paths = infos.Select(x => MockUnixSupport.Path(x.FullName)).ToList();
         Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4"), paths);
         Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E02 - The Cap Table.mp4"), paths);
         Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E03 - Articles of Incorporation.mkv"), paths);
@@ -68,7 +68,7 @@ public class LibraryServiceTests
         var infos = service.GetFileSystemInfos(library);
 
         // assert
-        var paths = infos.Select(x => x.FullName).ToList();
+        var paths = infos.Select(x => MockUnixSupport.Path(x.FullName)).ToList();
         Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1"), paths);
     }
 
