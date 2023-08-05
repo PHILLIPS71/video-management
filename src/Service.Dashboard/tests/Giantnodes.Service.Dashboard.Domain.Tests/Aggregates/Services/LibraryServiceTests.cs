@@ -47,12 +47,12 @@ public class LibraryServiceTests
 
         // assert
         var paths = infos.Select(x => x.FullName).ToList();
-        Assert.Contains(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4", paths);
-        Assert.Contains(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E02 - The Cap Table.mp4", paths);
-        Assert.Contains(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E03 - Articles of Incorporation.mkv", paths);
-        
-        Assert.DoesNotContain(@"C:\tv-shows\Silicon Valley\Season 1\.DS_Store", paths);
-        Assert.DoesNotContain(@"C:\tv-shows\Silicon Valley\Season 1\poster.png", paths);
+        Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4"), paths);
+        Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E02 - The Cap Table.mp4"), paths);
+        Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E03 - Articles of Incorporation.mkv"), paths);
+
+        Assert.DoesNotContain(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\.DS_Store"), paths);
+        Assert.DoesNotContain(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\poster.png"), paths);
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class LibraryServiceTests
 
         // assert
         var paths = infos.Select(x => x.FullName).ToList();
-        Assert.Contains(@"C:\tv-shows\Silicon Valley\Season 1", paths);
+        Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1"), paths);
     }
 
     [Fact]
