@@ -66,10 +66,9 @@ jobs:
 
       - name: install dot cover
         shell: bash
-        run: |
-          dotnet tool install --global JetBrains.dotCover.GlobalTool
+        run: dotnet tool install --global JetBrains.dotCover.GlobalTool
 
-      - name: build and analyze
+      - name: begin analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -83,7 +82,15 @@ jobs:
           /d:sonar.cpd.exclusions="**/Migrations/**/*" \
           /d:sonar.coverage.exclusions="**/Migrations/**/*" \
 
-          dotnet build ./src/Service.Dashboard -c Release --no-restore
-          dotnet dotcover test ./src/Service.Dashboard --dcReportType=HTML -c Release --no-build --no-restore
+      - name: build
+        shell: bash
+        run: dotnet build ./src/Service.Dashboard -c Release --no-restore
 
+      - name: coverage
+        shell: bash
+        run: dotnet dotcover test ./src/Service.Dashboard --dcReportType=HTML -c Release --no-build --no-restore
+
+      - name: end analyze
+        shell: bash
+        run: |
           ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
