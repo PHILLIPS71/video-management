@@ -20,11 +20,11 @@ public class LibraryCreateConsumerTests
 
     private readonly MockFileSystem _fs = new MockFileSystem(new Dictionary<string, MockFileData>
     {
-        { @"C:\tv-shows\Silicon Valley", new MockDirectoryData() },
-        { @"C:\tv-shows\Silicon Valley\Season 1", new MockDirectoryData() },
-        { @"C:\tv-shows\Silicon Valley\Season 1\.DS_Store", new MockFileData(string.Empty) },
-        { @"C:\tv-shows\Silicon Valley\Season 1\poster.png", new MockFileData(string.Empty) },
-        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4", new MockFileData(string.Empty) }
+        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley"), new MockDirectoryData() },
+        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1"), new MockDirectoryData() },
+        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\.DS_Store"), new MockFileData(string.Empty) },
+        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\poster.png"), new MockFileData(string.Empty) },
+        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4"), new MockFileData(string.Empty) }
     });
 
     public LibraryCreateConsumerTests()
@@ -50,7 +50,7 @@ public class LibraryCreateConsumerTests
         {
             Name = "Silicon Valley",
             Slug = "silicon-valley",
-            FullPath = @"C:\tv-shows\Silicon Valley"
+            FullPath = MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley")
         };
 
         var harness = provider.GetRequiredService<ITestHarness>();
@@ -79,7 +79,7 @@ public class LibraryCreateConsumerTests
         {
             Name = "Silicon Valley",
             Slug = "silicon-valley",
-            FullPath = @"C:\tv-shows\Silicon Valley"
+            FullPath = MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley")
         };
 
         var harness = provider.GetRequiredService<ITestHarness>();
