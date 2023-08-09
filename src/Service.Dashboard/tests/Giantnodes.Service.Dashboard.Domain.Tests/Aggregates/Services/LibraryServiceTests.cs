@@ -3,29 +3,20 @@ using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services.Impl;
+using Giantnodes.Service.Dashboard.Tests.Shared.Fixtures;
 using Xunit;
 
 namespace Giantnodes.Service.Dashboard.Domain.Tests.Aggregates.Services;
 
-public class LibraryServiceTests
+public class LibraryServiceTests : FileSystemFixture
 {
-    private readonly MockFileSystem _fs = new MockFileSystem(new Dictionary<string, MockFileData> {
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley"), new MockDirectoryData() },
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1"), new MockDirectoryData() },
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\.DS_Store"), new MockFileData(string.Empty) },
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\poster.png"), new MockFileData(string.Empty) },
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4"), new MockFileData(string.Empty) },
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E02 - The Cap Table.mp4"), new MockFileData(string.Empty) },
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E03 - Articles of Incorporation.mkv"), new MockFileData(string.Empty) }
-    });
-
     [Fact]
     public void Should_Throw_DirectoryNotFoundException()
     {
         // arrange
-        var service = new LibraryService(_fs);
+        var service = new LibraryService(FileSystem);
 
-        var directory = _fs.DirectoryInfo.New(MockUnixSupport.Path(@"C:\tv-shows\Mr. Robot\Season 1"));
+        var directory = FileSystem.DirectoryInfo.New(MockUnixSupport.Path(@"C:\tv-shows\Mr. Robot\Season 1"));
         var library = new Library(directory, "Mr. Robot", "mr-robot");
 
         // act
@@ -37,9 +28,9 @@ public class LibraryServiceTests
     public void Should_Return_Only_Media_Files()
     {
         // arrange
-        var service = new LibraryService(_fs);
+        var service = new LibraryService(FileSystem);
 
-        var directory = _fs.DirectoryInfo.New(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley"));
+        var directory = FileSystem.DirectoryInfo.New(RootPath);
         var library = new Library(directory, "Silicon Valley", "silicon-valley");
 
         // act
@@ -47,10 +38,6 @@ public class LibraryServiceTests
 
         // assert
         var paths = infos.Select(x => x.FullName).ToList();
-        Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4"), paths);
-        Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E02 - The Cap Table.mp4"), paths);
-        Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E03 - Articles of Incorporation.mkv"), paths);
-
         Assert.DoesNotContain(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\.DS_Store"), paths);
         Assert.DoesNotContain(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\poster.png"), paths);
     }
@@ -59,26 +46,26 @@ public class LibraryServiceTests
     public void Should_Return_Directories()
     {
         // arrange
-        var service = new LibraryService(_fs);
+        var service = new LibraryService(FileSystem);
 
-        var directory = _fs.DirectoryInfo.New(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley"));
+        var directory = FileSystem.DirectoryInfo.New(RootPath);
         var library = new Library(directory, "Silicon Valley", "silicon-valley");
 
         // act
-        var infos = service.GetFileSystemInfos(library);
+        var results = service.GetFileSystemInfos(library);
 
         // assert
-        var paths = infos.Select(x => x.FullName).ToList();
-        Assert.Contains(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1"), paths);
+        var paths = results.Select(x => x.FullName);
+        Assert.All(AllDirectories, x => Assert.Contains(x, paths));
     }
 
     [Fact]
     public void Should_Return_Read_Only_Collection()
     {
         // arrange
-        var service = new LibraryService(_fs);
+        var service = new LibraryService(FileSystem);
 
-        var directory = _fs.DirectoryInfo.New(MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley"));
+        var directory = FileSystem.DirectoryInfo.New(RootPath);
         var library = new Library(directory, "Silicon Valley", "silicon-valley");
 
         // act

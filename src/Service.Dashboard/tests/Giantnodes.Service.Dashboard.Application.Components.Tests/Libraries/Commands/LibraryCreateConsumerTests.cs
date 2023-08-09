@@ -5,6 +5,7 @@ using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services.Impl;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
+using Giantnodes.Service.Dashboard.Tests.Shared.Fixtures;
 using MassTransit;
 using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -13,38 +14,27 @@ using Xunit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Tests.Libraries.Commands;
 
-public class LibraryCreateConsumerTests
+public class LibraryCreateConsumerTests : FileSystemFixture
 {
     private readonly ApplicationDbContext _database;
-    private readonly IServiceCollection _services;
-
-    private readonly MockFileSystem _fs = new MockFileSystem(new Dictionary<string, MockFileData>
-    {
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley"), new MockDirectoryData() },
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1"), new MockDirectoryData() },
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\.DS_Store"), new MockFileData(string.Empty) },
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\poster.png"), new MockFileData(string.Empty) },
-        { MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4"), new MockFileData(string.Empty) }
-    });
+    private readonly IServiceProvider _provider;
 
     public LibraryCreateConsumerTests()
     {
         _database = new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
 
-        _services = new ServiceCollection()
+        _provider = new ServiceCollection()
             .AddSingleton<ApplicationDbContext>(_ => _database)
-            .AddSingleton<IFileSystem>(_fs)
-            .AddMassTransitTestHarness(cfg => cfg.AddConsumer<LibraryCreateConsumer>());
+            .AddSingleton<IFileSystem>(FileSystem)
+            .AddSingleton<ILibraryService, LibraryService>()
+            .AddMassTransitTestHarness(cfg => cfg.AddConsumer<LibraryCreateConsumer>())
+            .BuildServiceProvider(true);
     }
 
     [Fact]
     public async Task Should_Create_Library()
     {
-        var provider = _services
-            .AddSingleton<ILibraryService, LibraryService>()
-            .BuildServiceProvider(true);
-
         // arrange
         var command = new LibraryCreate.Command
         {
@@ -53,7 +43,7 @@ public class LibraryCreateConsumerTests
             FullPath = MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley")
         };
 
-        var harness = provider.GetRequiredService<ITestHarness>();
+        var harness = _provider.GetRequiredService<ITestHarness>();
         await harness.Start();
 
         // act
@@ -70,10 +60,6 @@ public class LibraryCreateConsumerTests
     [Fact]
     public async Task Should_Return_Library_Id()
     {
-        var provider = _services
-            .AddSingleton<ILibraryService, LibraryService>()
-            .BuildServiceProvider(true);
-
         // arrange
         var command = new LibraryCreate.Command
         {
@@ -82,7 +68,7 @@ public class LibraryCreateConsumerTests
             FullPath = MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley")
         };
 
-        var harness = provider.GetRequiredService<ITestHarness>();
+        var harness = _provider.GetRequiredService<ITestHarness>();
         await harness.Start();
 
         // act

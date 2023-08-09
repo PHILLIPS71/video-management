@@ -1,23 +1,18 @@
-﻿using System.IO.Abstractions.TestingHelpers;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
+﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Factories;
+using Giantnodes.Service.Dashboard.Tests.Shared.Fixtures;
 using Xunit;
 
 namespace Giantnodes.Service.Dashboard.Domain.Tests.Aggregates.Factories;
 
-public class FileSystemEntryFactoryTests
+public class FileSystemEntryFactoryTests : FileSystemFixture
 {
-    private readonly MockFileSystem _fs = new MockFileSystem(new Dictionary<string, MockFileData> {
-        { @"C:\tv-shows\Silicon Valley", new MockDirectoryData() },
-        { @"C:\tv-shows\Silicon Valley\Season 1", new MockDirectoryData() },
-        { @"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4", new MockFileData(string.Empty) },
-    });
-
-    [Fact]
-    public void Should_Build_FileSystemFile()
+    [Theory]
+    [MemberData(nameof(GetFiles), parameters: 5)]
+    public void Should_Build_FileSystemFile(string path)
     {
         // arrange
-        var file = _fs.FileInfo.New(@"C:\tv-shows\Silicon Valley\Season 1\Silicon Valley - S01E01 - Minimum Viable Product.mp4");
+        var file = FileSystem.FileInfo.New(path);
 
         // act
         var entry = FileSystemEntryFactory.Build(file);
@@ -26,11 +21,12 @@ public class FileSystemEntryFactoryTests
         Assert.IsType<FileSystemFile>(entry);
     }
     
-    [Fact]
-    public void Should_Build_FileSystemDirectory()
+    [Theory]
+    [MemberData(nameof(GetDirectories), parameters: 5)]
+    public void Should_Build_FileSystemDirectory(string path)
     {
         // arrange
-        var directory = _fs.DirectoryInfo.New(@"C:\tv-shows\Silicon Valley");
+        var directory = FileSystem.DirectoryInfo.New(path);
 
         // act
         var entry = FileSystemEntryFactory.Build(directory);
