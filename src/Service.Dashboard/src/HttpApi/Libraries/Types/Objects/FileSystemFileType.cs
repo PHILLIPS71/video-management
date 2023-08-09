@@ -2,7 +2,7 @@
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects;
 
-public class FileSystemFileObjectType : ObjectType<FileSystemFile>
+public class FileSystemFileType : ObjectType<FileSystemFile>
 {
     protected override void Configure(IObjectTypeDescriptor<FileSystemFile> descriptor)
     {

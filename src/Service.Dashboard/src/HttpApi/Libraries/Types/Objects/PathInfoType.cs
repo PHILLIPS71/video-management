@@ -2,7 +2,7 @@
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects;
 
-public class PathInfoObjectType : ObjectType<PathInfo>
+public class PathInfoType : ObjectType<PathInfo>
 {
     protected override void Configure(IObjectTypeDescriptor<PathInfo> descriptor)
     {
