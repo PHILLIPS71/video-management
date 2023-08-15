@@ -1,4 +1,5 @@
-﻿using Giantnodes.Service.Dashboard.Persistence.DbContexts;
+﻿using EntityFramework.Exceptions.PostgreSQL;
+using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,8 @@ public static class PersistenceServiceRegistration
             {
                 options
                     .UseNpgsql(configuration.GetConnectionString(name: "DatabaseConnection"), o => o.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
-                    .UseSnakeCaseNamingConvention();
+                    .UseSnakeCaseNamingConvention()
+                    .UseExceptionProcessor();
             });
 
         services
@@ -22,7 +24,8 @@ public static class PersistenceServiceRegistration
             {
                 options
                     .UseNpgsql(configuration.GetConnectionString(name: "DatabaseConnection"), o => o.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName))
-                    .UseSnakeCaseNamingConvention();
+                    .UseSnakeCaseNamingConvention()
+                    .UseExceptionProcessor();
             });
 
         return services;
