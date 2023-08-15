@@ -63,6 +63,16 @@ public class FileSystemFixture
             .New(RootPath)
             .GetDirectories("*", SearchOption.AllDirectories)
             .Select(x => x.FullName);
+    
+    /// <summary>
+    /// A collection of the top level directories within the <see cref="RootPath" /> directory.
+    /// </summary>
+    protected static IEnumerable<string> TopLevelDirectories => 
+        FileSystem
+            .DirectoryInfo
+            .New(RootPath)
+            .GetDirectories("*", SearchOption.TopDirectoryOnly)
+            .Select(x => x.FullName);
 
     /// <summary>
     /// A collection of file paths within the <see cref="RootPath" /> directory which can be used as a data source for

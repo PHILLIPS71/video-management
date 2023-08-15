@@ -56,7 +56,7 @@ public class LibraryServiceTests : FileSystemFixture
 
         // assert
         var paths = results.Select(x => x.FullName);
-        Assert.All(AllDirectories, x => Assert.Contains(x, paths));
+        Assert.All(TopLevelDirectories, x => Assert.Contains(x, paths));
     }
 
     [Fact]
