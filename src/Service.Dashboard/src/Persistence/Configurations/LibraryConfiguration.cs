@@ -20,13 +20,5 @@ public class LibraryConfiguration : IEntityTypeConfiguration<Library>
         builder
             .Property(p => p.ConcurrencyToken)
             .IsRowVersion();
-
-        builder
-            .OwnsOne<PathInfo>(p => p.PathInfo);
-
-        builder
-            .HasMany(p => p.Entries)
-            .WithOne()
-            .IsRequired();
     }
 }

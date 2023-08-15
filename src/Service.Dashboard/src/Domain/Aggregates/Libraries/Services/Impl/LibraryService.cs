@@ -2,7 +2,6 @@
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 using Giantnodes.Service.Dashboard.Domain.Enumerations;
-using Giantnodes.Service.Dashboard.Domain.Shared;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services.Impl;
 
@@ -16,15 +15,15 @@ public class LibraryService : ILibraryService
     }
 
     /// <inheritdoc/>
-    public IReadOnlyCollection<IFileSystemInfo> GetFileSystemInfos(Library library)
+    public IReadOnlyCollection<IFileSystemInfo> GetFileSystemInfos(FileSystemDirectory directory)
     {
-        var root = _fs.DirectoryInfo.New(library.PathInfo.FullName);
+        var root = _fs.DirectoryInfo.New(directory.PathInfo.FullName);
         if (!root.Exists)
             throw new DirectoryNotFoundException();
 
-        // collect all the directories and media files inside the root directory
+        // collect all the directories and media files inside the file system directory
         var entries = root
-            .GetFileSystemInfos("*", SearchOption.AllDirectories)
+            .GetFileSystemInfos("*", SearchOption.TopDirectoryOnly)
             .Where(x => x is IDirectoryInfo || Enumeration.TryParse<MediaFileExtension>(x.Extension) != null)
             .ToList();
 

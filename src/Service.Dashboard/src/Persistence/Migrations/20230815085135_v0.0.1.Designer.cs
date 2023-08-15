@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230804120810_v0.0.1")]
+    [Migration("20230815085135_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -33,18 +33,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("LibraryId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("library_id");
-
                     b.Property<Guid?>("ParentDirectoryId")
                         .HasColumnType("uuid")
                         .HasColumnName("parent_directory_id");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LibraryId")
-                        .HasDatabaseName("ix_file_system_entries_library_id");
 
                     b.HasIndex("ParentDirectoryId")
                         .HasDatabaseName("ix_file_system_entries_parent_directory_id");
@@ -67,6 +60,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("concurrency_token");
 
+                    b.Property<Guid>("DirectoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("directory_id");
+
                     b.Property<string>("DriveStatus")
                         .IsRequired()
                         .HasColumnType("text")
@@ -84,6 +81,9 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_libraries");
+
+                    b.HasIndex("DirectoryId")
+                        .HasDatabaseName("ix_libraries_directory_id");
 
                     b.HasIndex("Slug")
                         .IsUnique()
@@ -112,15 +112,8 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemEntry", b =>
                 {
-                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", null)
-                        .WithMany("Entries")
-                        .HasForeignKey("LibraryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_file_system_entries_libraries_library_id");
-
                     b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemDirectory", "ParentDirectory")
-                        .WithMany()
+                        .WithMany("Entries")
                         .HasForeignKey("ParentDirectoryId")
                         .HasConstraintName("fk_file_system_entries_file_system_directories_parent_directory_id");
 
@@ -129,41 +122,14 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", b =>
                 {
-                    b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Values.PathInfo", "PathInfo", b1 =>
-                        {
-                            b1.Property<Guid>("LibraryId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
+                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemDirectory", "Directory")
+                        .WithMany()
+                        .HasForeignKey("DirectoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_libraries_file_system_entries_directory_id");
 
-                            b1.Property<string>("DirectoryPath")
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_directory_path");
-
-                            b1.Property<string>("Extension")
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_extension");
-
-                            b1.Property<string>("FullName")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_full_name");
-
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_name");
-
-                            b1.HasKey("LibraryId");
-
-                            b1.ToTable("libraries", "public");
-
-                            b1.WithOwner()
-                                .HasForeignKey("LibraryId")
-                                .HasConstraintName("fk_libraries_libraries_id");
-                        });
-
-                    b.Navigation("PathInfo")
-                        .IsRequired();
+                    b.Navigation("Directory");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemDirectory", b =>
@@ -244,7 +210,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemDirectory", b =>
                 {
                     b.Navigation("Entries");
                 });

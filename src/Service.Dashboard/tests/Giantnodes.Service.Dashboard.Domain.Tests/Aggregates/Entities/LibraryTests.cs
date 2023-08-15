@@ -20,23 +20,7 @@ public class LibraryTests : FileSystemFixture
         // assert
         Assert.Equal("Silicon Valley", library.Name);
         Assert.Equal("silicon-valley", library.Slug);
-    }
-    
-    [Theory]
-    [MemberData(nameof(GetDirectories), parameters: 5)]
-    public void Should_Construct_Path_Info(string path)
-    {
-        // arrange
-        var directory = FileSystem.DirectoryInfo.New(path);
-
-        // act
-        var library = new Library(directory, "Silicon Valley", "silicon-valley");
-
-        // assert
-        Assert.Equal(library.PathInfo.Name, directory.Name);
-        Assert.Equal(library.PathInfo.FullName, directory.FullName);
-        Assert.Equal(library.PathInfo.DirectoryPath, Path.GetDirectoryName(directory.FullName));
-        Assert.Null(library.PathInfo.Extension);
+        Assert.Equal(path, library.Directory.PathInfo.FullName);
     }
 
     [Theory]

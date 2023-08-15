@@ -54,7 +54,6 @@ public class LibraryCreateConsumerTests : FileSystemFixture
         var library = await _database.Libraries.SingleAsync();
         Assert.Equal(command.Name, library.Name);
         Assert.Equal(command.Slug, library.Slug);
-        Assert.Equal(command.FullPath, library.PathInfo.FullName);
     }
 
     [Fact]

@@ -16,12 +16,12 @@ public class LibraryServiceTests : FileSystemFixture
         // arrange
         var service = new LibraryService(FileSystem);
 
-        var directory = FileSystem.DirectoryInfo.New(MockUnixSupport.Path(@"C:\tv-shows\Mr. Robot\Season 1"));
-        var library = new Library(directory, "Mr. Robot", "mr-robot");
+        var info = FileSystem.DirectoryInfo.New(MockUnixSupport.Path(@"C:\tv-shows\Mr. Robot\Season 1"));
+        var directory = new FileSystemDirectory(info);
 
         // act
         // assert
-        Assert.Throws<DirectoryNotFoundException>(() => service.GetFileSystemInfos(library));
+        Assert.Throws<DirectoryNotFoundException>(() => service.GetFileSystemInfos(directory));
     }
 
     [Fact]
@@ -30,11 +30,11 @@ public class LibraryServiceTests : FileSystemFixture
         // arrange
         var service = new LibraryService(FileSystem);
 
-        var directory = FileSystem.DirectoryInfo.New(RootPath);
-        var library = new Library(directory, "Silicon Valley", "silicon-valley");
+        var info = FileSystem.DirectoryInfo.New(RootPath);
+        var directory = new FileSystemDirectory(info);
 
         // act
-        var infos = service.GetFileSystemInfos(library);
+        var infos = service.GetFileSystemInfos(directory);
 
         // assert
         var paths = infos.Select(x => x.FullName).ToList();
@@ -48,11 +48,11 @@ public class LibraryServiceTests : FileSystemFixture
         // arrange
         var service = new LibraryService(FileSystem);
 
-        var directory = FileSystem.DirectoryInfo.New(RootPath);
-        var library = new Library(directory, "Silicon Valley", "silicon-valley");
+        var info = FileSystem.DirectoryInfo.New(RootPath);
+        var directory = new FileSystemDirectory(info);
 
         // act
-        var results = service.GetFileSystemInfos(library);
+        var results = service.GetFileSystemInfos(directory);
 
         // assert
         var paths = results.Select(x => x.FullName);
@@ -65,11 +65,11 @@ public class LibraryServiceTests : FileSystemFixture
         // arrange
         var service = new LibraryService(FileSystem);
 
-        var directory = FileSystem.DirectoryInfo.New(RootPath);
-        var library = new Library(directory, "Silicon Valley", "silicon-valley");
+        var info = FileSystem.DirectoryInfo.New(RootPath);
+        var directory = new FileSystemDirectory(info);
 
         // act
-        var infos = service.GetFileSystemInfos(library);
+        var infos = service.GetFileSystemInfos(directory);
 
         // assert
         Assert.IsType<ReadOnlyCollection<IFileSystemInfo>>(infos);
