@@ -1,5 +1,4 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
-using Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Unions;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,13 +24,6 @@ public class LibraryType : ObjectType<Library>
             .Field(p => p.DriveStatus);
 
         descriptor
-            .Field(p => p.PathInfo);
-
-        descriptor
-            .Field(p => p.Entries)
-            .Type<ListType<FileSystemEntryType>>()
-            .UseProjection()
-            .UseFiltering()
-            .UseSorting();
+            .Field(p => p.Directory);
     }
 }
