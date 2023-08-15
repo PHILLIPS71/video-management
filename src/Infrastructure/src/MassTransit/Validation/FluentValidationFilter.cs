@@ -1,41 +1,65 @@
 ﻿using FluentValidation;
-using Giantnodes.Infrastructure.MassTransit.Validation.Extensions;
+using Giantnodes.Infrastructure.Faults;
+using Giantnodes.Infrastructure.Faults.Types;
+using Giantnodes.Infrastructure.Validation.Contracts;
 using MassTransit;
 
-namespace Giantnodes.Infrastructure.Masstransit.Validation
+namespace Giantnodes.Infrastructure.Masstransit.Validation;
+
+public class FluentValidationFilter<TMessage> : IFilter<ConsumeContext<TMessage>>
+    where TMessage : class
 {
-    public class FluentValidationFilter<TMessage> : IFilter<ConsumeContext<TMessage>>
-        where TMessage : class
+    private readonly IValidator<TMessage>? _validator;
+
+    public FluentValidationFilter(IEnumerable<IValidator<TMessage>>? validator)
     {
-        private readonly IValidator<TMessage>? _validator;
+        _validator = validator?.FirstOrDefault();
+    }
 
-        public FluentValidationFilter(IEnumerable<IValidator<TMessage>>? validator)
+    public void Probe(ProbeContext context)
+    {
+        context.CreateScope("fluent-validation-filter");
+    }
+
+    public async Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
+    {
+        if (_validator == null)
         {
-            _validator = validator?.FirstOrDefault();
+            await next.Send(context);
+            return;
         }
 
-        public void Probe(ProbeContext context)
+        var message = context.Message;
+        var result = await _validator.ValidateAsync(message, context.CancellationToken);
+        if (result.IsValid)
         {
-            context.CreateScope("fluent-validation-filter");
+            await next.Send(context);
+            return;
         }
 
-        public async Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
-        {
-            if (_validator == null)
+        var properties = result
+            .Errors
+            .GroupBy(error => error.PropertyName)
+            .Select(group => new InvalidValidationProperty
             {
-                await next.Send(context);
-                return;
-            }
+                Property = group.Key,
+                Issues = group.Select(error => new InvalidValidationRule
+                {
+                    Rule = error.ErrorCode,
+                    Reason = error.ErrorMessage
+                }).ToArray()
+            })
+            .ToArray();
 
-            var message = context.Message;
-            var result = await _validator.ValidateAsync(message, context.CancellationToken);
-            if (result.IsValid)
-            {
-                await next.Send(context);
-                return;
-            }
-
-            await context.RespondAsync(result.ToFault());
-        }
+        var fault = FaultKind.Validation;
+        await context.RespondAsync(new ValidationFault
+        {
+            Type = fault.Type,
+            RequestId = context.RequestId,
+            TimeStamp = InVar.Timestamp,
+            Code = fault.Code,
+            Message = fault.Message,
+            Properties = properties
+        });
     }
 }

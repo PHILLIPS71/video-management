@@ -6,7 +6,7 @@ namespace Giantnodes.Infrastructure.Domain.Specifications;
 public interface ISpecification<TEntity> 
     where TEntity : Entity
 {
-    bool IsSatisfiedBy(TEntity obj);
+    bool IsSatisfiedBy(TEntity entity);
 
     Expression<Func<TEntity, bool>> ToExpression();
 }
