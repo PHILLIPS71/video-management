@@ -1,5 +1,6 @@
-﻿using Giantnodes.Infrastructure.Exceptions;
-using Giantnodes.Infrastructure.MassTransit.Validation.Messages;
+﻿using Giantnodes.Infrastructure.Faults.Exceptions;
+using Giantnodes.Infrastructure.Faults.Types;
+using Giantnodes.Infrastructure.Validation.Exceptions;
 using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
@@ -11,6 +12,8 @@ namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Mutations;
 [ExtendObjectType(OperationTypeNames.Mutation)]
 public class LibraryCreateMutation
 {
+    [Error<DomainException>]
+    [Error<ValidationException>]
     [UseFirstOrDefault]
     [UseProjection]
     public async Task<IQueryable<Library>> LibraryCreate(
@@ -28,11 +31,12 @@ public class LibraryCreateMutation
             FullPath = path
         };
 
-        Response response = await request.GetResponse<LibraryCreate.Result, ValidationResult>(command, cancellation);
+        Response response = await request.GetResponse<LibraryCreate.Result, DomainFault, ValidationFault>(command, cancellation);
         return response switch
         {
             (_, LibraryCreate.Result result) => database.Libraries.AsNoTracking().Where(x => x.Id == result.Id),
-            (_, ValidationFault error) => throw new DomainException<ValidationFault>(error),
+            (_, DomainFault fault) => throw new DomainException(fault),
+            (_, ValidationFault fault) => throw new ValidationException(fault),
             _ => throw new InvalidOperationException()
         };
     }

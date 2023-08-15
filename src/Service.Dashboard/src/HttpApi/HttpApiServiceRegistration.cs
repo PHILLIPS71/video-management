@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Giantnodes.Infrastructure.Faults;
 using Giantnodes.Infrastructure.GraphQL;
 using Giantnodes.Infrastructure.Masstransit.Validation;
 using Giantnodes.Service.Dashboard.HttpApi.Cors;
@@ -25,6 +26,7 @@ public static class HttpApiServiceRegistration
             .AddConvention<INamingConventions, SnakeCaseNamingConvention>()
             .ModifyOptions(opt => opt.DefaultFieldBindingFlags = FieldBindingFlags.Default)
             .AddGlobalObjectIdentification()
+            .AddMutationConventions()
             .AddHttpApiTypes()
             .AddQueryType()
             .AddMutationType()
