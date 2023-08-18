@@ -1,4 +1,5 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
+using Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Unions;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,15 +16,22 @@ public class LibraryType : ObjectType<Library>
                 context.Service<ApplicationDbContext>().Libraries.SingleOrDefaultAsync(x => x.Id == id));
 
         descriptor
+            .Field(p => p.Id);
+
+        descriptor
             .Field(p => p.Name);
 
         descriptor
             .Field(p => p.Slug);
 
         descriptor
-            .Field(p => p.DriveStatus);
+            .Field(p => p.Status);
 
         descriptor
-            .Field(p => p.Directory);
+            .Field(p => p.Entries)
+            .Type<ListType<FileSystemEntryType>>()
+            .UseProjection()
+            .UseFiltering()
+            .UseSorting();
     }
 }

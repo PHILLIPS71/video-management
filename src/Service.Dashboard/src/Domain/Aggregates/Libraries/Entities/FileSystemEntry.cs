@@ -6,24 +6,19 @@ namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 
 public abstract class FileSystemEntry : Entity<Guid>
 {
-    public PathInfo PathInfo { get; private set; } = null!;
+    public long Size { get; protected set; }
 
-    public FileSystemDirectory? ParentDirectory { get; private set; }
+    public PathInfo PathInfo { get; protected set; } = null!;
+
+    public FileSystemDirectory? ParentDirectory { get; protected set; }
 
     protected FileSystemEntry()
     {
     }
 
-    protected FileSystemEntry(IFileSystemInfo entry)
+    protected FileSystemEntry(FileSystemDirectory? parent, IFileSystemInfo entry)
     {
+        ParentDirectory = parent;
         PathInfo = new PathInfo(entry);
-    }
-
-    public void SetParentDirectory(FileSystemDirectory? directory)
-    {
-        if (PathInfo.DirectoryPath != directory?.PathInfo.FullName)
-            throw new ArgumentException($"'{PathInfo.DirectoryPath}' is not a parent directory of '{directory?.PathInfo.FullName}'");
-
-        ParentDirectory = directory;
     }
 }

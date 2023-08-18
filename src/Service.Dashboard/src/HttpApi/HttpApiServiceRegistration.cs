@@ -11,7 +11,7 @@ namespace Giantnodes.Service.Dashboard.HttpApi;
 
 public static class HttpApiServiceRegistration
 {
-    public static void AddHttpApiServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+    public static void AddHttpApiServices(this IServiceCollection services)
     {
         services.AddCors().ConfigureOptions<CorsConfigureOptions>();
         services.AddGraphQLServices();

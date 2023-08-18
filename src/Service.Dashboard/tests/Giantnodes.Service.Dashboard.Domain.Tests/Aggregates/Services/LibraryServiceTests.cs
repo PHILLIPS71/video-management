@@ -14,27 +14,23 @@ public class LibraryServiceTests : FileSystemFixture
     public void Should_Throw_DirectoryNotFoundException()
     {
         // arrange
-        var service = new LibraryService(FileSystem);
+        var service = new FileSystemService(FileSystem);
 
-        var info = FileSystem.DirectoryInfo.New(MockUnixSupport.Path(@"C:\tv-shows\Mr. Robot\Season 1"));
-        var directory = new FileSystemDirectory(info);
+        var path = MockUnixSupport.Path(@"C:\tv-shows\Mr. Robot\Season 1");
 
         // act
         // assert
-        Assert.Throws<DirectoryNotFoundException>(() => service.GetFileSystemInfos(directory));
+        Assert.Throws<DirectoryNotFoundException>(() => service.GetFileSystemEntries(path));
     }
 
     [Fact]
     public void Should_Return_Only_Media_Files()
     {
         // arrange
-        var service = new LibraryService(FileSystem);
-
-        var info = FileSystem.DirectoryInfo.New(RootPath);
-        var directory = new FileSystemDirectory(info);
+        var service = new FileSystemService(FileSystem);
 
         // act
-        var infos = service.GetFileSystemInfos(directory);
+        var infos = service.GetFileSystemEntries(RootPath);
 
         // assert
         var paths = infos.Select(x => x.FullName).ToList();
@@ -46,13 +42,10 @@ public class LibraryServiceTests : FileSystemFixture
     public void Should_Return_Directories()
     {
         // arrange
-        var service = new LibraryService(FileSystem);
-
-        var info = FileSystem.DirectoryInfo.New(RootPath);
-        var directory = new FileSystemDirectory(info);
+        var service = new FileSystemService(FileSystem);
 
         // act
-        var results = service.GetFileSystemInfos(directory);
+        var results = service.GetFileSystemEntries(RootPath);
 
         // assert
         var paths = results.Select(x => x.FullName);
@@ -63,13 +56,10 @@ public class LibraryServiceTests : FileSystemFixture
     public void Should_Return_Read_Only_Collection()
     {
         // arrange
-        var service = new LibraryService(FileSystem);
-
-        var info = FileSystem.DirectoryInfo.New(RootPath);
-        var directory = new FileSystemDirectory(info);
+        var service = new FileSystemService(FileSystem);
 
         // act
-        var infos = service.GetFileSystemInfos(directory);
+        var infos = service.GetFileSystemEntries(RootPath);
 
         // assert
         Assert.IsType<ReadOnlyCollection<IFileSystemInfo>>(infos);

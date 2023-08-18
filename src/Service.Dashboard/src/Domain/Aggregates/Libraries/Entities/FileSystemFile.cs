@@ -4,14 +4,12 @@ namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 
 public class FileSystemFile : FileSystemEntry
 {
-    public long Size { get; private set; }
-
     protected FileSystemFile()
     {
     }
 
-    public FileSystemFile(IFileInfo file)
-        : base(file)
+    public FileSystemFile( FileSystemDirectory parent, IFileInfo file)
+        : base(parent, file)
     {
         Size = file.Length;
     }

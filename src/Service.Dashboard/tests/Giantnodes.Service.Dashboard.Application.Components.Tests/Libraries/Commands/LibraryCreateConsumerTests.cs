@@ -27,7 +27,7 @@ public class LibraryCreateConsumerTests : FileSystemFixture
         _provider = new ServiceCollection()
             .AddSingleton<ApplicationDbContext>(_ => _database)
             .AddSingleton<IFileSystem>(FileSystem)
-            .AddSingleton<ILibraryService, LibraryService>()
+            .AddSingleton<IFileSystemService, FileSystemService>()
             .AddMassTransitTestHarness(cfg => cfg.AddConsumer<LibraryCreateConsumer>())
             .BuildServiceProvider(true);
     }

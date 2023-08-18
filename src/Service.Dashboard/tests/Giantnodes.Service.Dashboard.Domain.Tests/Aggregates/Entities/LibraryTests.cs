@@ -20,6 +20,7 @@ public class LibraryTests : FileSystemFixture
         // assert
         Assert.Equal("Silicon Valley", library.Name);
         Assert.Equal("silicon-valley", library.Slug);
+        Assert.Equal(FileSystemStatus.Online, library.Status);
         Assert.Equal(path, library.Directory.PathInfo.FullName);
     }
 
@@ -34,19 +35,17 @@ public class LibraryTests : FileSystemFixture
         var library = new Library(directory, "Silicon Valley", "silicon-valley");
 
         // assert
-        Assert.Equal(DriveStatus.Online, library.DriveStatus);
+        Assert.Equal(FileSystemStatus.Online, library.Status);
     }
 
     [Fact]
-    public void Should_Construct_Drive_Status_Offline()
+    public void Should_Throw_ArgumentException_Directory_Doesnt_Exist()
     {
         // arrange
         var directory = FileSystem.DirectoryInfo.New(@"C:\tv-shows\Mr. Robot\Season 1");
 
         // act
-        var library = new Library(directory, "Mr. Robot", "mr-robot");
-
         // assert
-        Assert.Equal(DriveStatus.Offline, library.DriveStatus);
+        Assert.Throws<ArgumentException>(() => new Library(directory, "Mr. Robot", "mr-robot"));
     }
 }

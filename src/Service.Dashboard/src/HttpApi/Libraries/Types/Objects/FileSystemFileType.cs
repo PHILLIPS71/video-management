@@ -18,5 +18,8 @@ public class FileSystemFileType : ObjectType<FileSystemFile>
 
         descriptor
             .Field(p => p.PathInfo);
+
+        descriptor
+            .Field(p => p.ParentDirectory);
     }
 }

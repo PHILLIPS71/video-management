@@ -15,12 +15,34 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 name: "public");
 
             migrationBuilder.CreateTable(
+                name: "libraries",
+                schema: "public",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    slug = table.Column<string>(type: "text", nullable: false),
+                    path_info_name = table.Column<string>(type: "text", nullable: false),
+                    path_info_full_name = table.Column<string>(type: "text", nullable: false),
+                    path_info_extension = table.Column<string>(type: "text", nullable: true),
+                    path_info_directory_path = table.Column<string>(type: "text", nullable: true),
+                    status = table.Column<string>(type: "text", nullable: false),
+                    concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_libraries", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FileSystemDirectories",
                 schema: "public",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
+                    size = table.Column<long>(type: "bigint", nullable: false),
                     parent_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    library_id = table.Column<Guid>(type: "uuid", nullable: false),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
@@ -35,6 +57,13 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         principalSchema: "public",
                         principalTable: "FileSystemDirectories",
                         principalColumn: "id");
+                    table.ForeignKey(
+                        name: "fk_file_system_entries_libraries_library_id",
+                        column: x => x.library_id,
+                        principalSchema: "public",
+                        principalTable: "libraries",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -43,8 +72,9 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    parent_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
                     size = table.Column<long>(type: "bigint", nullable: false),
+                    parent_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    library_id = table.Column<Guid>(type: "uuid", nullable: false),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
@@ -59,31 +89,20 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         principalSchema: "public",
                         principalTable: "FileSystemDirectories",
                         principalColumn: "id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "libraries",
-                schema: "public",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    slug = table.Column<string>(type: "text", nullable: false),
-                    drive_status = table.Column<string>(type: "text", nullable: false),
-                    directory_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_libraries", x => x.id);
                     table.ForeignKey(
-                        name: "fk_libraries_file_system_entries_directory_id",
-                        column: x => x.directory_id,
+                        name: "fk_file_system_entries_libraries_library_id",
+                        column: x => x.library_id,
                         principalSchema: "public",
-                        principalTable: "FileSystemDirectories",
+                        principalTable: "libraries",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_file_system_directories_library_id",
+                schema: "public",
+                table: "FileSystemDirectories",
+                column: "library_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_file_system_directories_parent_directory_id",
@@ -92,16 +111,16 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 column: "parent_directory_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_file_system_files_library_id",
+                schema: "public",
+                table: "FileSystemFiles",
+                column: "library_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_file_system_files_parent_directory_id",
                 schema: "public",
                 table: "FileSystemFiles",
                 column: "parent_directory_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_libraries_directory_id",
-                schema: "public",
-                table: "libraries",
-                column: "directory_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_libraries_slug",
@@ -119,11 +138,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 schema: "public");
 
             migrationBuilder.DropTable(
-                name: "libraries",
+                name: "FileSystemDirectories",
                 schema: "public");
 
             migrationBuilder.DropTable(
-                name: "FileSystemDirectories",
+                name: "libraries",
                 schema: "public");
         }
     }

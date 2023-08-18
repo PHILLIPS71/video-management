@@ -19,8 +19,7 @@ public sealed class LibraryRepository : ILibraryRepository
     {
         return _database
             .Libraries
-            .Include(x => x.Directory)
-                .ThenInclude(x => x.Entries)
+            .Include(x => x.Entries)
             .SingleOrDefaultAsync(predicate, cancellation);
     }
 }

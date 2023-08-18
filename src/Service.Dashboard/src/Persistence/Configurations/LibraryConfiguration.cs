@@ -14,11 +14,19 @@ public class LibraryConfiguration : IEntityTypeConfiguration<Library>
             .IsUnique();
 
         builder
-            .Property(p => p.DriveStatus)
+            .Property(p => p.Status)
             .HasConversion<string>();
 
         builder
             .Property(p => p.ConcurrencyToken)
             .IsRowVersion();
+
+        builder
+            .OwnsOne<PathInfo>(p => p.PathInfo);
+
+        builder
+            .HasMany(p => p.Entries)
+            .WithOne()
+            .IsRequired();
     }
 }

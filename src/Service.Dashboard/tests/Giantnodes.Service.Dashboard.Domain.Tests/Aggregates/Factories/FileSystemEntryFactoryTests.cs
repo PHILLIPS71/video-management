@@ -13,23 +13,31 @@ public class FileSystemEntryFactoryTests : FileSystemFixture
     {
         // arrange
         var file = FileSystem.FileInfo.New(path);
+        if (file.Directory == null)
+            throw new DirectoryNotFoundException();
+
+        var parent = new FileSystemDirectory(null, file.Directory);
 
         // act
-        var entry = FileSystemEntryFactory.Build(file);
+        var entry = FileSystemEntryFactory.Build(parent, file);
 
         // assert
         Assert.IsType<FileSystemFile>(entry);
     }
-    
+
     [Theory]
     [MemberData(nameof(GetDirectories), parameters: 5)]
     public void Should_Build_FileSystemDirectory(string path)
     {
         // arrange
         var directory = FileSystem.DirectoryInfo.New(path);
+        if (directory.Parent == null)
+            throw new DirectoryNotFoundException();
+
+        var parent = new FileSystemDirectory(null, directory.Parent);
 
         // act
-        var entry = FileSystemEntryFactory.Build(directory);
+        var entry = FileSystemEntryFactory.Build(parent, directory);
 
         // assert
         Assert.IsType<FileSystemDirectory>(entry);

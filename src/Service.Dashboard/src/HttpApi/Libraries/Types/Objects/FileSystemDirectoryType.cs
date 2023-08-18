@@ -15,13 +15,12 @@ public class FileSystemDirectoryType : ObjectType<FileSystemDirectory>
             .Field(p => p.Id);
 
         descriptor
+            .Field(p => p.Size);
+
+        descriptor
             .Field(p => p.PathInfo);
 
         descriptor
-            .Field(p => p.Entries)
-            .Type<ListType<FileSystemEntryType>>()
-            .UseProjection()
-            .UseFiltering()
-            .UseSorting();
+            .Field(p => p.ParentDirectory);
     }
 }

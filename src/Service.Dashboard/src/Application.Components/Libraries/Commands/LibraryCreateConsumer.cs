@@ -6,6 +6,7 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Commands;
@@ -13,22 +14,23 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Commands
 public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 {
     private readonly ApplicationDbContext _database;
-    private readonly IFileSystem _fs;
-    private readonly ILibraryService _service;
+    private readonly IFileSystemService _fileSystemService;
+    private readonly IFileSystem _fileSystem;
 
-    public LibraryCreateConsumer(ApplicationDbContext database, IFileSystem fs, ILibraryService service)
+    public LibraryCreateConsumer(ApplicationDbContext database, IFileSystemService fileSystemService, IFileSystem fileSystem)
     {
         _database = database;
-        _fs = fs;
-        _service = service;
+        _fileSystemService = fileSystemService;
+        _fileSystem = fileSystem;
     }
 
     public async Task Consume(ConsumeContext<LibraryCreate.Command> context)
     {
-        var directory = _fs.DirectoryInfo.New(context.Message.FullPath);
+        var directory = _fileSystem.DirectoryInfo.New(context.Message.FullPath);
 
         var library = new Library(directory, context.Message.Name, context.Message.Slug);
-        library.Directory.Scan(_service);
+        library.Scan(_fileSystemService);
+
         _database.Libraries.Add(library);
 
         try

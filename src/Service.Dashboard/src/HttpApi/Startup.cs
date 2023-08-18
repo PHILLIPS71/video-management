@@ -19,8 +19,8 @@ public class Startup
     {
         services
             .AddPersistenceServices(_configuration)
-            .AddApplicationServices(_configuration, _environment)
-            .AddHttpApiServices(_configuration, _environment);
+            .AddApplicationServices()
+            .AddHttpApiServices();
     }
 
     public void Configure(IApplicationBuilder app)
