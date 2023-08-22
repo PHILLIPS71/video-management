@@ -8,7 +8,7 @@ public class FaultKind : Enumeration
     public static readonly FaultKind Constraint =
         new(101, FaultType.InvalidRequest, "constraint_fault", "duplicate value violates a unique constraint");
 
-    private FaultKind(int id, FaultType type, string code, string message)
+    public FaultKind(int id, FaultType type, string code, string message)
         : base(id, code)
     {
         Type = type;

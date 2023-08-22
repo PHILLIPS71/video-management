@@ -32,12 +32,10 @@ public class Library : AggregateRoot<Guid>
 
     public Library(IDirectoryInfo root, string name, string slug)
     {
-        if (!root.Exists)
-            throw new ArgumentException($"A directory at '{root.FullName}' does not exist.");
-
         Name = name;
         Slug = slug;
         PathInfo = new PathInfo(root);
+
         _entries.Add(new FileSystemDirectory(null, root));
     }
 
@@ -63,7 +61,7 @@ public class Library : AggregateRoot<Guid>
 
             try
             {
-                var infos = service.GetFileSystemEntries(path, SearchOption.TopDirectoryOnly);
+                var infos = service.GetFileSystemEntries(path);
 
                 foreach (var info in infos)
                 {

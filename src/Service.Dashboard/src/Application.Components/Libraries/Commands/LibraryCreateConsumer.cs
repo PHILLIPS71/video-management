@@ -6,7 +6,6 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using MassTransit;
-using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Commands;
@@ -17,7 +16,10 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
     private readonly IFileSystemService _fileSystemService;
     private readonly IFileSystem _fileSystem;
 
-    public LibraryCreateConsumer(ApplicationDbContext database, IFileSystemService fileSystemService, IFileSystem fileSystem)
+    public LibraryCreateConsumer(
+        ApplicationDbContext database,
+        IFileSystemService fileSystemService,
+        IFileSystem fileSystem)
     {
         _database = database;
         _fileSystemService = fileSystemService;
@@ -27,14 +29,18 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
     public async Task Consume(ConsumeContext<LibraryCreate.Command> context)
     {
         var directory = _fileSystem.DirectoryInfo.New(context.Message.FullPath);
+        if (!directory.Exists)
+        {
+            await context.RejectAsync(LibraryCreate.Fault.DirectoryNotFound, nameof(context.Message.FullPath));
+            return;
+        }
 
         var library = new Library(directory, context.Message.Name, context.Message.Slug);
         library.Scan(_fileSystemService);
 
-        _database.Libraries.Add(library);
-
         try
         {
+            _database.Libraries.Add(library);
             await _database.SaveChangesAsync(context.CancellationToken);
         }
         catch (UniqueConstraintException ex) when (ex.InnerException is PostgresException pg)

@@ -1,9 +1,10 @@
 using System.Collections.ObjectModel;
 using System.IO.Abstractions;
+using Giantnodes.Infrastructure.Domain.Services;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 
-public interface IFileSystemService
+public interface IFileSystemService : IDomainService
 {
     /// <summary>
     /// Gets all the <see cref="IFileSystemInfo"/> objects that are within the specified <paramref name="path"/>
