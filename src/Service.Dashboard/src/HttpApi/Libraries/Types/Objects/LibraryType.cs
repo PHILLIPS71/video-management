@@ -25,6 +25,9 @@ public class LibraryType : ObjectType<Library>
             .Field(p => p.Slug);
 
         descriptor
+            .Field(p => p.PathInfo);
+
+        descriptor
             .Field(p => p.Status);
 
         descriptor

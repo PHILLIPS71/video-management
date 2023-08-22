@@ -21,6 +21,9 @@ public class FileSystemDirectoryType : ObjectType<FileSystemDirectory>
             .Field(p => p.PathInfo);
 
         descriptor
+            .Field(p => p.Library);
+
+        descriptor
             .Field(p => p.ParentDirectory);
     }
 }

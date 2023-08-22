@@ -26,7 +26,7 @@ public class LibraryConfiguration : IEntityTypeConfiguration<Library>
 
         builder
             .HasMany(p => p.Entries)
-            .WithOne()
+            .WithOne(p => p.Library)
             .IsRequired();
     }
 }

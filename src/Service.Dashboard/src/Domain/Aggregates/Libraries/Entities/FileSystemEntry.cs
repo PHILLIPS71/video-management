@@ -12,6 +12,8 @@ public abstract class FileSystemEntry : Entity<Guid>
 
     public FileSystemDirectory? ParentDirectory { get; protected set; }
 
+    public Library Library { get; protected set; }  = null!;
+
     protected FileSystemEntry()
     {
     }
