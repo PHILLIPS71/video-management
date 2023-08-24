@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Queries;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class LibraryFindManyQuery
+public class LibraryFindOne
 {
-    [UsePaging]
+    [UseFirstOrDefault]
     [UseProjection]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<Library> Libraries([Service] ApplicationDbContext database)
+    public IQueryable<Library> Library([Service] ApplicationDbContext database)
     {
         return database.Libraries.AsNoTracking();
     }

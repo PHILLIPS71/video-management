@@ -25,5 +25,12 @@ public class FileSystemDirectoryType : ObjectType<FileSystemDirectory>
 
         descriptor
             .Field(p => p.ParentDirectory);
+
+        descriptor
+            .Field(p => p.Entries)
+            .Type<ListType<FileSystemEntryType>>()
+            .UseProjection()
+            .UseFiltering()
+            .UseSorting();
     }
 }
