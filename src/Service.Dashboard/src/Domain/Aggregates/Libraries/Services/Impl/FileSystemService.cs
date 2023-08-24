@@ -19,7 +19,7 @@ public class FileSystemService : IFileSystemService
     {
         var directory = _fs.DirectoryInfo.New(path);
         if (!directory.Exists)
-            throw new DirectoryNotFoundException();
+            return Array.Empty<IFileSystemInfo>().AsReadOnly();
 
         return directory
             .EnumerateFileSystemInfos("*", search)

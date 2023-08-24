@@ -30,13 +30,13 @@ public class Library : AggregateRoot<Guid>
     {
     }
 
-    public Library(IDirectoryInfo root, string name, string slug)
+    public Library(IFileSystemService service, IDirectoryInfo root, string name, string slug)
     {
         Name = name;
         Slug = slug;
         PathInfo = new PathInfo(root);
 
-        _entries.Add(new FileSystemDirectory(null, root));
+        _entries.Add(new FileSystemDirectory(service, null, root));
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public class Library : AggregateRoot<Guid>
                     var entry = _entries.SingleOrDefault(x => x.PathInfo.FullName == info.FullName);
                     if (entry == null)
                     {
-                        entry = FileSystemEntryFactory.Build(parent, info);
+                        entry = FileSystemEntryFactory.Build(service, parent, info);
                         _entries.Add(entry);
                     }
 
@@ -79,6 +79,7 @@ public class Library : AggregateRoot<Guid>
                             break;
 
                         case IDirectoryInfo subdirectory:
+                            ((FileSystemDirectory)entry).SetSize(service);
                             stack.Push(subdirectory.FullName);
                             break;
                     }

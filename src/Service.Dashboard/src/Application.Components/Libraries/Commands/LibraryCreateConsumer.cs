@@ -35,7 +35,7 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
             return;
         }
 
-        var library = new Library(directory, context.Message.Name, context.Message.Slug);
+        var library = new Library(_fileSystemService, directory, context.Message.Name, context.Message.Slug);
         library.Scan(_fileSystemService);
 
         try

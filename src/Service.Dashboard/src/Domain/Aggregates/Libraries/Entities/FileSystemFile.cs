@@ -8,7 +8,7 @@ public class FileSystemFile : FileSystemEntry
     {
     }
 
-    public FileSystemFile( FileSystemDirectory parent, IFileInfo file)
+    public FileSystemFile(FileSystemDirectory parent, IFileInfo file)
         : base(parent, file)
     {
         Size = file.Length;
@@ -16,6 +16,9 @@ public class FileSystemFile : FileSystemEntry
 
     public void SetSize(IFileInfo file)
     {
+        if (file.FullName != PathInfo.FullName)
+            throw new AggregateException("the file info path provided does not match the file system entry");
+
         Size = file.Length;
     }
 }
