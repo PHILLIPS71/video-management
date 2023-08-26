@@ -26,6 +26,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
+                    path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
                     concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
@@ -46,7 +47,8 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
-                    path_info_directory_path = table.Column<string>(type: "text", nullable: true)
+                    path_info_directory_path = table.Column<string>(type: "text", nullable: true),
+                    path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,7 +80,8 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
-                    path_info_directory_path = table.Column<string>(type: "text", nullable: true)
+                    path_info_directory_path = table.Column<string>(type: "text", nullable: true),
+                    path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -109,7 +109,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemEntry", b =>
                 {
-                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", null)
+                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", "Library")
                         .WithMany("Entries")
                         .HasForeignKey("LibraryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -117,9 +117,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasConstraintName("fk_file_system_entries_libraries_library_id");
 
                     b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemDirectory", "ParentDirectory")
-                        .WithMany()
+                        .WithMany("Entries")
                         .HasForeignKey("ParentDirectoryId")
                         .HasConstraintName("fk_file_system_entries_file_system_directories_parent_directory_id");
+
+                    b.Navigation("Library");
 
                     b.Navigation("ParentDirectory");
                 });
@@ -135,6 +137,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                             b1.Property<string>("DirectoryPath")
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_directory_path");
+
+                            b1.Property<char>("DirectorySeparatorChar")
+                                .HasColumnType("character(1)")
+                                .HasColumnName("path_info_directory_separator_char");
 
                             b1.Property<string>("Extension")
                                 .HasColumnType("text")
@@ -175,6 +181,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_directory_path");
 
+                            b1.Property<char>("DirectorySeparatorChar")
+                                .HasColumnType("character(1)")
+                                .HasColumnName("path_info_directory_separator_char");
+
                             b1.Property<string>("Extension")
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_extension");
@@ -214,6 +224,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_directory_path");
 
+                            b1.Property<char>("DirectorySeparatorChar")
+                                .HasColumnType("character(1)")
+                                .HasColumnName("path_info_directory_separator_char");
+
                             b1.Property<string>("Extension")
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_extension");
@@ -242,6 +256,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", b =>
+                {
+                    b.Navigation("Entries");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemDirectory", b =>
                 {
                     b.Navigation("Entries");
                 });

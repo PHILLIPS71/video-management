@@ -17,5 +17,8 @@ public class PathInfoType : ObjectType<PathInfo>
 
         descriptor
             .Field(p => p.DirectoryPath);
+
+        descriptor
+            .Field(p => p.DirectorySeparatorChar);
     }
 }

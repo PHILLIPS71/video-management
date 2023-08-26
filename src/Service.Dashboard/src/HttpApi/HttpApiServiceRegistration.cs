@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
 using Giantnodes.Infrastructure.GraphQL;
+using Giantnodes.Infrastructure.GraphQL.Scalars;
 using Giantnodes.Infrastructure.Masstransit.Validation;
 using Giantnodes.Service.Dashboard.HttpApi.Cors;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
+using HotChocolate.Data.Filters;
 using HotChocolate.Types.Descriptors;
 using HotChocolate.Types.Pagination;
 using MassTransit;
@@ -22,10 +24,12 @@ public static class HttpApiServiceRegistration
     {
         services
             .AddGraphQLServer()
-            .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled)
-            .AddConvention<INamingConventions, SnakeCaseNamingConvention>()
             .ModifyOptions(opt => opt.DefaultFieldBindingFlags = FieldBindingFlags.Default)
             .SetPagingOptions(new PagingOptions { IncludeTotalCount = true })
+            .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled)
+            .AddType<CharType>()
+            .AddConvention<IFilterConvention, CharFilterConvention>()
+            .AddConvention<INamingConventions, SnakeCaseNamingConvention>()
             .AddGlobalObjectIdentification()
             .AddMutationConventions()
             .AddHttpApiTypes()

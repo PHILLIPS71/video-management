@@ -13,10 +13,13 @@ public class PathInfo : ValueObject
 
     public string? DirectoryPath { get; init; }
 
+    public char DirectorySeparatorChar { get; init; }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Name;
         yield return FullName;
+        yield return DirectorySeparatorChar;
     }
 
     protected PathInfo()
@@ -29,5 +32,6 @@ public class PathInfo : ValueObject
         FullName = info.FullName;
         Extension = string.IsNullOrWhiteSpace(info.Extension) ? null : info.Extension;
         DirectoryPath = Path.GetDirectoryName(info.FullName);
+        DirectorySeparatorChar = Path.DirectorySeparatorChar;
     }
 }
