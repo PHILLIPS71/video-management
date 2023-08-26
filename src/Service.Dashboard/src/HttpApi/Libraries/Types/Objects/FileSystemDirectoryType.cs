@@ -1,5 +1,5 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
-using Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Unions;
+using Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Interfaces;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects;
 
@@ -7,6 +7,8 @@ public class FileSystemDirectoryType : ObjectType<FileSystemDirectory>
 {
     protected override void Configure(IObjectTypeDescriptor<FileSystemDirectory> descriptor)
     {
+        descriptor.Implements<FileSystemEntryType>();
+
         descriptor
             .ImplementsNode()
             .IdField(p => p.Id);
@@ -29,7 +31,7 @@ public class FileSystemDirectoryType : ObjectType<FileSystemDirectory>
         descriptor
             .Field(p => p.Entries)
             .Type<ListType<FileSystemEntryType>>()
-            .UseProjection()
+            // .UseProjection()
             .UseFiltering()
             .UseSorting();
     }

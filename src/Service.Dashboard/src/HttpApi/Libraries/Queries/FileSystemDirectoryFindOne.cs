@@ -5,15 +5,15 @@ using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Queries;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class FileSystemEntriesFindOne
+public class FileSystemDirectoryFindOne
 {
     [GraphQLType<ListType<FileSystemEntryType>>]
     [UseSingleOrDefault]
     [UseProjection]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<FileSystemEntry> FileSystemEntry([Service] ApplicationDbContext database)
+    public IQueryable<FileSystemDirectory> FileSystemDirectory([Service] ApplicationDbContext database)
     {
-        return database.FileSystemEntries;
+        return database.FileSystemDirectories;
     }
 }

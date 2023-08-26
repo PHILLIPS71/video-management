@@ -1,5 +1,5 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
-using Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Unions;
+using Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Interfaces;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Queries;
