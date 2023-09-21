@@ -61,8 +61,8 @@ jobs:
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: bash
         run: |
-          mkdir ./.sonar/scanner
-          dotnet tool update dotnet-sonarscanner --tool-path ./.sonar/scanner
+          mkdir -p $GITHUB_WORKSPACE/.sonar/scanner
+          dotnet tool update dotnet-sonarscanner --tool-path $GITHUB_WORKSPACE/.sonar/scanner
 
       - name: install dot cover
         shell: bash
