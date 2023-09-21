@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services.Impl;
 using Giantnodes.Service.Dashboard.Tests.Shared.Fixtures;
 using Xunit;
@@ -11,7 +10,7 @@ namespace Giantnodes.Service.Dashboard.Domain.Tests.Aggregates.Services;
 public class LibraryServiceTests : FileSystemFixture
 {
     [Fact]
-    public void Should_Throw_DirectoryNotFoundException()
+    public void Should_Return_Empty_Array_Directory_Not_Found()
     {
         // arrange
         var service = new FileSystemService(FileSystem);
@@ -19,8 +18,10 @@ public class LibraryServiceTests : FileSystemFixture
         var path = MockUnixSupport.Path(@"C:\tv-shows\Mr. Robot\Season 1");
 
         // act
+        var infos = service.GetFileSystemEntries(path);
+
         // assert
-        Assert.Throws<DirectoryNotFoundException>(() => service.GetFileSystemEntries(path));
+        Assert.Empty(infos);
     }
 
     [Fact]

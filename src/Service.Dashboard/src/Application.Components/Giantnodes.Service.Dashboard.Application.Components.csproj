@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="MassTransit.Abstractions" Version="8.1.0" />
-		<PackageReference Include="System.IO.Abstractions" Version="19.2.64" />
+		<PackageReference Include="System.IO.Abstractions" Version="19.2.69" />
 	</ItemGroup>
 
 	<ItemGroup>
