@@ -1,8 +1,8 @@
 'use client'
 
-import type { NavbarProps } from '@giantnodes/design-system-react'
+import type { NavbarProps } from '@giantnodes/react'
 
-import { Input, Navigation } from '@giantnodes/design-system-react'
+import { Input, Navigation } from '@giantnodes/react'
 import { IconBell, IconSearch } from '@tabler/icons-react'
 
 export type NavigationMobileProps = NavbarProps

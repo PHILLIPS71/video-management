@@ -3,7 +3,7 @@
 import type { SidebarLibrarySegmentFragment$key } from '@/__generated__/SidebarLibrarySegmentFragment.graphql'
 import type { SidebarLibrarySegmentPaginationQuery } from '@/__generated__/SidebarLibrarySegmentPaginationQuery.graphql'
 
-import { Button, Navigation } from '@giantnodes/design-system-react'
+import { Button, Navigation } from '@giantnodes/react'
 import { IconAlbum } from '@tabler/icons-react'
 import Link from 'next/link'
 import { graphql, usePaginationFragment } from 'react-relay'

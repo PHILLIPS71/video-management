@@ -29,8 +29,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
       <Sidebar $key={query} className="max-md:hidden" />
 
       <div className="flex flex-col flex-grow overflow-x-hidden">
-        <Navbar className="max-sm:hidden" />
-        <NavigationMobile className="sm:hidden" />
+        <Navbar />
 
         <main className="flex-grow py-6 md:py-8 px-4 md:px-6 overflow-y-auto">{children}</main>
       </div>

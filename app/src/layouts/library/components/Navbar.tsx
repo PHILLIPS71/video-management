@@ -1,8 +1,8 @@
 'use client'
 
-import type { NavigationProps } from '@giantnodes/design-system-react'
+import type { NavigationProps } from '@giantnodes/react'
 
-import { Breadcrumb, Input, Navigation } from '@giantnodes/design-system-react'
+import { Breadcrumb, Input, Navigation } from '@giantnodes/react'
 import { IconBell, IconSearch } from '@tabler/icons-react'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'

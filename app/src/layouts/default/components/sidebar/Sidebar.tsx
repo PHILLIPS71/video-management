@@ -1,9 +1,9 @@
 'use client'
 
 import type { SidebarQuery$key } from '@/__generated__/SidebarQuery.graphql'
-import type { NavigationProps } from '@giantnodes/design-system-react'
+import type { NavigationProps } from '@giantnodes/react'
 
-import { Navigation } from '@giantnodes/design-system-react'
+import { Navigation } from '@giantnodes/react'
 import { IconGauge, IconSettings } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
