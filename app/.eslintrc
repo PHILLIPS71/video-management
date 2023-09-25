@@ -23,6 +23,7 @@
   "rules": {
     "@typescript-eslint/consistent-type-imports": "error",
     "no-console": "warn",
+    "no-underscore-dangle": ["error", { "allow": ["__typename"] }],
     "react/prop-types": "off",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
