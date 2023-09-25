@@ -16,6 +16,7 @@ export const useLibrary = ({ $key }: UseLibraryProps) => {
         name
         path_info {
           full_name
+          directory_separator_char
         }
       }
     `,
