@@ -28,7 +28,7 @@ public class LibraryTests : FileSystemFixture
 
     [Theory]
     [MemberData(nameof(GetDirectories), parameters: 5)]
-    public void Construct_Drive_Status_Online(string path)
+    public void Construct_Drive_Status_Online_Directory_Found(string path)
     {
         // arrange
         var service = new FileSystemService(FileSystem);
@@ -42,7 +42,7 @@ public class LibraryTests : FileSystemFixture
     }
 
     [Fact]
-    public void Construct_Drive_Status_Offline_Directory_Doesnt_Exist()
+    public void Construct_Drive_Status_Offline_Directory_Not_Found()
     {
         // arrange
         var service = new FileSystemService(FileSystem);
@@ -52,6 +52,6 @@ public class LibraryTests : FileSystemFixture
         var library = new Library(service, directory, "Mr. Robot", "mr-robot");
         
         // assert
-        Assert.Equal(FileSystemStatus.Online, library.Status);
+        Assert.Equal(FileSystemStatus.Offline, library.Status);
     }
 }

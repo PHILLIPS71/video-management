@@ -10,7 +10,7 @@ namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 
 public class Library : AggregateRoot<Guid>
 {
-    private readonly List<FileSystemEntry> _entries = new List<FileSystemEntry>();
+    private readonly List<FileSystemEntry> _entries = new();
 
     public string Name { get; private set; } = null!;
 
@@ -18,7 +18,7 @@ public class Library : AggregateRoot<Guid>
 
     public PathInfo PathInfo { get; private set; } = null!;
 
-    public FileSystemStatus Status { get; private set; } = FileSystemStatus.Online;
+    public FileSystemStatus Status { get; private set; } = FileSystemStatus.Offline;
 
     public FileSystemDirectory Directory => _entries
         .OfType<FileSystemDirectory>()
@@ -35,6 +35,9 @@ public class Library : AggregateRoot<Guid>
         Name = name;
         Slug = slug;
         PathInfo = new PathInfo(root);
+
+        if (root.Exists)
+            Status = FileSystemStatus.Online;
 
         _entries.Add(new FileSystemDirectory(service, null, root));
     }

@@ -19,7 +19,9 @@ public class FileSystemDirectory : FileSystemEntry
 
     public void SetSize(IFileSystemService service)
     {
-        var infos = service.GetFileSystemEntries(PathInfo.FullName, SearchOption.AllDirectories);
-        Size = infos.OfType<IFileInfo>().Sum(x => x.Length);
+        Size = service
+            .GetFileSystemEntries(PathInfo.FullName, SearchOption.AllDirectories)
+            .OfType<IFileInfo>()
+            .Sum(x => x.Length);
     }
 }
