@@ -7,11 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="MassTransit.Abstractions" Version="8.1.0" />
-		<PackageReference Include="System.IO.Abstractions" Version="19.2.69" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\Application.Contracts\Giantnodes.Service.Dashboard.Application.Contracts.csproj" />
 		<ProjectReference Include="..\Persistence\Giantnodes.Service.Dashboard.Persistence.csproj" />
 	</ItemGroup>

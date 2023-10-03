@@ -10,6 +10,7 @@ using MassTransit;
 using MassTransit.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using Xunit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Tests.Libraries.Commands;
@@ -28,6 +29,8 @@ public class LibraryCreateConsumerTests : FileSystemFixture
             .AddSingleton<ApplicationDbContext>(_ => _database)
             .AddSingleton<IFileSystem>(FileSystem)
             .AddSingleton<IFileSystemService, FileSystemService>()
+            .AddSingleton<IFileSystemWatcherFactory, FileSystemWatcherFactory>()
+            .AddSingleton<IFileSystemWatcherService>(Substitute.For<IFileSystemWatcherService>())
             .AddMassTransitTestHarness(cfg => cfg.AddConsumer<LibraryCreateConsumer>())
             .BuildServiceProvider(true);
     }

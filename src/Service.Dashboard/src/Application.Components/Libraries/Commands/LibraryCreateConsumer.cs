@@ -13,17 +13,20 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Commands
 public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 {
     private readonly ApplicationDbContext _database;
-    private readonly IFileSystemService _fileSystemService;
     private readonly IFileSystem _fileSystem;
+    private readonly IFileSystemService _fileSystemService;
+    private readonly IFileSystemWatcherService _watcher;
 
     public LibraryCreateConsumer(
         ApplicationDbContext database,
+        IFileSystem fileSystem,
         IFileSystemService fileSystemService,
-        IFileSystem fileSystem)
+        IFileSystemWatcherService watcher)
     {
         _database = database;
-        _fileSystemService = fileSystemService;
         _fileSystem = fileSystem;
+        _fileSystemService = fileSystemService;
+        _watcher = watcher;
     }
 
     public async Task Consume(ConsumeContext<LibraryCreate.Command> context)
@@ -37,6 +40,7 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 
         var library = new Library(_fileSystemService, directory, context.Message.Name, context.Message.Slug);
         library.Scan(_fileSystemService);
+        _watcher.Watch(library);
 
         try
         {
