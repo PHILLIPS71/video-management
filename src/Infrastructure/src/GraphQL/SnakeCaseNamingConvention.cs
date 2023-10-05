@@ -19,6 +19,15 @@ public partial class SnakeCaseNamingConvention : DefaultNamingConventions
         return string.Join("_", pattern.Matches(member.Name)).ToLower();
     }
 
+    public override string GetArgumentName(ParameterInfo parameter)
+    {
+        if (string.IsNullOrWhiteSpace(parameter.Name))
+            return base.GetArgumentName(parameter);
+
+        var pattern = SnakeCaseRegexPattern();
+        return string.Join("_", pattern.Matches(parameter.Name)).ToLower();
+    }
+
     public override string GetEnumValueName(object value)
     {
         var input = value.ToString();
