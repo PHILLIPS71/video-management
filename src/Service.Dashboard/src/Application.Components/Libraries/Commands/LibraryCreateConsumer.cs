@@ -40,7 +40,16 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 
         var library = new Library(_fileSystemService, directory, context.Message.Name, context.Message.Slug);
         library.Scan(_fileSystemService);
-        _watcher.Watch(library);
+
+        try
+        {
+            library.SetWatched(_watcher, context.Message.IsWatched);
+        }
+        catch (PlatformNotSupportedException)
+        {
+            await context.RejectAsync(LibraryCreate.Fault.PlatformNotSupported);
+            return;
+        }
 
         try
         {

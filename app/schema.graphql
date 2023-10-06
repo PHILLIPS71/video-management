@@ -28,9 +28,17 @@ input LibraryFilterInput {
   slug: StringOperationFilterInput
   path_info: PathInfoFilterInput
   status: FileSystemStatusOperationFilterInput
+  is_watched: BooleanOperationFilterInput
   directory: FileSystemDirectoryFilterInput
   entries: ListFilterInputTypeOfFileSystemEntryFilterInput
   concurrency_token: ListByteOperationFilterInput
+}
+
+interface FileSystemEntry {
+  size: Long!
+  path_info: PathInfo!
+  library: Library!
+  parent_directory: FileSystemDirectory
 }
 
 type FileSystemDirectory implements FileSystemEntry & Node {
@@ -39,7 +47,7 @@ type FileSystemDirectory implements FileSystemEntry & Node {
   path_info: PathInfo!
   library: Library!
   parent_directory: FileSystemDirectory
-  entries(where: FileSystemEntryFilterInput, order: [FileSystemEntrySortInput!]): [FileSystemEntry]
+  entries(where: FileSystemEntryFilterInput, order: [FileSystemEntrySortInput!]): [FileSystemEntry!]!
 }
 
 type FileSystemFile implements FileSystemEntry & Node {
@@ -56,6 +64,7 @@ type Library implements Node {
   slug: String!
   path_info: PathInfo!
   status: FileSystemStatus!
+  is_watched: Boolean!
   entries(where: FileSystemEntryFilterInput, order: [FileSystemEntrySortInput!]): [FileSystemEntry]
 }
 
@@ -65,13 +74,6 @@ type PathInfo {
   extension: String
   directory_path: String
   directory_separator_char: Char!
-}
-
-interface FileSystemEntry {
-  size: Long!
-  path_info: PathInfo!
-  library: Library!
-  parent_directory: FileSystemDirectory
 }
 
 type DomainException {
@@ -234,6 +236,11 @@ input FileSystemStatusOperationFilterInput {
   nin: [FileSystemStatus!]
 }
 
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
 input ListFilterInputTypeOfFileSystemEntryFilterInput {
   all: FileSystemEntryFilterInput
   none: FileSystemEntryFilterInput
@@ -332,6 +339,7 @@ input LibrarySortInput {
   slug: SortEnumType
   path_info: PathInfoSortInput
   status: SortEnumType
+  is_watched: SortEnumType
   directory: FileSystemDirectorySortInput
   id: SortEnumType
 }
@@ -482,6 +490,7 @@ input Library_createInput {
   name: String!
   slug: String!
   path: String!
+  is_watched: Boolean!
 }
 
 union Library_createError = DomainError | ValidationError

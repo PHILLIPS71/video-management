@@ -22,13 +22,15 @@ public class LibraryCreateMutation
         string name,
         string slug,
         string path,
+        bool isWatched,
         CancellationToken cancellation = default)
     {
         var command = new LibraryCreate.Command
         {
             Name = name,
             Slug = slug,
-            FullPath = path
+            FullPath = path,
+            IsWatched = isWatched
         };
 
         Response response = await request.GetResponse<LibraryCreate.Result, DomainFault, ValidationFault>(command, cancellation);

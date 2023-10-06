@@ -25,6 +25,7 @@ const LibraryCreateSchema = z.object({
   name: z.string().trim().min(1, { message: 'not enough chars' }).max(128, { message: 'too many chars' }),
   slug: z.string().trim().min(1, { message: 'not enough chars' }).max(128, { message: 'too many chars' }),
   path: z.string().trim().min(1, { message: 'not enough chars' }),
+  is_watched: z.boolean().default(true),
 })
 
 type LibraryCreateInput = z.infer<typeof LibraryCreateSchema>
@@ -63,6 +64,7 @@ const LibraryCreatePage = () => {
           name: data.name,
           slug: SlugTransform.parse(data.slug),
           path: data.path,
+          is_watched: data.is_watched,
         },
       },
       onCompleted: (payload) => {

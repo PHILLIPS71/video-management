@@ -21,6 +21,8 @@ public class Library : AggregateRoot<Guid>
 
     public FileSystemStatus Status { get; private set; } = FileSystemStatus.Offline;
 
+    public bool IsWatched { get; private set; }
+
     public FileSystemDirectory Directory => _entries
         .OfType<FileSystemDirectory>()
         .Single(x => x.PathInfo.FullName == PathInfo.FullName);
@@ -42,6 +44,23 @@ public class Library : AggregateRoot<Guid>
             Status = FileSystemStatus.Online;
 
         _entries.Add(new FileSystemDirectory(service, null, root));
+    }
+
+    /// <summary>
+    /// Sets the <seealso cref="IsWatched" /> property starting or stopping if the library path should be monitored. 
+    /// </summary>
+    /// <param name="service">The service used to manage file system monitoring.</param>
+    /// <param name="watched">A boolean indicating to begin or stop watching for file system changes.</param>
+    /// <exception cref="PlatformNotSupportedException">The operating system is not Microsoft Windows NT or later.</exception>
+    /// <exception cref="FileNotFoundException">The <see cref="PathInfo.FullName"/> could not be found.</exception>
+    public void SetWatched(IFileSystemWatcherService service, bool watched)
+    {
+        if (watched)
+            service.Watch(this);
+        else
+            service.Unwatch(this);
+
+        IsWatched = watched;
     }
 
     /// <summary>

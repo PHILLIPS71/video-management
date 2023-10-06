@@ -29,6 +29,10 @@ public class FileSystemWatcherService : IFileSystemWatcherService
     /// <inheritdoc />
     public void Unwatch(Library library)
     {
+        if (!_libraries.TryGetValue(library.Id, out var watcher))
+            return;
+
+        watcher.EnableRaisingEvents = false;
         _libraries.Remove(library.Id);
     }
 

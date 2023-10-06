@@ -40,12 +40,12 @@ const ExplorePath: React.FC<ExplorePathProps> = ({ $key }) => {
   }, [library.path_info.full_name, data.path_info])
 
   const isBreadcrumbLink = (index: number): boolean => {
-    // cannot link to the currently viewed directory
+    // cannot navigate to the currently viewed directory
     if (directories.size - 1 === index) return false
 
     const parts = library.path_info.full_name.split(library.path_info.directory_separator_char).length - 1
 
-    // cannot link to a directory that falls within the library root path
+    // cannot navigate to a directory that falls within the library root path
     if (parts > index) return false
 
     return true

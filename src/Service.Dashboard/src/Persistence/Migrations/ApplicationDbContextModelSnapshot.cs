@@ -18,7 +18,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -67,6 +67,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
                         .HasColumnName("concurrency_token");
+
+                    b.Property<bool>("IsWatched")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_watched");
 
                     b.Property<string>("Name")
                         .IsRequired()

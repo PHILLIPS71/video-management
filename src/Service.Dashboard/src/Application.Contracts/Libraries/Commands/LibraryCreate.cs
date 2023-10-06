@@ -12,6 +12,8 @@ public sealed class LibraryCreate
         public required string Slug { get; init; }
 
         public required string FullPath { get; init; }
+
+        public bool IsWatched { get; init; }
     }
 
     public sealed class Validator : AbstractValidator<Command>
@@ -28,18 +30,21 @@ public sealed class LibraryCreate
                 .NotEmpty();
         }
     }
-    
+
     public sealed class Fault : FaultKind
     {
         public static readonly FaultKind DirectoryNotFound =
             new(1, FaultType.InvalidRequest, "directory_not_found", "the directory cannot be found.");
 
-        private Fault(int id, FaultType type, string code, string message) 
+        public static readonly FaultKind PlatformNotSupported =
+            new(2, FaultType.Api, "platform_not_supported", "the operating system is not supported.");
+
+        private Fault(int id, FaultType type, string code, string message)
             : base(id, type, code, message)
         {
         }
     }
-    
+
     public sealed record Result
     {
         public required Guid Id { get; init; }

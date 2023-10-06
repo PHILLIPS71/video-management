@@ -31,6 +31,9 @@ public class LibraryType : ObjectType<Library>
             .Field(p => p.Status);
 
         descriptor
+            .Field(p => p.IsWatched);
+
+        descriptor
             .Field(p => p.Entries)
             .Type<ListType<FileSystemEntryType>>()
             .UseProjection()

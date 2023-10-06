@@ -28,6 +28,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
+                    is_watched = table.Column<bool>(type: "boolean", nullable: false),
                     concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
@@ -120,7 +121,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 column: "library_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_file_system_files_parent_directory_id",
+                name: "ix_file_system_file_parent_directory_id",
                 schema: "public",
                 table: "FileSystemFiles",
                 column: "parent_directory_id");
