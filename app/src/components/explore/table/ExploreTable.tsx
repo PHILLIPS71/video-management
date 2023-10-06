@@ -3,7 +3,7 @@ import type { ExploreTableFragment$key } from '@/__generated__/ExploreTableFragm
 import { Table } from '@giantnodes/react'
 import { graphql, useFragment } from 'react-relay'
 
-import { ExploreTableDirectory, ExploreTableFile } from '@/components/explore-table'
+import { ExploreTableDirectory, ExploreTableFile } from '@/components/explore/table'
 
 type ExploreTableProps = {
   $key: ExploreTableFragment$key

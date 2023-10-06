@@ -2,15 +2,17 @@
 
 import type { page_LibrarySlugExploreQuery } from '@/__generated__/page_LibrarySlugExploreQuery.graphql'
 
-import { Card } from '@giantnodes/react'
+import { Card, Typography } from '@giantnodes/react'
 import { notFound } from 'next/navigation'
 import React, { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
-import ExploreControls from '@/components/explore-controls/ExploreControls'
-import ExplorePath from '@/components/explore-path/ExplorePath'
-import ExploreTable from '@/components/explore-table/ExploreTable'
+import ExploreCodecs from '@/components/explore/ExploreCodecs'
+import ExploreContainers from '@/components/explore/ExploreContainers'
+import ExploreControls from '@/components/explore/ExploreControls'
+import ExplorePath from '@/components/explore/ExplorePath'
+import ExploreTable from '@/components/explore/table/ExploreTable'
 
 type LibraryExplorePageProps = {
   params: {
@@ -75,28 +77,52 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <Card transparent>
-        <Card.Header>
-          <Suspense fallback="LOADING...">
-            <ExplorePath $key={query.file_system_directory} />
-          </Suspense>
-        </Card.Header>
-      </Card>
+    <div className="flex lg:flex-row flex-col gap-2">
+      <div className="flex flex-col flex-1 gap-2">
+        <Card transparent>
+          <Card.Header>
+            <Suspense fallback="LOADING...">
+              <ExplorePath $key={query.file_system_directory} />
+            </Suspense>
+          </Card.Header>
+        </Card>
 
-      <Card transparent>
-        <Card.Header>
-          <Suspense fallback="LOADING...">
-            <ExploreControls $key={query.file_system_directory} />
-          </Suspense>
-        </Card.Header>
-      </Card>
+        <Card transparent>
+          <Card.Header>
+            <Suspense fallback="LOADING...">
+              <ExploreControls $key={query.file_system_directory} />
+            </Suspense>
+          </Card.Header>
+        </Card>
 
-      <Card>
-        <Suspense fallback="LOADING...">
-          <ExploreTable $key={query.file_system_directory} />
-        </Suspense>
-      </Card>
+        <Card>
+          <Suspense fallback="LOADING...">
+            <ExploreTable $key={query.file_system_directory} />
+          </Suspense>
+        </Card>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Card className="h-fit lg:w-80">
+          <Card.Header>
+            <Typography.Text as="strong">Containers</Typography.Text>
+          </Card.Header>
+
+          <Card.Body>
+            <ExploreContainers />
+          </Card.Body>
+        </Card>
+
+        <Card className="h-fit lg:w-80">
+          <Card.Header>
+            <Typography.Text as="strong">Codecs</Typography.Text>
+          </Card.Header>
+
+          <Card.Body>
+            <ExploreCodecs />
+          </Card.Body>
+        </Card>
+      </div>
     </div>
   )
 }

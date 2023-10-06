@@ -4,7 +4,7 @@ import { Card, Chip, Table, Typography } from '@giantnodes/react'
 import { IconGripVertical } from '@tabler/icons-react'
 
 const LibraryPage = () => (
-  <Card className="max-w-4xl">
+  <Card className="max-w-6xl">
     <Card.Header>Tasks</Card.Header>
     <Table size="sm">
       <Table.Body>
