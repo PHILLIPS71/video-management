@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using Giantnodes.Infrastructure.Domain.Entities;
 using Giantnodes.Service.Dashboard.Domain.Values;
+using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 
@@ -20,6 +21,7 @@ public abstract class FileSystemEntry : Entity<Guid>
 
     protected FileSystemEntry(FileSystemDirectory? parent, IFileSystemInfo entry)
     {
+        Id = NewId.NextSequentialGuid();
         ParentDirectory = parent;
         PathInfo = new PathInfo(entry);
     }

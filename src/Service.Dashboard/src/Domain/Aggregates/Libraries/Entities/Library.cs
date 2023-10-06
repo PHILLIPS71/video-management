@@ -5,6 +5,7 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Factories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Domain.Values;
+using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 
@@ -26,12 +27,13 @@ public class Library : AggregateRoot<Guid>
 
     public IReadOnlyCollection<FileSystemEntry> Entries => _entries.AsReadOnly();
 
-    protected Library()
+    private Library()
     {
     }
 
     public Library(IFileSystemService service, IDirectoryInfo root, string name, string slug)
     {
+        Id = NewId.NextSequentialGuid();
         Name = name;
         Slug = slug;
         PathInfo = new PathInfo(root);
