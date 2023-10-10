@@ -1,9 +1,8 @@
-﻿using Giantnodes.Infrastructure.Logging;
-using Giantnodes.Infrastructure.Modules.Extensions;
-using Giantnodes.Service.Encoder.Application.Components;
+﻿using Giantnodes.Service.Encoder.Application.Components;
 using Giantnodes.Service.Encoder.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using Xabe.FFmpeg;
 using Xabe.FFmpeg.Downloader;
 
@@ -23,21 +22,19 @@ public static class Program
 
     private static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
-            .ConfigureServices((_, services) =>
+            .ConfigureServices((context, services) =>
             {
                 var configuration = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
                     .AddEnvironmentVariables()
                     .AddCommandLine(args)
-                    .AddJsonFile("appsettings.json", false)
-                    .AddJsonFile("appsettings.Development.json", true)
                     .Build();
-
-                services
-                    .AddGiantnodes(options => options.UseLogging(configuration));
-
+                
                 services
                     .AddPersistenceServices(configuration)
                     .AddApplicationServices()
                     .AddConsoleServices();
-            });
+            })
+            .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 }
