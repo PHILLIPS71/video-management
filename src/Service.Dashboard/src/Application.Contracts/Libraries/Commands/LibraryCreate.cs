@@ -36,9 +36,6 @@ public sealed class LibraryCreate
         public static readonly FaultKind DirectoryNotFound =
             new(1, FaultType.InvalidRequest, "directory_not_found", "the directory cannot be found.");
 
-        public static readonly FaultKind PlatformNotSupported =
-            new(2, FaultType.Api, "platform_not_supported", "the operating system is not supported.");
-
         private Fault(int id, FaultType type, string code, string message)
             : base(id, type, code, message)
         {

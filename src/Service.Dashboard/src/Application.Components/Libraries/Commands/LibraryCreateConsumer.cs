@@ -47,7 +47,7 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
         }
         catch (PlatformNotSupportedException)
         {
-            await context.RejectAsync(LibraryCreate.Fault.PlatformNotSupported);
+            await context.RejectAsync(FaultKind.Platform);
             return;
         }
 

@@ -8,6 +8,9 @@ public class FaultKind : Enumeration
     public static readonly FaultKind Constraint =
         new(101, FaultType.InvalidRequest, "constraint_fault", "duplicate value violates a unique constraint");
 
+    public static readonly FaultKind Platform =
+        new(102, FaultType.Api, "platform_not_supported", "the operating system is not supported.");
+
     public FaultKind(int id, FaultType type, string code, string message)
         : base(id, code)
     {
