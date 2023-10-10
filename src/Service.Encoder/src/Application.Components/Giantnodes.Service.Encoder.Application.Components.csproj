@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Infrastructure\src\Logging\Giantnodes.Infrastructure.Logging.csproj" />
         <ProjectReference Include="..\Application.Contracts\Giantnodes.Service.Encoder.Application.Contracts.csproj" />
         <ProjectReference Include="..\Persistence\Giantnodes.Service.Encoder.Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit.Abstractions" Version="8.0.16" />
         <PackageReference Include="Riok.Mapperly" Version="2.8.0" />
         <PackageReference Include="System.IO.Abstractions" Version="19.2.29" />
         <PackageReference Include="Xabe.FFmpeg" Version="5.2.6" />

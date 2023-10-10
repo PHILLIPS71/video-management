@@ -12,32 +12,27 @@
         <Content Include="..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
-        <Content Include="appsettings.Development.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        </Content>
         <Content Include="appsettings.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         </Content>
+        <Content Include="appsettings.Development.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit" Version="8.0.16" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.16" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.8">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-        <PackageReference Include="Xabe.FFmpeg.Downloader" Version="5.2.6" />
+        <PackageReference Include="MassTransit" Version="8.1.1"/>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0"/>
+        <PackageReference Include="Xabe.FFmpeg.Downloader" Version="5.2.6"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Infrastructure\src\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj" />
-        <ProjectReference Include="..\Application.Components\Giantnodes.Service.Encoder.Application.Components.csproj" />
+        <ProjectReference Include="..\Application.Components\Giantnodes.Service.Encoder.Application.Components.csproj"/>
     </ItemGroup>
 
 </Project>

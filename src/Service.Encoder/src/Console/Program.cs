@@ -1,11 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Giantnodes.Infrastructure.Logging;
+using Giantnodes.Infrastructure.Modules.Extensions;
+using Giantnodes.Service.Encoder.Application.Components;
+using Giantnodes.Service.Encoder.Persistence;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Xabe.FFmpeg;
 using Xabe.FFmpeg.Downloader;
 
-namespace Giantnodes.Service.Encoder.Application;
+namespace Giantnodes.Service.Encoder.Console;
 
-public class Program
+public static class Program
 {
     public static async Task Main(string[] args)
     {
@@ -19,15 +23,21 @@ public class Program
 
     private static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
-            .ConfigureServices((builder, services) =>
+            .ConfigureServices((_, services) =>
             {
                 var configuration = new ConfigurationBuilder()
                     .AddEnvironmentVariables()
                     .AddCommandLine(args)
-                    .AddJsonFile("appsettings.Development.json")
+                    .AddJsonFile("appsettings.json", false)
+                    .AddJsonFile("appsettings.Development.json", true)
                     .Build();
 
                 services
-                    .AddApplicationServices(configuration);
+                    .AddGiantnodes(options => options.UseLogging(configuration));
+
+                services
+                    .AddPersistenceServices(configuration)
+                    .AddApplicationServices()
+                    .AddConsoleServices();
             });
 }

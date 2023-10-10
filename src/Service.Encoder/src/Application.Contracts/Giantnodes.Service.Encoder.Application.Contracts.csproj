@@ -7,11 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Domain.Shared\Giantnodes.Service.Encoder.Domain.Shared.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="MassTransit.Abstractions" Version="8.0.16" />
+        <ProjectReference Include="..\..\..\Infrastructure\src\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj" />
+        <ProjectReference Include="..\Domain.Shared\Giantnodes.Service.Encoder.Domain.Shared.csproj" />
     </ItemGroup>
 
 </Project>
