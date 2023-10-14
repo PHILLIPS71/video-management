@@ -1,7 +1,7 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 using Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Interfaces;
 
-namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects;
+namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects.Entities;
 
 public class FileSystemFileType : ObjectType<FileSystemFile>
 {
@@ -27,5 +27,26 @@ public class FileSystemFileType : ObjectType<FileSystemFile>
 
         descriptor
             .Field(p => p.ParentDirectory);
+
+        descriptor
+            .Field(p => p.VideoStreams)
+            // .UsePaging()
+            // .UseProjection()
+            .UseFiltering()
+            .UseSorting();
+
+        descriptor
+            .Field(p => p.AudioStreams)
+            // .UsePaging()
+            // .UseProjection()
+            .UseFiltering()
+            .UseSorting();
+
+        descriptor
+            .Field(p => p.SubtitleStreams)
+            // .UsePaging()
+            // .UseProjection()
+            .UseFiltering()
+            .UseSorting();
     }
 }

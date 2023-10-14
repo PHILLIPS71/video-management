@@ -1,7 +1,7 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 using Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Interfaces;
 
-namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects;
+namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects.Entities;
 
 public class FileSystemDirectoryType : ObjectType<FileSystemDirectory>
 {
@@ -30,7 +30,7 @@ public class FileSystemDirectoryType : ObjectType<FileSystemDirectory>
 
         descriptor
             .Field(p => p.Entries)
-            .Type<ListType<FileSystemEntryType>>()
+            // .UsePaging()
             // .UseProjection()
             .UseFiltering()
             .UseSorting();

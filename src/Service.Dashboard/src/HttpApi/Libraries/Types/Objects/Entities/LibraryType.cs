@@ -1,9 +1,8 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
-using Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Interfaces;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects;
+namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects.Entities;
 
 public class LibraryType : ObjectType<Library>
 {
@@ -35,7 +34,6 @@ public class LibraryType : ObjectType<Library>
 
         descriptor
             .Field(p => p.Entries)
-            .Type<ListType<FileSystemEntryType>>()
             .UseProjection()
             .UseFiltering()
             .UseSorting();

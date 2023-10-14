@@ -1,6 +1,6 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Values;
 
-namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects;
+namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Objects.Values;
 
 public class PathInfoType : ObjectType<PathInfo>
 {
