@@ -165,4 +165,5 @@ yarn-error.log*
 .vercel
 
 # Relay
+/app/schema.graphql
 __generated__/
