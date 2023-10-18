@@ -1,35 +1,35 @@
-﻿using Giantnodes.Infrastructure.Domain.Values;
+﻿namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values;
 
-namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values;
-
-public class VideoStream : ValueObject
+public class VideoStream : FileStream
 {
-    public required int Index { get; init; }
+    public TimeSpan Duration { get; init; }
 
-    public required string Codec { get; init; }
+    public VideoQuality Quality { get; init; }
 
-    public required TimeSpan Duration { get; init; }
+    public double Framerate { get; init; }
 
-    public required int Width { get; init; }
+    public long Bitrate { get; init; }
 
-    public required int Height { get; init; }
-
-    public required double Framerate { get; init; }
-
-    public required string Ratio { get; init; }
-
-    public required long Bitrate { get; init; }
-
-    public required string PixelFormat { get; init; }
-
-    public bool Default { get; init; }
-
-    public bool Forced { get; init; }
-
-    public int? Rotation { get; init; }
+    public string PixelFormat { get; init; }
 
     private VideoStream()
     {
+    }
+
+    public VideoStream(
+        int index,
+        string codec,
+        TimeSpan duration,
+        VideoQuality quality,
+        double framerate,
+        long bitrate,
+        string pixelFormat) : base(index, codec)
+    {
+        Duration = duration;
+        Quality = quality;
+        Framerate = framerate;
+        Bitrate = bitrate;
+        PixelFormat = pixelFormat;
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
@@ -37,10 +37,8 @@ public class VideoStream : ValueObject
         yield return Index;
         yield return Codec;
         yield return Duration;
-        yield return Width;
-        yield return Height;
+        yield return Quality;
         yield return Framerate;
-        yield return Ratio;
         yield return Bitrate;
         yield return PixelFormat;
     }

@@ -17,11 +17,5 @@ public class SubtitleStreamType : ObjectType<SubtitleStream>
 
         descriptor
             .Field(p => p.Title);
-
-        descriptor
-            .Field(p => p.Default);
-
-        descriptor
-            .Field(p => p.Forced);
     }
 }

@@ -1,6 +1,7 @@
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 using Giantnodes.Service.Dashboard.HttpApi.Libraries.Types.Interfaces;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Libraries.Queries;
 
@@ -14,6 +15,6 @@ public class FileSystemDirectoryFindOne
     [UseSorting]
     public IQueryable<FileSystemDirectory> FileSystemDirectory([Service] ApplicationDbContext database)
     {
-        return database.FileSystemDirectories;
+        return database.FileSystemDirectories.AsNoTracking();
     }
 }

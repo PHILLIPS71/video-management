@@ -4,9 +4,9 @@ namespace Giantnodes.Infrastructure;
 
 public abstract class Enumeration : IComparable
 {
-    private int Id { get; }
+    public int Id { get; init; }
 
-    private string Name { get; }
+    public string Name { get; init; }
 
     protected Enumeration(int id, string name)
     {
@@ -50,14 +50,14 @@ public abstract class Enumeration : IComparable
 
         return match;
     }
-    
+
     public static TValue? TryParse<TValue>(string name) where TValue : Enumeration
     {
         try
         {
             return Parse<TValue, string>(name, item => item.Name == name);
         }
-        catch(InvalidOperationException)
+        catch (InvalidOperationException)
         {
             return null;
         }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231005064250_v0.0.1")]
+    [Migration("20231018073031_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -258,8 +258,199 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasConstraintName("fk_file_system_files_file_system_files_id");
                         });
 
+                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values.AudioStream", "AudioStreams", b1 =>
+                        {
+                            b1.Property<Guid>("FileSystemFileId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("file_system_file_id");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer")
+                                .HasColumnName("id");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<long>("Bitrate")
+                                .HasColumnType("bigint")
+                                .HasColumnName("bitrate");
+
+                            b1.Property<int>("Channels")
+                                .HasColumnType("integer")
+                                .HasColumnName("channels");
+
+                            b1.Property<string>("Codec")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("codec");
+
+                            b1.Property<TimeSpan>("Duration")
+                                .HasColumnType("interval")
+                                .HasColumnName("duration");
+
+                            b1.Property<int>("Index")
+                                .HasColumnType("integer")
+                                .HasColumnName("index");
+
+                            b1.Property<string>("Language")
+                                .HasColumnType("text")
+                                .HasColumnName("language");
+
+                            b1.Property<int>("SampleRate")
+                                .HasColumnType("integer")
+                                .HasColumnName("sample_rate");
+
+                            b1.Property<string>("Title")
+                                .HasColumnType("text")
+                                .HasColumnName("title");
+
+                            b1.HasKey("FileSystemFileId", "Id")
+                                .HasName("pk_audio_streams");
+
+                            b1.ToTable("audio_streams", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FileSystemFileId")
+                                .HasConstraintName("fk_audio_streams_file_system_entries_file_system_file_id");
+                        });
+
+                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values.SubtitleStream", "SubtitleStreams", b1 =>
+                        {
+                            b1.Property<Guid>("FileSystemFileId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("file_system_file_id");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer")
+                                .HasColumnName("id");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Codec")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("codec");
+
+                            b1.Property<int>("Index")
+                                .HasColumnType("integer")
+                                .HasColumnName("index");
+
+                            b1.Property<string>("Language")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("language");
+
+                            b1.Property<string>("Title")
+                                .HasColumnType("text")
+                                .HasColumnName("title");
+
+                            b1.HasKey("FileSystemFileId", "Id")
+                                .HasName("pk_subtitle_streams");
+
+                            b1.ToTable("subtitle_streams", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FileSystemFileId")
+                                .HasConstraintName("fk_subtitle_streams_file_system_entries_file_system_file_id");
+                        });
+
+                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values.VideoStream", "VideoStreams", b1 =>
+                        {
+                            b1.Property<Guid>("FileSystemFileId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("file_system_file_id");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer")
+                                .HasColumnName("id");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<long>("Bitrate")
+                                .HasColumnType("bigint")
+                                .HasColumnName("bitrate");
+
+                            b1.Property<string>("Codec")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("codec");
+
+                            b1.Property<TimeSpan>("Duration")
+                                .HasColumnType("interval")
+                                .HasColumnName("duration");
+
+                            b1.Property<double>("Framerate")
+                                .HasColumnType("double precision")
+                                .HasColumnName("framerate");
+
+                            b1.Property<int>("Index")
+                                .HasColumnType("integer")
+                                .HasColumnName("index");
+
+                            b1.Property<string>("PixelFormat")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("pixel_format");
+
+                            b1.HasKey("FileSystemFileId", "Id")
+                                .HasName("pk_video_streams");
+
+                            b1.ToTable("video_streams", "public");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FileSystemFileId")
+                                .HasConstraintName("fk_video_streams_file_system_entries_file_system_file_id");
+
+                            b1.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values.VideoQuality", "Quality", b2 =>
+                                {
+                                    b2.Property<Guid>("VideoStreamFileSystemFileId")
+                                        .HasColumnType("uuid")
+                                        .HasColumnName("file_system_file_id");
+
+                                    b2.Property<int>("VideoStreamId")
+                                        .HasColumnType("integer")
+                                        .HasColumnName("id");
+
+                                    b2.Property<string>("AspectRatio")
+                                        .IsRequired()
+                                        .HasColumnType("text")
+                                        .HasColumnName("quality_aspect_ratio");
+
+                                    b2.Property<int>("Height")
+                                        .HasColumnType("integer")
+                                        .HasColumnName("quality_height");
+
+                                    b2.Property<int>("Resolution")
+                                        .HasColumnType("integer")
+                                        .HasColumnName("quality_resolution");
+
+                                    b2.Property<int>("Width")
+                                        .HasColumnType("integer")
+                                        .HasColumnName("quality_width");
+
+                                    b2.HasKey("VideoStreamFileSystemFileId", "VideoStreamId");
+
+                                    b2.ToTable("video_streams", "public");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("VideoStreamFileSystemFileId", "VideoStreamId")
+                                        .HasConstraintName("fk_video_streams_video_streams_file_system_file_id_id");
+                                });
+
+                            b1.Navigation("Quality")
+                                .IsRequired();
+                        });
+
+                    b.Navigation("AudioStreams");
+
                     b.Navigation("PathInfo")
                         .IsRequired();
+
+                    b.Navigation("SubtitleStreams");
+
+                    b.Navigation("VideoStreams");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", b =>

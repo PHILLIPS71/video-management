@@ -1,13 +1,7 @@
-﻿using Giantnodes.Infrastructure.Domain.Values;
+﻿namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values;
 
-namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values;
-
-public class AudioStream : ValueObject
+public class AudioStream : FileStream
 {
-    public required int Index { get; init; }
-
-    public required string Codec { get; init; }
-
     public string? Title { get; init; }
 
     public string? Language { get; init; }
@@ -20,14 +14,15 @@ public class AudioStream : ValueObject
 
     public required int Channels { get; init; }
 
-    public bool Default { get; init; }
-
-    public bool Forced { get; init; }
-
     private AudioStream()
     {
     }
-    
+
+    public AudioStream(int index, string codec)
+        : base(index, codec)
+    {
+    }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Index;

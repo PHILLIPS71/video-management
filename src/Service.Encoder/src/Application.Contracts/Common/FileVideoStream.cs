@@ -14,7 +14,7 @@ public sealed record FileVideoStream
 
     public required double Framerate { get; init; }
 
-    public required string Ratio { get; init; }
+    public required string AspectRatio { get; init; }
 
     public required long Bitrate { get; init; }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -102,6 +103,91 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "audio_streams",
+                schema: "public",
+                columns: table => new
+                {
+                    file_system_file_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    title = table.Column<string>(type: "text", nullable: true),
+                    language = table.Column<string>(type: "text", nullable: true),
+                    duration = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    bitrate = table.Column<long>(type: "bigint", nullable: false),
+                    sample_rate = table.Column<int>(type: "integer", nullable: false),
+                    channels = table.Column<int>(type: "integer", nullable: false),
+                    index = table.Column<int>(type: "integer", nullable: false),
+                    codec = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_audio_streams", x => new { x.file_system_file_id, x.id });
+                    table.ForeignKey(
+                        name: "fk_audio_streams_file_system_entries_file_system_file_id",
+                        column: x => x.file_system_file_id,
+                        principalSchema: "public",
+                        principalTable: "FileSystemFiles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "subtitle_streams",
+                schema: "public",
+                columns: table => new
+                {
+                    file_system_file_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    language = table.Column<string>(type: "text", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: true),
+                    index = table.Column<int>(type: "integer", nullable: false),
+                    codec = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_subtitle_streams", x => new { x.file_system_file_id, x.id });
+                    table.ForeignKey(
+                        name: "fk_subtitle_streams_file_system_entries_file_system_file_id",
+                        column: x => x.file_system_file_id,
+                        principalSchema: "public",
+                        principalTable: "FileSystemFiles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "video_streams",
+                schema: "public",
+                columns: table => new
+                {
+                    file_system_file_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    duration = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    quality_width = table.Column<int>(type: "integer", nullable: false),
+                    quality_height = table.Column<int>(type: "integer", nullable: false),
+                    quality_aspect_ratio = table.Column<string>(type: "text", nullable: false),
+                    quality_resolution = table.Column<int>(type: "integer", nullable: false),
+                    framerate = table.Column<double>(type: "double precision", nullable: false),
+                    bitrate = table.Column<long>(type: "bigint", nullable: false),
+                    pixel_format = table.Column<string>(type: "text", nullable: false),
+                    index = table.Column<int>(type: "integer", nullable: false),
+                    codec = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_video_streams", x => new { x.file_system_file_id, x.id });
+                    table.ForeignKey(
+                        name: "fk_video_streams_file_system_entries_file_system_file_id",
+                        column: x => x.file_system_file_id,
+                        principalSchema: "public",
+                        principalTable: "FileSystemFiles",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "ix_file_system_directories_library_id",
                 schema: "public",
@@ -121,7 +207,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 column: "library_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_file_system_file_parent_directory_id",
+                name: "ix_file_system_files_parent_directory_id",
                 schema: "public",
                 table: "FileSystemFiles",
                 column: "parent_directory_id");
@@ -137,6 +223,18 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "audio_streams",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "subtitle_streams",
+                schema: "public");
+
+            migrationBuilder.DropTable(
+                name: "video_streams",
+                schema: "public");
+
             migrationBuilder.DropTable(
                 name: "FileSystemFiles",
                 schema: "public");

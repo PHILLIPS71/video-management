@@ -7,6 +7,7 @@ namespace Giantnodes.Service.Encoder.Application.Components;
 [Mapper]
 public partial class Mapper
 {
+    [MapProperty(nameof(IVideoStream.Ratio), nameof(FileVideoStream.AspectRatio))]
     public partial FileVideoStream Map(IVideoStream dto);
 
     public partial FileAudioStream Map(IAudioStream dto);

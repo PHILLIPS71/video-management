@@ -16,30 +16,15 @@ public class VideoStreamType : ObjectType<VideoStream>
             .Field(p => p.Duration);
 
         descriptor
-            .Field(p => p.Width);
-
-        descriptor
-            .Field(p => p.Height);
+            .Field(p => p.Quality);
 
         descriptor
             .Field(p => p.Framerate);
-
-        descriptor
-            .Field(p => p.Ratio);
 
         descriptor
             .Field(p => p.Bitrate);
 
         descriptor
             .Field(p => p.PixelFormat);
-
-        descriptor
-            .Field(p => p.Rotation);
-
-        descriptor
-            .Field(p => p.Default);
-
-        descriptor
-            .Field(p => p.Forced);
     }
 }

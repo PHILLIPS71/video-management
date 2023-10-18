@@ -32,11 +32,5 @@ public class AudioStreamType : ObjectType<AudioStream>
 
         descriptor
             .Field(p => p.Channels);
-
-        descriptor
-            .Field(p => p.Default);
-
-        descriptor
-            .Field(p => p.Forced);
     }
 }
