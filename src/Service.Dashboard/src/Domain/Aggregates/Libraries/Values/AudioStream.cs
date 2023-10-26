@@ -6,29 +6,33 @@ public class AudioStream : FileStream
 
     public string? Language { get; init; }
 
-    public required TimeSpan Duration { get; init; }
+    public TimeSpan Duration { get; init; }
 
-    public required long Bitrate { get; init; }
+    public long Bitrate { get; init; }
 
-    public required int SampleRate { get; init; }
+    public int SampleRate { get; init; }
 
-    public required int Channels { get; init; }
+    public int Channels { get; init; }
 
     private AudioStream()
     {
     }
 
-    public AudioStream(int index, string codec)
+    public AudioStream(int index, string codec, string? title, string? language, TimeSpan duration, long bitrate, int sampleRate, int channels)
         : base(index, codec)
     {
+        Title = title;
+        Language = language;
+        Duration = duration;
+        Bitrate = bitrate;
+        SampleRate = sampleRate;
+        Channels = channels;
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Index;
         yield return Codec;
-        yield return Title;
-        yield return Language;
         yield return Duration;
         yield return Bitrate;
         yield return SampleRate;

@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values;
+using FileStream = Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values.FileStream;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 
@@ -27,5 +28,23 @@ public class FileSystemFile : FileSystemEntry
             throw new ArgumentException("the file info path provided does not match the file system entry");
 
         Size = file.Length;
+    }
+
+    public void SetStreams(params FileStream[] streams)
+    {
+        VideoStreams = VideoStreams
+            .Union(streams.OfType<VideoStream>())
+            .Intersect(streams.OfType<VideoStream>())
+            .ToList();
+
+        AudioStreams = AudioStreams
+            .Union(streams.OfType<AudioStream>())
+            .Intersect(streams.OfType<AudioStream>())
+            .ToList();
+
+        SubtitleStreams = SubtitleStreams
+            .Union(streams.OfType<SubtitleStream>())
+            .Intersect(streams.OfType<SubtitleStream>())
+            .ToList();
     }
 }
