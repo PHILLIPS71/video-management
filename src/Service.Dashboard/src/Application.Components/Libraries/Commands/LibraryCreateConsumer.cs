@@ -2,9 +2,9 @@
 using EntityFramework.Exceptions.Common;
 using Giantnodes.Infrastructure.Faults;
 using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
-using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using MassTransit;
 using Npgsql;
 
@@ -12,18 +12,18 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Commands
 
 public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 {
-    private readonly ApplicationDbContext _database;
+    private readonly ILibraryRepository _repository;
     private readonly IFileSystem _fileSystem;
     private readonly IFileSystemService _fileSystemService;
     private readonly IFileSystemWatcherService _watcher;
 
     public LibraryCreateConsumer(
-        ApplicationDbContext database,
+        ILibraryRepository repository,
         IFileSystem fileSystem,
         IFileSystemService fileSystemService,
         IFileSystemWatcherService watcher)
     {
-        _database = database;
+        _repository = repository;
         _fileSystem = fileSystem;
         _fileSystemService = fileSystemService;
         _watcher = watcher;
@@ -53,8 +53,8 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 
         try
         {
-            _database.Libraries.Add(library);
-            await _database.SaveChangesAsync(context.CancellationToken);
+            _repository.Create(library);
+            await _repository.SaveChangesAsync(context.CancellationToken);
         }
         catch (UniqueConstraintException ex) when (ex.InnerException is PostgresException pg)
         {

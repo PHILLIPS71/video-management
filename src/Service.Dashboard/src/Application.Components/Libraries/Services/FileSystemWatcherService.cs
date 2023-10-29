@@ -1,6 +1,6 @@
 using System.IO.Abstractions;
 using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Events;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 using MassTransit;
 

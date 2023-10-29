@@ -1,6 +1,5 @@
 using Giantnodes.Infrastructure.DependencyInjection;
 using Giantnodes.Infrastructure.Domain.Services;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 

@@ -1,5 +1,8 @@
-﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values;
+﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
 using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.Persistence.DbContexts;

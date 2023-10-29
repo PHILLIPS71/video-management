@@ -32,6 +32,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Tests.Shared", "tests\Giantnodes.Service.Dashboard.Tests.Shared\Giantnodes.Service.Dashboard.Tests.Shared.csproj", "{80D27505-2E68-4F77-B7FD-78A1C0F237FD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".contracts", ".contracts", "{A14DC95B-D12E-47DC-97D5-B6470418C982}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Encoder.Application.Contracts", "..\Service.Encoder\src\Application.Contracts\Giantnodes.Service.Encoder.Application.Contracts.csproj", "{7EB24DCF-893D-4925-91E5-401E688A1C2D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +54,7 @@ Global
 		{B170206F-710A-4314-9255-EF861FD3A135} = {27214AD8-98E7-4A7D-B67B-575AC944C369}
 		{2120E351-42AA-4478-86C6-DC35AB4E47DA} = {27214AD8-98E7-4A7D-B67B-575AC944C369}
 		{80D27505-2E68-4F77-B7FD-78A1C0F237FD} = {27214AD8-98E7-4A7D-B67B-575AC944C369}
+		{7EB24DCF-893D-4925-91E5-401E688A1C2D} = {A14DC95B-D12E-47DC-97D5-B6470418C982}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{41C6A8F1-A1D9-451B-9162-D8A5404A3C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -100,5 +105,9 @@ Global
 		{80D27505-2E68-4F77-B7FD-78A1C0F237FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80D27505-2E68-4F77-B7FD-78A1C0F237FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80D27505-2E68-4F77-B7FD-78A1C0F237FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EB24DCF-893D-4925-91E5-401E688A1C2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EB24DCF-893D-4925-91E5-401E688A1C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EB24DCF-893D-4925-91E5-401E688A1C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EB24DCF-893D-4925-91E5-401E688A1C2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

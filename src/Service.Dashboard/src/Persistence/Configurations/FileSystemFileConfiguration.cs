@@ -1,6 +1,6 @@
 ﻿using Giantnodes.Infrastructure;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
 using Giantnodes.Service.Dashboard.Domain.Enumerations;
 using Giantnodes.Service.Dashboard.Domain.Values;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

@@ -7,6 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\Service.Encoder\src\Application.Contracts\Giantnodes.Service.Encoder.Application.Contracts.csproj" />
 		<ProjectReference Include="..\Application.Contracts\Giantnodes.Service.Dashboard.Application.Contracts.csproj" />
 		<ProjectReference Include="..\Persistence\Giantnodes.Service.Dashboard.Persistence.csproj" />
 	</ItemGroup>
