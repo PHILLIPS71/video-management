@@ -4,6 +4,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".referenced", ".referenced"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure", "..\Infrastructure\src\Infrastructure\Giantnodes.Infrastructure.csproj", "{5A75D2A0-B3FF-4225-977F-2EA92F5D08A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.EntityFrameworkCore", "..\Infrastructure\src\EntityFrameworkCore\Giantnodes.Infrastructure.EntityFrameworkCore.csproj", "{9734EB1A-4571-4F2F-96BA-D8119120E72C}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.GraphQL", "..\Infrastructure\src\GraphQL\Giantnodes.Infrastructure.GraphQL.csproj", "{82D30D2C-3AB9-415C-9D3D-E74A7BBABCF2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.MassTransit", "..\Infrastructure\src\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj", "{572D76F3-7BBA-44C9-99A5-CDDD995DC2EB}"
@@ -55,6 +57,7 @@ Global
 		{2120E351-42AA-4478-86C6-DC35AB4E47DA} = {27214AD8-98E7-4A7D-B67B-575AC944C369}
 		{80D27505-2E68-4F77-B7FD-78A1C0F237FD} = {27214AD8-98E7-4A7D-B67B-575AC944C369}
 		{7EB24DCF-893D-4925-91E5-401E688A1C2D} = {A14DC95B-D12E-47DC-97D5-B6470418C982}
+		{9734EB1A-4571-4F2F-96BA-D8119120E72C} = {D31480C0-C771-4832-B82F-E3B4EFC84E6C}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{41C6A8F1-A1D9-451B-9162-D8A5404A3C39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -109,5 +112,9 @@ Global
 		{7EB24DCF-893D-4925-91E5-401E688A1C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EB24DCF-893D-4925-91E5-401E688A1C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EB24DCF-893D-4925-91E5-401E688A1C2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9734EB1A-4571-4F2F-96BA-D8119120E72C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9734EB1A-4571-4F2F-96BA-D8119120E72C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9734EB1A-4571-4F2F-96BA-D8119120E72C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9734EB1A-4571-4F2F-96BA-D8119120E72C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -15,6 +15,4 @@ public interface IRepository<TEntity>
         CancellationToken cancellation = default);
 
     TEntity Create(TEntity entity);
-
-    Task SaveChangesAsync(CancellationToken cancellation = default);
 }

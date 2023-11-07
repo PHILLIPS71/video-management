@@ -47,9 +47,4 @@ public sealed class LibraryRepository : ILibraryRepository
     {
         return _database.Libraries.Add(entity).Entity;
     }
-
-    public Task SaveChangesAsync(CancellationToken cancellation = default)
-    {
-        return _database.SaveChangesAsync(cancellation);
-    }
 }

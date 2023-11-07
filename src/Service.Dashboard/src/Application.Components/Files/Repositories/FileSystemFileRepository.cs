@@ -51,9 +51,4 @@ public class FileSystemFileRepository : IFileSystemFileRepository
     {
         return _database.FileSystemFiles.Add(entity).Entity;
     }
-
-    public Task SaveChangesAsync(CancellationToken cancellation = default)
-    {
-        return _database.SaveChangesAsync(cancellation);
-    }
 }

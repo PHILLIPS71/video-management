@@ -18,7 +18,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services
-            .AddPersistenceServices(_configuration)
+            .SetupPersistence(_configuration)
             .AddApplicationServices()
             .AddHttpApiServices();
     }

@@ -22,7 +22,7 @@ public class LibraryCreateMutation
         string name,
         string slug,
         string path,
-        bool isWatched,
+        // bool isWatched,
         CancellationToken cancellation = default)
     {
         var command = new LibraryCreate.Command
@@ -30,7 +30,7 @@ public class LibraryCreateMutation
             Name = name,
             Slug = slug,
             FullPath = path,
-            IsWatched = isWatched
+            // IsWatched = isWatched
         };
 
         Response response = await request.GetResponse<LibraryCreate.Result, DomainFault, ValidationFault>(command, cancellation);

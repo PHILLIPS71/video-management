@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using EntityFramework.Exceptions.Common;
 using Giantnodes.Infrastructure.Faults;
+using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Repositories;
@@ -12,17 +13,20 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Commands
 
 public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 {
+    private readonly IUnitOfWorkService _uow;
     private readonly ILibraryRepository _repository;
     private readonly IFileSystem _fileSystem;
     private readonly IFileSystemService _fileSystemService;
     private readonly IFileSystemWatcherService _watcher;
 
     public LibraryCreateConsumer(
+        IUnitOfWorkService uow,
         ILibraryRepository repository,
         IFileSystem fileSystem,
         IFileSystemService fileSystemService,
         IFileSystemWatcherService watcher)
     {
+        _uow = uow;
         _repository = repository;
         _fileSystem = fileSystem;
         _fileSystemService = fileSystemService;
@@ -51,21 +55,24 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
             return;
         }
 
-        try
+        using (var uow = _uow.Begin())
         {
-            _repository.Create(library);
-            await _repository.SaveChangesAsync(context.CancellationToken);
-        }
-        catch (UniqueConstraintException ex) when (ex.InnerException is PostgresException pg)
-        {
-            var param = pg.ConstraintName switch
+            try
             {
-                "ix_libraries_slug" => nameof(context.Message.Slug),
-                _ => null
-            };
+                _repository.Create(library);
+                await uow.CommitAsync(context.CancellationToken);
+            }
+            catch (UniqueConstraintException ex) when (ex.InnerException is PostgresException pg)
+            {
+                var param = pg.ConstraintName switch
+                {
+                    "ix_libraries_slug" => nameof(context.Message.Slug),
+                    _ => null
+                };
 
-            await context.RejectAsync(FaultKind.Constraint, param);
-            return;
+                await context.RejectAsync(FaultKind.Constraint, param);
+                return;
+            }
         }
 
         await context.RespondAsync(new LibraryCreate.Result { Id = library.Id });
