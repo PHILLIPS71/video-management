@@ -1,6 +1,6 @@
 import type { ExploreTableFileFragment$key } from '@/__generated__/ExploreTableFileFragment.graphql'
 
-import { Table, Typography } from '@giantnodes/react'
+import { Chip, Table, Typography } from '@giantnodes/react'
 import { IconFile } from '@tabler/icons-react'
 import { filesize } from 'filesize'
 import { graphql, useFragment } from 'react-relay'
@@ -21,6 +21,17 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
           extension
           directory_path
         }
+        video_streams {
+          codec
+          quality {
+            aspect_ratio
+            width
+            height
+            resolution {
+              abbreviation
+            }
+          }
+        }
       }
     `,
     $key
@@ -32,6 +43,20 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
         <div className="flex flex-row items-center gap-2">
           <IconFile size={20} />
           <Typography.Text>{data.path_info.name}</Typography.Text>
+
+          {data.video_streams.map((stream) => (
+            <>
+              <Chip color="info" size="sm">
+                {stream.codec}
+              </Chip>
+              <Chip color="brand" size="sm" title={`${stream.quality.width}x${stream.quality.height}`}>
+                {stream.quality.resolution.abbreviation}
+              </Chip>
+              <Chip color="warning" size="sm">
+                {stream.quality.aspect_ratio}
+              </Chip>
+            </>
+          ))}
         </div>
       </Table.Data>
       <Table.Data>

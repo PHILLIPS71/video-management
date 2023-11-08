@@ -31,6 +31,13 @@ public class FileSystemFileRepository : IFileSystemFileRepository
             .AsQueryable();
     }
 
+    public Task<bool> ExistsAsync(
+        Expression<Func<FileSystemFile, bool>> predicate, 
+        CancellationToken cancellation = default)
+    {
+        return Build().AnyAsync(predicate, cancellation);
+    }
+
     public Task<FileSystemFile?> SingleOrDefaultAsync(
         Expression<Func<FileSystemFile, bool>> predicate,
         CancellationToken cancellation = default)

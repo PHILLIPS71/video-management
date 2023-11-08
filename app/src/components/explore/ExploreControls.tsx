@@ -1,20 +1,15 @@
+import type { ExploreControls_DirectoryProbeMutation } from '@/__generated__/ExploreControls_DirectoryProbeMutation.graphql'
 import type { ExploreControlsFragment$key } from '@/__generated__/ExploreControlsFragment.graphql'
+import type { FileSizeReturnObject } from 'filesize'
 
 import { Button, Typography } from '@giantnodes/react'
 import { IconDeviceFloppy, IconFile, IconFolderFilled, IconFolderSearch } from '@tabler/icons-react'
 import { filesize } from 'filesize'
 import React from 'react'
-import { graphql, useFragment } from 'react-relay'
+import { graphql, useFragment, useMutation } from 'react-relay'
 
 type ExploreControlsProps = {
   $key: ExploreControlsFragment$key
-}
-
-type SizeObject = {
-  value: number
-  symbol: string
-  exponent: number
-  unit: string
 }
 
 const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
@@ -22,15 +17,44 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
     graphql`
       fragment ExploreControlsFragment on FileSystemDirectory {
         size
+        path_info {
+          full_name
+        }
       }
     `,
     $key
   )
 
-  const size = React.useMemo<SizeObject>(
-    () => filesize(data.size, { base: 2, output: 'object' }) as SizeObject,
+  const size = React.useMemo<FileSizeReturnObject>(
+    () => filesize(data.size, { base: 2, output: 'object' }),
     [data.size]
   )
+
+  const [commit, isLoading] = useMutation<ExploreControls_DirectoryProbeMutation>(graphql`
+    mutation ExploreControls_LibraryProbeMutation($input: Directory_probeInput!) {
+      directory_probe(input: $input) {
+        string
+        errors {
+          ... on DomainError {
+            message
+          }
+          ... on ValidationError {
+            message
+          }
+        }
+      }
+    }
+  `)
+
+  const onScanClick = () => {
+    commit({
+      variables: {
+        input: {
+          path: data.path_info.full_name,
+        },
+      },
+    })
+  }
 
   return (
     <div className="flex gap-4 flex-col sm:flex-row">
@@ -54,7 +78,7 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
         </div>
       </div>
 
-      <Button color="brand" size="sm">
+      <Button color="brand" disabled={isLoading} size="sm" onClick={() => onScanClick()}>
         <IconFolderSearch size={16} /> Scan
       </Button>
     </div>

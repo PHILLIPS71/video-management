@@ -1,6 +1,6 @@
 'use client'
 
-import type { page_LibraryCreate_CreateLibraryMutation } from '@/__generated__/page_LibraryCreate_CreateLibraryMutation.graphql'
+import type { page_LibraryCreate_LibraryCreateMutation } from '@/__generated__/page_LibraryCreate_LibraryCreateMutation.graphql'
 import type { SubmitHandler } from 'react-hook-form'
 
 import { Alert, Button, Card, Form, Input, Typography } from '@giantnodes/react'
@@ -25,7 +25,7 @@ const LibraryCreateSchema = z.object({
   name: z.string().trim().min(1, { message: 'not enough chars' }).max(128, { message: 'too many chars' }),
   slug: z.string().trim().min(1, { message: 'not enough chars' }).max(128, { message: 'too many chars' }),
   path: z.string().trim().min(1, { message: 'not enough chars' }),
-  is_watched: z.boolean().default(true),
+  is_watched: z.boolean().default(false),
 })
 
 type LibraryCreateInput = z.infer<typeof LibraryCreateSchema>
@@ -35,8 +35,8 @@ const LibraryCreatePage = () => {
   const form = useForm<LibraryCreateInput>({ resolver: zodResolver(LibraryCreateSchema) })
   const [errors, setErrors] = React.useState<string[]>([])
 
-  const [commit, isLoading] = useMutation<page_LibraryCreate_CreateLibraryMutation>(graphql`
-    mutation page_LibraryCreate_CreateLibraryMutation($connections: [ID!]!, $input: Library_createInput!) {
+  const [commit, isLoading] = useMutation<page_LibraryCreate_LibraryCreateMutation>(graphql`
+    mutation page_LibraryCreate_LibraryCreateMutation($connections: [ID!]!, $input: Library_createInput!) {
       library_create(input: $input) {
         library @appendNode(connections: $connections, edgeTypeName: "LibrariesEdge") {
           slug
@@ -64,7 +64,7 @@ const LibraryCreatePage = () => {
           name: data.name,
           slug: SlugTransform.parse(data.slug),
           path: data.path,
-          is_watched: data.is_watched,
+          // is_watched: data.is_watched,
         },
       },
       onCompleted: (payload) => {

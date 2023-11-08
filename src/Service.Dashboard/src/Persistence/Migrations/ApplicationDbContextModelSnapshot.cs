@@ -18,17 +18,21 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "7.0.11")
+                .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemEntry", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<byte[]>("ConcurrencyToken")
+                        .HasColumnType("bytea")
+                        .HasColumnName("concurrency_token");
 
                     b.Property<Guid>("LibraryId")
                         .HasColumnType("uuid")
@@ -55,7 +59,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.UseTpcMappingStrategy();
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Library", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,30 +101,30 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.ToTable("libraries", "public");
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemDirectory", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>
                 {
-                    b.HasBaseType("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemEntry");
+                    b.HasBaseType("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry");
 
                     b.ToTable("FileSystemDirectories", "public");
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemFile", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile", b =>
                 {
-                    b.HasBaseType("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemEntry");
+                    b.HasBaseType("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry");
 
                     b.ToTable("FileSystemFiles", "public");
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemEntry", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry", b =>
                 {
-                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", "Library")
+                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Library", "Library")
                         .WithMany("Entries")
                         .HasForeignKey("LibraryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_file_system_entries_libraries_library_id");
 
-                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemDirectory", "ParentDirectory")
+                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.FileSystemDirectory", "ParentDirectory")
                         .WithMany("Entries")
                         .HasForeignKey("ParentDirectoryId")
                         .HasConstraintName("fk_file_system_entries_file_system_directories_parent_directory_id");
@@ -130,7 +134,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.Navigation("ParentDirectory");
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Library", b =>
                 {
                     b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Values.PathInfo", "PathInfo", b1 =>
                         {
@@ -173,7 +177,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemDirectory", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>
                 {
                     b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Values.PathInfo", "PathInfo", b1 =>
                         {
@@ -216,7 +220,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemFile", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile", b =>
                 {
                     b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Values.PathInfo", "PathInfo", b1 =>
                         {
@@ -255,7 +259,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasConstraintName("fk_file_system_files_file_system_files_id");
                         });
 
-                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values.AudioStream", "AudioStreams", b1 =>
+                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.AudioStream", "AudioStreams", b1 =>
                         {
                             b1.Property<Guid>("FileSystemFileId")
                                 .HasColumnType("uuid")
@@ -311,7 +315,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasConstraintName("fk_audio_streams_file_system_entries_file_system_file_id");
                         });
 
-                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values.SubtitleStream", "SubtitleStreams", b1 =>
+                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.SubtitleStream", "SubtitleStreams", b1 =>
                         {
                             b1.Property<Guid>("FileSystemFileId")
                                 .HasColumnType("uuid")
@@ -334,7 +338,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasColumnName("index");
 
                             b1.Property<string>("Language")
-                                .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("language");
 
@@ -352,7 +355,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasConstraintName("fk_subtitle_streams_file_system_entries_file_system_file_id");
                         });
 
-                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values.VideoStream", "VideoStreams", b1 =>
+                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.VideoStream", "VideoStreams", b1 =>
                         {
                             b1.Property<Guid>("FileSystemFileId")
                                 .HasColumnType("uuid")
@@ -400,7 +403,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasForeignKey("FileSystemFileId")
                                 .HasConstraintName("fk_video_streams_file_system_entries_file_system_file_id");
 
-                            b1.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Values.VideoQuality", "Quality", b2 =>
+                            b1.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.VideoQuality", "Quality", b2 =>
                                 {
                                     b2.Property<Guid>("VideoStreamFileSystemFileId")
                                         .HasColumnType("uuid")
@@ -450,12 +453,12 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.Navigation("VideoStreams");
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.Library", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Library", b =>
                 {
                     b.Navigation("Entries");
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Entities.FileSystemDirectory", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>
                 {
                     b.Navigation("Entries");
                 });

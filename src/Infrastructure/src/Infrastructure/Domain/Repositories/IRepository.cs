@@ -6,6 +6,10 @@ namespace Giantnodes.Infrastructure.Domain.Repositories;
 public interface IRepository<TEntity>
     where TEntity : IAggregateRoot
 {
+    Task<bool> ExistsAsync(
+        Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellation = default);
+
     Task<TEntity?> SingleOrDefaultAsync(
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellation = default);

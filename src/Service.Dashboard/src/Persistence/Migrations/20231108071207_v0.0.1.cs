@@ -43,14 +43,15 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    size = table.Column<long>(type: "bigint", nullable: false),
-                    parent_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
                     library_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    parent_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    size = table.Column<long>(type: "bigint", nullable: false),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
-                    path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false)
+                    path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
+                    concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -76,14 +77,15 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    size = table.Column<long>(type: "bigint", nullable: false),
-                    parent_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
                     library_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    parent_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    size = table.Column<long>(type: "bigint", nullable: false),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
-                    path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false)
+                    path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
+                    concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -140,8 +142,8 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     file_system_file_id = table.Column<Guid>(type: "uuid", nullable: false),
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    language = table.Column<string>(type: "text", nullable: false),
                     title = table.Column<string>(type: "text", nullable: true),
+                    language = table.Column<string>(type: "text", nullable: true),
                     index = table.Column<int>(type: "integer", nullable: false),
                     codec = table.Column<string>(type: "text", nullable: false)
                 },

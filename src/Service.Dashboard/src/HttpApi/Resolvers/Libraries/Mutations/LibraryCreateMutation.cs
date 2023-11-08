@@ -30,7 +30,7 @@ public class LibraryCreateMutation
             Name = name,
             Slug = slug,
             FullPath = path,
-            // IsWatched = isWatched
+            IsWatched = false
         };
 
         Response response = await request.GetResponse<LibraryCreate.Result, DomainFault, ValidationFault>(command, cancellation);

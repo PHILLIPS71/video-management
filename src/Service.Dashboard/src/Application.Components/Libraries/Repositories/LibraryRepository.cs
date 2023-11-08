@@ -27,6 +27,13 @@ public sealed class LibraryRepository : ILibraryRepository
             .AsQueryable();
     }
 
+    public Task<bool> ExistsAsync(
+        Expression<Func<Library, bool>> predicate, 
+        CancellationToken cancellation = default)
+    {
+        return Build().AnyAsync(predicate, cancellation);
+    }
+
     public Task<Library?> SingleOrDefaultAsync(
         Expression<Func<Library, bool>> predicate,
         CancellationToken cancellation = default)
