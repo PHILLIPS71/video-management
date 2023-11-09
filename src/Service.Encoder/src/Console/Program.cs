@@ -25,15 +25,15 @@ public static class Program
             .ConfigureServices((context, services) =>
             {
                 var configuration = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile("appsettings.json", false, true)
+                    .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", true, true)
                     .AddEnvironmentVariables()
                     .AddCommandLine(args)
                     .Build();
-                
+
                 services
-                    .AddPersistenceServices(configuration)
-                    .AddApplicationServices()
+                    .SetupPersistence(configuration)
+                    .SetupApplicationComponents(configuration)
                     .AddConsoleServices();
             })
             .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));

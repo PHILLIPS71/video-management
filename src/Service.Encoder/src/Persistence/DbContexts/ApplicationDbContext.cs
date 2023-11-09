@@ -10,6 +10,12 @@ public class ApplicationDbContext : SagaDbContext
     {
     }
 
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        builder.HasDefaultSchema("encoder");
+    }
+
     protected override IEnumerable<ISagaClassMap> Configurations
     {
         get

@@ -1,5 +1,6 @@
 using System.Reflection;
 using Giantnodes.Infrastructure.Masstransit.Validation;
+using Giantnodes.Service.Encoder.Persistence.DbContexts;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,11 +22,26 @@ public static class ConsoleServiceRegistration
                     .SetKebabCaseEndpointNameFormatter();
 
                 options
+                    .AddDelayedMessageScheduler();
+
+                options
+                    .SetJobConsumerOptions();
+
+                options
+                    .AddJobSagaStateMachines(configure => configure.FinalizeCompleted = true)
+                    .EntityFrameworkRepository(configure =>
+                    {
+                        configure.ExistingDbContext<ApplicationDbContext>();
+                        configure.UsePostgres();
+                    });
+
+                options
                     .AddConsumers(Assembly.Load("Giantnodes.Service.Encoder.Application.Components"));
 
                 options
                     .UsingRabbitMq((context, config) =>
                     {
+                        config.UseDelayedMessageScheduler();
                         config.UseConsumeFilter(typeof(FluentValidationFilter<>), context);
 
                         config.ConfigureEndpoints(context);
