@@ -25,6 +25,7 @@ public class FileSystemFileRepository : IFileSystemFileRepository
             .FileSystemFiles
             .Include(x => x.Library)
             .Include(x => x.ParentDirectory)
+            .Include(x => x.Transcodes)
             .Include(x => x.VideoStreams)
             .Include(x => x.AudioStreams)
             .Include(x => x.SubtitleStreams)
@@ -32,10 +33,17 @@ public class FileSystemFileRepository : IFileSystemFileRepository
     }
 
     public Task<bool> ExistsAsync(
-        Expression<Func<FileSystemFile, bool>> predicate, 
+        Expression<Func<FileSystemFile, bool>> predicate,
         CancellationToken cancellation = default)
     {
         return Build().AnyAsync(predicate, cancellation);
+    }
+
+    public Task<FileSystemFile> SingleAsync(
+        Expression<Func<FileSystemFile, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return Build().SingleAsync(predicate, cancellation);
     }
 
     public Task<FileSystemFile?> SingleOrDefaultAsync(
@@ -49,9 +57,7 @@ public class FileSystemFileRepository : IFileSystemFileRepository
         Expression<Func<FileSystemFile, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build()
-            .Where(predicate)
-            .ToListAsync(cancellation);
+        return Build().Where(predicate).ToListAsync(cancellation);
     }
 
     public FileSystemFile Create(FileSystemFile entity)

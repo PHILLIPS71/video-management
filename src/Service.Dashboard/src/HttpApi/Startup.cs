@@ -19,7 +19,7 @@ public class Startup
     {
         services
             .SetupPersistence(_configuration)
-            .AddApplicationServices()
+            .SetupApplicationComponents()
             .AddHttpApiServices();
     }
 

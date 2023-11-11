@@ -15,19 +15,6 @@ public static class Setup
 {
     public static IServiceCollection SetupPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        // services
-        //     .AddDbContextPool<ApplicationDbContext>(options =>
-        //     {
-        //         options
-        //             .UseNpgsql(configuration.GetConnectionString(name: "DatabaseConnection"), optionsBuilder =>
-        //             {
-        //                 optionsBuilder.MigrationsHistoryTable("__migrations");
-        //                 optionsBuilder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-        //             })
-        //             .UseSnakeCaseNamingConvention()
-        //             .UseExceptionProcessor();
-        //     });
-
         services
             .AddDbContext<ApplicationDbContext>(options =>
             {

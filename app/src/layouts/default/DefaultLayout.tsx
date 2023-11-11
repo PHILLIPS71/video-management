@@ -6,7 +6,6 @@ import React from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import Navbar from '@/layouts/default/components/navbar/Navbar'
-import NavigationMobile from '@/layouts/default/components/navbar/Navbar.mobile'
 import Sidebar from '@/layouts/default/components/sidebar/Sidebar'
 
 type DefaultLayoutProps = React.PropsWithChildren

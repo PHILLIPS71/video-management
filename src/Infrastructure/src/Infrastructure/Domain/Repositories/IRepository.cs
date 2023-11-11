@@ -10,6 +10,10 @@ public interface IRepository<TEntity>
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellation = default);
 
+    Task<TEntity> SingleAsync(
+        Expression<Func<TEntity, bool>> predicate,
+        CancellationToken cancellation = default);
+
     Task<TEntity?> SingleOrDefaultAsync(
         Expression<Func<TEntity, bool>> predicate,
         CancellationToken cancellation = default);

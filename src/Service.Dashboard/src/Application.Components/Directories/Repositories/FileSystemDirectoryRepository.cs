@@ -29,10 +29,17 @@ public class FileSystemDirectoryRepository : IFileSystemDirectoryRepository
     }
 
     public Task<bool> ExistsAsync(
-        Expression<Func<FileSystemDirectory, bool>> predicate, 
+        Expression<Func<FileSystemDirectory, bool>> predicate,
         CancellationToken cancellation = default)
     {
         return Build().AnyAsync(predicate, cancellation);
+    }
+
+    public Task<FileSystemDirectory> SingleAsync(
+        Expression<Func<FileSystemDirectory, bool>> predicate,
+        CancellationToken cancellation = default)
+    {
+        return Build().SingleAsync(predicate, cancellation);
     }
 
     public Task<FileSystemDirectory?> SingleOrDefaultAsync(

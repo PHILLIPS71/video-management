@@ -13,9 +13,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Giantnodes.Service.Dashboard.Application.Components;
 
-public static class ApplicationServiceRegistration
+public static class Setup
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static IServiceCollection SetupApplicationComponents(this IServiceCollection services)
     {
         services.TryAddSingleton<IFileSystem, FileSystem>();
         services.TryAddSingleton<IFileSystemService, FileSystemService>();

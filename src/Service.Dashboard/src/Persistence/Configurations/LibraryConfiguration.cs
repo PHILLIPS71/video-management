@@ -10,16 +10,16 @@ public class LibraryConfiguration : IEntityTypeConfiguration<Library>
     public void Configure(EntityTypeBuilder<Library> builder)
     {
         builder
+            .Property(p => p.ConcurrencyToken)
+            .IsRowVersion();
+
+        builder
             .HasIndex(p => p.Slug)
             .IsUnique();
 
         builder
             .Property(p => p.Status)
             .HasConversion<string>();
-
-        builder
-            .Property(p => p.ConcurrencyToken)
-            .IsRowVersion();
 
         builder
             .OwnsOne<PathInfo>(p => p.PathInfo);

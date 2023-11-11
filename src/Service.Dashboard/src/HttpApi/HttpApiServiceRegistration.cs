@@ -49,11 +49,27 @@ public static class HttpApiServiceRegistration
                     .SetKebabCaseEndpointNameFormatter();
 
                 options
+                    .AddDelayedMessageScheduler();
+
+                options
                     .AddConsumers(Assembly.Load("Giantnodes.Service.Dashboard.Application.Components"));
+
+                options
+                    .AddSagaStateMachines(Assembly.Load("Giantnodes.Service.Dashboard.Application.Components"));
+
+                options
+                    .SetEntityFrameworkSagaRepositoryProvider(r =>
+                    {
+                        r.ConcurrencyMode = ConcurrencyMode.Optimistic;
+
+                        r.ExistingDbContext<ApplicationDbContext>();
+                        r.UsePostgres();
+                    });
 
                 options
                     .UsingRabbitMq((context, config) =>
                     {
+                        config.UseDelayedMessageScheduler();
                         config.UseConsumeFilter(typeof(FluentValidationFilter<>), context);
 
                         config.ConfigureEndpoints(context);

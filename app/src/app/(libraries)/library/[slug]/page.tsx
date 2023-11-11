@@ -1,80 +1,52 @@
 'use client'
 
-import { Card, Chip, Table, Typography } from '@giantnodes/react'
-import { IconGripVertical } from '@tabler/icons-react'
+import type { page_LibraryDashboardQuery } from '@/__generated__/page_LibraryDashboardQuery.graphql'
 
-const LibraryPage = () => (
-  <Card className="max-w-6xl">
-    <Card.Header>Tasks</Card.Header>
-    <Table size="sm">
-      <Table.Body>
-        <Table.Row className="cursor-grab">
-          <Table.Data>
-            <div className="flex flex-row items-center gap">
-              <IconGripVertical size={16} />
-              <Typography.Text>1883 - S01E01 - 1883.mp4</Typography.Text>
-            </div>
-          </Table.Data>
+import { Card } from '@giantnodes/react'
+import { Suspense } from 'react'
+import { graphql, useLazyLoadQuery } from 'react-relay'
 
-          <Table.Data align="right">
-            <Chip color="success">in progress</Chip>
-          </Table.Data>
-        </Table.Row>
+import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
+import TranscodeTable from '@/components/dashboard/TranscodeTable'
 
-        <Table.Row className="cursor-grab">
-          <Table.Data>
-            <div className="flex flex-row items-center gap">
-              <IconGripVertical size={16} />
-              <Typography.Text>1883 - S01E02 - Behind Us, A Cliff.mp4</Typography.Text>
-            </div>
-          </Table.Data>
+const LibraryDashboard = () => {
+  const { library } = useLibraryContext()
 
-          <Table.Data align="right">
-            <Chip color="success">in progress</Chip>
-          </Table.Data>
-        </Table.Row>
+  const query = useLazyLoadQuery<page_LibraryDashboardQuery>(
+    graphql`
+      query page_LibraryDashboardQuery(
+        $where: TranscodeFilterInput
+        $first: Int
+        $after: String
+        $order: [TranscodeSortInput!]
+      ) {
+        ...TranscodeTableFragment @arguments(where: $where, first: $first, after: $after, order: $order)
+      }
+    `,
+    {
+      first: 8,
+      order: [{ status: 'ASC' }],
+      where: {
+        file: {
+          library: {
+            id: {
+              eq: library.id,
+            },
+          },
+        },
+      },
+    }
+  )
 
-        <Table.Row className="cursor-grab">
-          <Table.Data>
-            <div className="flex flex-row items-center gap">
-              <IconGripVertical size={16} />
-              <Typography.Text>1883 - S01E03 - River.mp4</Typography.Text>
-            </div>
-          </Table.Data>
+  return (
+    <Card className="max-w-6xl">
+      <Card.Header>Tasks</Card.Header>
 
-          <Table.Data align="right">
-            <Chip color="warning">paused</Chip>
-          </Table.Data>
-        </Table.Row>
+      <Suspense>
+        <TranscodeTable $key={query} />
+      </Suspense>
+    </Card>
+  )
+}
 
-        <Table.Row className="cursor-grab">
-          <Table.Data>
-            <div className="flex flex-row items-center gap">
-              <IconGripVertical size={16} />
-              <Typography.Text>1883 - S01E04 - The Crossing.mp4</Typography.Text>
-            </div>
-          </Table.Data>
-
-          <Table.Data align="right">
-            <Chip color="info">queued</Chip>
-          </Table.Data>
-        </Table.Row>
-
-        <Table.Row className="cursor-grab">
-          <Table.Data>
-            <div className="flex flex-row items-center gap">
-              <IconGripVertical size={16} />
-              <Typography.Text>1883 - S01E05 - The Fangs of Freedom.mp4</Typography.Text>
-            </div>
-          </Table.Data>
-
-          <Table.Data align="right">
-            <Chip color="info">queued</Chip>
-          </Table.Data>
-        </Table.Row>
-      </Table.Body>
-    </Table>
-  </Card>
-)
-
-export default LibraryPage
+export default LibraryDashboard
