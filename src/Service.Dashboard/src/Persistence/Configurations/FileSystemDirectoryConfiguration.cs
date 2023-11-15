@@ -10,6 +10,10 @@ public class FileSystemDirectoryConfiguration : IEntityTypeConfiguration<FileSys
     public void Configure(EntityTypeBuilder<FileSystemDirectory> builder)
     {
         builder
+            .Property(p => p.Id)
+            .ValueGeneratedNever();
+
+        builder
             .OwnsOne<PathInfo>(p => p.PathInfo);
     }
 }

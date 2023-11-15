@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Data;
+using System.Reflection;
 using Giantnodes.Infrastructure.GraphQL;
 using Giantnodes.Infrastructure.GraphQL.Scalars;
 using Giantnodes.Infrastructure.Masstransit.Validation;
@@ -58,12 +59,19 @@ public static class HttpApiServiceRegistration
                     .AddSagaStateMachines(Assembly.Load("Giantnodes.Service.Dashboard.Application.Components"));
 
                 options
-                    .SetEntityFrameworkSagaRepositoryProvider(r =>
+                    .SetEntityFrameworkSagaRepositoryProvider(configure =>
                     {
-                        r.ConcurrencyMode = ConcurrencyMode.Optimistic;
+                        configure.ConcurrencyMode = ConcurrencyMode.Optimistic;
 
-                        r.ExistingDbContext<ApplicationDbContext>();
-                        r.UsePostgres();
+                        configure.ExistingDbContext<ApplicationDbContext>();
+                        configure.UsePostgres();
+                    });
+
+                options
+                    .AddEntityFrameworkOutbox<ApplicationDbContext>(configure =>
+                    {
+                        configure.UsePostgres();
+                        configure.UseBusOutbox();
                     });
 
                 options

@@ -13,6 +13,10 @@ public class FileSystemFileConfiguration : IEntityTypeConfiguration<FileSystemFi
     public void Configure(EntityTypeBuilder<FileSystemFile> builder)
     {
         builder
+            .Property(p => p.Id)
+            .ValueGeneratedNever();
+
+        builder
             .OwnsOne<PathInfo>(p => p.PathInfo);
 
         builder

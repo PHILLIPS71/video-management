@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231108071207_v0.0.1")]
+    [Migration("20231113081710_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("public")
+                .HasDefaultSchema("dashboard")
                 .HasAnnotation("ProductVersion", "7.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -29,7 +29,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -62,10 +61,63 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.UseTpcMappingStrategy();
                 });
 
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities.Transcode", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("completed_at");
+
+                    b.Property<byte[]>("ConcurrencyToken")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea")
+                        .HasColumnName("concurrency_token");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("FailedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("failed_at");
+
+                    b.Property<Guid>("FileId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("file_id");
+
+                    b.Property<float?>("Percent")
+                        .HasColumnType("real")
+                        .HasColumnName("percent");
+
+                    b.Property<DateTime?>("StartedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("started_at");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_transcodes");
+
+                    b.HasIndex("FileId")
+                        .HasDatabaseName("ix_transcodes_file_id");
+
+                    b.ToTable("transcodes", "dashboard");
+                });
+
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Library", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -101,21 +153,287 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_libraries_slug");
 
-                    b.ToTable("libraries", "public");
+                    b.ToTable("libraries", "dashboard");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Persistence.Sagas.TranscodeSagaState", b =>
+                {
+                    b.Property<Guid>("CorrelationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<string>("CurrentState")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("current_state");
+
+                    b.Property<string>("InputFullPath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("input_full_path");
+
+                    b.Property<Guid?>("JobId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("job_id");
+
+                    b.Property<string>("OutputFullPath")
+                        .HasColumnType("text")
+                        .HasColumnName("output_full_path");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea")
+                        .HasColumnName("row_version");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("submitted_at");
+
+                    b.HasKey("CorrelationId")
+                        .HasName("pk_transcode_saga_state");
+
+                    b.HasIndex("JobId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_transcode_saga_state_job_id");
+
+                    b.HasIndex("OutputFullPath")
+                        .IsUnique()
+                        .HasDatabaseName("ix_transcode_saga_state_output_full_path");
+
+                    b.ToTable("transcode_saga_state", "dashboard");
+                });
+
+            modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime?>("Consumed")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("consumed");
+
+                    b.Property<Guid>("ConsumerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("consumer_id");
+
+                    b.Property<DateTime?>("Delivered")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("delivered");
+
+                    b.Property<DateTime?>("ExpirationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiration_time");
+
+                    b.Property<long?>("LastSequenceNumber")
+                        .HasColumnType("bigint")
+                        .HasColumnName("last_sequence_number");
+
+                    b.Property<Guid>("LockId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("lock_id");
+
+                    b.Property<Guid>("MessageId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("message_id");
+
+                    b.Property<int>("ReceiveCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("receive_count");
+
+                    b.Property<DateTime>("Received")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("received");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea")
+                        .HasColumnName("row_version");
+
+                    b.HasKey("Id")
+                        .HasName("pk_inbox_state");
+
+                    b.HasAlternateKey("MessageId", "ConsumerId")
+                        .HasName("ak_inbox_state_message_id_consumer_id");
+
+                    b.HasIndex("Delivered")
+                        .HasDatabaseName("ix_inbox_state_delivered");
+
+                    b.ToTable("inbox_state", "dashboard");
+                });
+
+            modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>
+                {
+                    b.Property<long>("SequenceNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("sequence_number");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("SequenceNumber"));
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("body");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("content_type");
+
+                    b.Property<Guid?>("ConversationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("conversation_id");
+
+                    b.Property<Guid?>("CorrelationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<string>("DestinationAddress")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("destination_address");
+
+                    b.Property<DateTime?>("EnqueueTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("enqueue_time");
+
+                    b.Property<DateTime?>("ExpirationTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiration_time");
+
+                    b.Property<string>("FaultAddress")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("fault_address");
+
+                    b.Property<string>("Headers")
+                        .HasColumnType("text")
+                        .HasColumnName("headers");
+
+                    b.Property<Guid?>("InboxConsumerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("inbox_consumer_id");
+
+                    b.Property<Guid?>("InboxMessageId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("inbox_message_id");
+
+                    b.Property<Guid?>("InitiatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("initiator_id");
+
+                    b.Property<Guid>("MessageId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("message_id");
+
+                    b.Property<string>("MessageType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("message_type");
+
+                    b.Property<Guid?>("OutboxId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("outbox_id");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("text")
+                        .HasColumnName("properties");
+
+                    b.Property<Guid?>("RequestId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("request_id");
+
+                    b.Property<string>("ResponseAddress")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("response_address");
+
+                    b.Property<DateTime>("SentTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("sent_time");
+
+                    b.Property<string>("SourceAddress")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("source_address");
+
+                    b.HasKey("SequenceNumber")
+                        .HasName("pk_outbox_message");
+
+                    b.HasIndex("EnqueueTime")
+                        .HasDatabaseName("ix_outbox_message_enqueue_time");
+
+                    b.HasIndex("ExpirationTime")
+                        .HasDatabaseName("ix_outbox_message_expiration_time");
+
+                    b.HasIndex("OutboxId", "SequenceNumber")
+                        .IsUnique()
+                        .HasDatabaseName("ix_outbox_message_outbox_id_sequence_number");
+
+                    b.HasIndex("InboxMessageId", "InboxConsumerId", "SequenceNumber")
+                        .IsUnique()
+                        .HasDatabaseName("ix_outbox_message_inbox_message_id_inbox_consumer_id_sequence_");
+
+                    b.ToTable("outbox_message", "dashboard");
+                });
+
+            modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxState", b =>
+                {
+                    b.Property<Guid>("OutboxId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("outbox_id");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
+
+                    b.Property<DateTime?>("Delivered")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("delivered");
+
+                    b.Property<long?>("LastSequenceNumber")
+                        .HasColumnType("bigint")
+                        .HasColumnName("last_sequence_number");
+
+                    b.Property<Guid>("LockId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("lock_id");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bytea")
+                        .HasColumnName("row_version");
+
+                    b.HasKey("OutboxId")
+                        .HasName("pk_outbox_state");
+
+                    b.HasIndex("Created")
+                        .HasDatabaseName("ix_outbox_state_created");
+
+                    b.ToTable("outbox_state", "dashboard");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>
                 {
                     b.HasBaseType("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry");
 
-                    b.ToTable("FileSystemDirectories", "public");
+                    b.ToTable("FileSystemDirectories", "dashboard");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile", b =>
                 {
                     b.HasBaseType("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry");
 
-                    b.ToTable("FileSystemFiles", "public");
+                    b.ToTable("FileSystemFiles", "dashboard");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry", b =>
@@ -135,6 +453,18 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.Navigation("Library");
 
                     b.Navigation("ParentDirectory");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities.Transcode", b =>
+                {
+                    b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile", "File")
+                        .WithMany("Transcodes")
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_transcodes_file_system_entries_file_id");
+
+                    b.Navigation("File");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Library", b =>
@@ -169,7 +499,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                             b1.HasKey("LibraryId");
 
-                            b1.ToTable("libraries", "public");
+                            b1.ToTable("libraries", "dashboard");
 
                             b1.WithOwner()
                                 .HasForeignKey("LibraryId")
@@ -212,7 +542,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                             b1.HasKey("FileSystemDirectoryId");
 
-                            b1.ToTable("FileSystemDirectories", "public");
+                            b1.ToTable("FileSystemDirectories", "dashboard");
 
                             b1.WithOwner()
                                 .HasForeignKey("FileSystemDirectoryId")
@@ -255,7 +585,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                             b1.HasKey("FileSystemFileId");
 
-                            b1.ToTable("FileSystemFiles", "public");
+                            b1.ToTable("FileSystemFiles", "dashboard");
 
                             b1.WithOwner()
                                 .HasForeignKey("FileSystemFileId")
@@ -311,7 +641,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                             b1.HasKey("FileSystemFileId", "Id")
                                 .HasName("pk_audio_streams");
 
-                            b1.ToTable("audio_streams", "public");
+                            b1.ToTable("audio_streams", "dashboard");
 
                             b1.WithOwner()
                                 .HasForeignKey("FileSystemFileId")
@@ -351,7 +681,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                             b1.HasKey("FileSystemFileId", "Id")
                                 .HasName("pk_subtitle_streams");
 
-                            b1.ToTable("subtitle_streams", "public");
+                            b1.ToTable("subtitle_streams", "dashboard");
 
                             b1.WithOwner()
                                 .HasForeignKey("FileSystemFileId")
@@ -400,7 +730,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                             b1.HasKey("FileSystemFileId", "Id")
                                 .HasName("pk_video_streams");
 
-                            b1.ToTable("video_streams", "public");
+                            b1.ToTable("video_streams", "dashboard");
 
                             b1.WithOwner()
                                 .HasForeignKey("FileSystemFileId")
@@ -435,7 +765,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                                     b2.HasKey("VideoStreamFileSystemFileId", "VideoStreamId");
 
-                                    b2.ToTable("video_streams", "public");
+                                    b2.ToTable("video_streams", "dashboard");
 
                                     b2.WithOwner()
                                         .HasForeignKey("VideoStreamFileSystemFileId", "VideoStreamId")
@@ -464,6 +794,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>
                 {
                     b.Navigation("Entries");
+                });
+
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile", b =>
+                {
+                    b.Navigation("Transcodes");
                 });
 #pragma warning restore 612, 618
         }

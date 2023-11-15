@@ -1,17 +1,18 @@
-using Giantnodes.Infrastructure.Uow.Services;
-using Giantnodes.Service.Dashboard.Application.Contracts.Transcoding.Commands;
+﻿using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
+using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using MassTransit;
+using MassTransit.Contracts.JobService;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activities;
 
-public class TranscodePrepareActivity : IStateMachineActivity<TranscodeSagaState, FileTranscode.Command>
+public class TranscodeQueuedActivity : IStateMachineActivity<TranscodeSagaState, JobSubmissionAccepted>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IFileSystemFileRepository _fileRepository;
 
-    public TranscodePrepareActivity(
+    public TranscodeQueuedActivity(
         IUnitOfWorkService uow,
         IFileSystemFileRepository fileRepository)
     {
@@ -21,7 +22,7 @@ public class TranscodePrepareActivity : IStateMachineActivity<TranscodeSagaState
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<TranscodePrepareActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<TranscodeProgressedActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)
@@ -30,27 +31,25 @@ public class TranscodePrepareActivity : IStateMachineActivity<TranscodeSagaState
     }
 
     public async Task Execute(
-        BehaviorContext<TranscodeSagaState, FileTranscode.Command> context,
-        IBehavior<TranscodeSagaState, FileTranscode.Command> next)
+        BehaviorContext<TranscodeSagaState, JobSubmissionAccepted> context,
+        IBehavior<TranscodeSagaState, JobSubmissionAccepted> next)
     {
         using (var uow = _uow.Begin())
         {
-            var file = await _fileRepository.SingleAsync(x => x.Id == context.Message.FileId);
+            var file = await _fileRepository.SingleAsync(x => x.Transcodes.Any(y => y.Id == context.CorrelationId));
 
-            var transcode = file.Transcode();
-            context.Saga.InputFullPath = file.PathInfo.FullName;
+            var transcode = file.Transcodes.First(x => x.Id == context.CorrelationId);
+            transcode.SetStatus(TranscodeStatus.Queued);
 
             await uow.CommitAsync(context.CancellationToken);
-
-            context.Saga.CorrelationId = transcode.Id;
         }
 
         await next.Execute(context);
     }
 
     public Task Faulted<TException>(
-        BehaviorExceptionContext<TranscodeSagaState, FileTranscode.Command, TException> context,
-        IBehavior<TranscodeSagaState, FileTranscode.Command> next)
+        BehaviorExceptionContext<TranscodeSagaState, JobSubmissionAccepted, TException> context,
+        IBehavior<TranscodeSagaState, JobSubmissionAccepted> next)
         where TException : Exception
     {
         return next.Faulted(context);

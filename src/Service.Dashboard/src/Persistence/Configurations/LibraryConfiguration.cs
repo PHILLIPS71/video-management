@@ -10,6 +10,10 @@ public class LibraryConfiguration : IEntityTypeConfiguration<Library>
     public void Configure(EntityTypeBuilder<Library> builder)
     {
         builder
+            .Property(p => p.Id)
+            .ValueGeneratedNever();
+
+        builder
             .Property(p => p.ConcurrencyToken)
             .IsRowVersion();
 

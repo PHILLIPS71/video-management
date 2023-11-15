@@ -1,7 +1,7 @@
 using Giantnodes.Infrastructure.Faults.Exceptions;
 using Giantnodes.Infrastructure.Faults.Types;
 using Giantnodes.Infrastructure.Validation.Exceptions;
-using Giantnodes.Service.Dashboard.Application.Contracts.Directories;
+using Giantnodes.Service.Dashboard.Application.Contracts.Directories.Commands;
 using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Directories.Mutations;

@@ -5,6 +5,7 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
+using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +19,7 @@ public class ApplicationDbContext : SagaDbContext
     }
 
     public DbSet<Library> Libraries => Set<Library>();
-   
+
     public DbSet<FileSystemEntry> FileSystemEntries => Set<FileSystemEntry>();
     public DbSet<FileSystemDirectory> FileSystemDirectories => Set<FileSystemDirectory>();
     public DbSet<FileSystemFile> FileSystemFiles => Set<FileSystemFile>();
@@ -32,7 +33,9 @@ public class ApplicationDbContext : SagaDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.HasDefaultSchema("public");
+        modelBuilder.AddTransactionalOutboxEntities();
+
+        modelBuilder.HasDefaultSchema("dashboard");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 

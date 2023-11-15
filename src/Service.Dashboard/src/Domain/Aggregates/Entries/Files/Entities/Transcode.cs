@@ -1,6 +1,7 @@
 using Giantnodes.Infrastructure.Domain.Entities;
 using Giantnodes.Infrastructure.Domain.Entities.Auditing;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
+using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities;
 
@@ -28,8 +29,9 @@ public class Transcode : AggregateRoot<Guid>, ITimestampableEntity
 
     internal Transcode(FileSystemFile file)
     {
+        Id = NewId.NextSequentialGuid();
         File = file;
-        Status = TranscodeStatus.Queued;
+        Status = TranscodeStatus.Submitted;
     }
 
     public void SetStatus(TranscodeStatus status)
@@ -43,9 +45,6 @@ public class Transcode : AggregateRoot<Guid>, ITimestampableEntity
             case TranscodeStatus.Completed:
                 CompletedAt = DateTime.UtcNow;
                 break;
-
-            default:
-                throw new ArgumentOutOfRangeException(nameof(status), status.ToString());
         }
 
         Status = status;

@@ -1,4 +1,4 @@
-using Giantnodes.Service.Dashboard.Application.Contracts.Directories;
+using Giantnodes.Service.Dashboard.Application.Contracts.Directories.Commands;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.Repositories;
 using Giantnodes.Service.Encoder.Application.Contracts.Probing.Jobs;
 using MassTransit;

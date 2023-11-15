@@ -55,11 +55,14 @@ const TranscodeTable: React.FC<TranscodeTableProps> = ({ $key }) => {
 
   const getStatusColour = (status: TranscodeStatus) => {
     switch (status) {
-      case 'TRANSCODING':
-        return 'success'
+      case 'SUBMITTED':
+        return 'info'
 
       case 'QUEUED':
         return 'info'
+
+      case 'TRANSCODING':
+        return 'success'
 
       case 'FAILED':
         return 'danger'

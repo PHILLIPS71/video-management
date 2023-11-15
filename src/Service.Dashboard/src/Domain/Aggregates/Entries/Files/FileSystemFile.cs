@@ -9,13 +9,15 @@ namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
 
 public class FileSystemFile : FileSystemEntry
 {
-    public ICollection<Transcode> Transcodes { get; private set; } = new List<Transcode>();
+    private readonly List<Transcode> _transcodes = new();
 
     public IReadOnlyCollection<VideoStream> VideoStreams { get; private set; } = new List<VideoStream>();
 
     public IReadOnlyCollection<AudioStream> AudioStreams { get; private set; } = new List<AudioStream>();
 
     public IReadOnlyCollection<SubtitleStream> SubtitleStreams { get; private set; } = new List<SubtitleStream>();
+    
+    public IReadOnlyCollection<Transcode> Transcodes => _transcodes.AsReadOnly();
 
     private FileSystemFile()
     {
@@ -53,11 +55,10 @@ public class FileSystemFile : FileSystemEntry
             .ToList();
     }
 
-    // todo: possibly publish the transcode file event here...
     public Transcode Transcode()
     {
         var transcode = new Transcode(this);
-        Transcodes.Add(transcode);
+        _transcodes.Add(transcode);
 
         return transcode;
     }

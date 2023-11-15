@@ -1,3 +1,4 @@
+using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using MassTransit;
 
@@ -12,7 +13,7 @@ public class TranscodeStateMachineDefinition : SagaDefinition<TranscodeSagaState
     {
         endpointConfigurator.ConcurrentMessageLimit = 3;
 
-        endpointConfigurator.UseInMemoryOutbox(context);
         endpointConfigurator.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(3)));
+        endpointConfigurator.UseEntityFrameworkOutbox<ApplicationDbContext>(context);
     }
 }
