@@ -9,27 +9,27 @@ using MassTransit;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Files.Mutations;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class FileTranscodeMutation
+public class FileTranscodeSubmitMutation
 {
     [Error<DomainException>]
     [Error<ValidationException>]
     [UseSingleOrDefault]
     [UseProjection]
-    public async Task<IQueryable<Transcode>> FileSubmitTranscode(
+    public async Task<IQueryable<Transcode>> FileTranscodeSubmit(
         [Service] ApplicationDbContext database,
-        [Service] IRequestClient<FileSubmitTranscode.Command> request,
+        [Service] IRequestClient<FileTranscodeSubmit.Command> request,
         Guid id,
         CancellationToken cancellation = default)
     {
-        var command = new FileSubmitTranscode.Command
+        var command = new FileTranscodeSubmit.Command
         {
             FileId = id
         };
 
-        Response response = await request.GetResponse<FileSubmitTranscode.Result, DomainFault, ValidationFault>(command, cancellation);
+        Response response = await request.GetResponse<FileTranscodeSubmit.Result, DomainFault, ValidationFault>(command, cancellation);
         return response switch
         {
-            (_, FileSubmitTranscode.Result result) => database.Transcodes.Where(x => x.Id == result.TranscodeId),
+            (_, FileTranscodeSubmit.Result result) => database.Transcodes.Where(x => x.Id == result.TranscodeId),
             (_, DomainFault fault) => throw new DomainException(fault),
             (_, ValidationFault fault) => throw new ValidationException(fault),
             _ => throw new InvalidOperationException()

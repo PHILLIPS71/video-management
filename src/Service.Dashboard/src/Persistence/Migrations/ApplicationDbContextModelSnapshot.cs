@@ -33,6 +33,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("concurrency_token");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
                     b.Property<Guid>("LibraryId")
                         .HasColumnType("uuid")
                         .HasColumnName("library_id");
@@ -44,6 +48,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.Property<long>("Size")
                         .HasColumnType("bigint")
                         .HasColumnName("size");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id");
 
@@ -64,6 +72,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("completed_at");
@@ -78,6 +90,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<DateTime?>("DegradedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("degraded_at");
+
                     b.Property<DateTime?>("FailedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("failed_at");
@@ -87,6 +103,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnName("file_id");
 
                     b.Property<float?>("Percent")
+                        .HasPrecision(3, 2)
                         .HasColumnType("real")
                         .HasColumnName("percent");
 
@@ -124,6 +141,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("concurrency_token");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
                     b.Property<bool>("IsWatched")
                         .HasColumnType("boolean")
                         .HasColumnName("is_watched");
@@ -142,6 +163,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("status");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id")
                         .HasName("pk_libraries");
@@ -466,7 +491,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Library", b =>
                 {
-                    b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Library.PathInfo#Giantnodes.Service.Dashboard.Domain.Values.PathInfo", "PathInfo", b1 =>
+                    b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Values.PathInfo", "PathInfo", b1 =>
                         {
                             b1.Property<Guid>("LibraryId")
                                 .HasColumnType("uuid")
@@ -509,7 +534,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.FileSystemDirectory", b =>
                 {
-                    b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.FileSystemDirectory.PathInfo#Giantnodes.Service.Dashboard.Domain.Values.PathInfo", "PathInfo", b1 =>
+                    b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Values.PathInfo", "PathInfo", b1 =>
                         {
                             b1.Property<Guid>("FileSystemDirectoryId")
                                 .HasColumnType("uuid")
@@ -552,7 +577,44 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile", b =>
                 {
-                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile.AudioStreams#Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.AudioStream", "AudioStreams", b1 =>
+                    b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Values.PathInfo", "PathInfo", b1 =>
+                        {
+                            b1.Property<Guid>("FileSystemFileId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("DirectoryPath")
+                                .HasColumnType("text")
+                                .HasColumnName("path_info_directory_path");
+
+                            b1.Property<char>("DirectorySeparatorChar")
+                                .HasColumnType("character(1)")
+                                .HasColumnName("path_info_directory_separator_char");
+
+                            b1.Property<string>("Extension")
+                                .HasColumnType("text")
+                                .HasColumnName("path_info_extension");
+
+                            b1.Property<string>("FullName")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("path_info_full_name");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("path_info_name");
+
+                            b1.HasKey("FileSystemFileId");
+
+                            b1.ToTable("FileSystemFiles", "dashboard");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FileSystemFileId")
+                                .HasConstraintName("fk_file_system_files_file_system_files_id");
+                        });
+
+                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.AudioStream", "AudioStreams", b1 =>
                         {
                             b1.Property<Guid>("FileSystemFileId")
                                 .HasColumnType("uuid")
@@ -608,44 +670,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasConstraintName("fk_audio_streams_file_system_entries_file_system_file_id");
                         });
 
-                    b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile.PathInfo#Giantnodes.Service.Dashboard.Domain.Values.PathInfo", "PathInfo", b1 =>
-                        {
-                            b1.Property<Guid>("FileSystemFileId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.Property<string>("DirectoryPath")
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_directory_path");
-
-                            b1.Property<char>("DirectorySeparatorChar")
-                                .HasColumnType("character(1)")
-                                .HasColumnName("path_info_directory_separator_char");
-
-                            b1.Property<string>("Extension")
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_extension");
-
-                            b1.Property<string>("FullName")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_full_name");
-
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("path_info_name");
-
-                            b1.HasKey("FileSystemFileId");
-
-                            b1.ToTable("FileSystemFiles", "dashboard");
-
-                            b1.WithOwner()
-                                .HasForeignKey("FileSystemFileId")
-                                .HasConstraintName("fk_file_system_files_file_system_files_id");
-                        });
-
-                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile.SubtitleStreams#Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.SubtitleStream", "SubtitleStreams", b1 =>
+                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.SubtitleStream", "SubtitleStreams", b1 =>
                         {
                             b1.Property<Guid>("FileSystemFileId")
                                 .HasColumnType("uuid")
@@ -685,7 +710,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasConstraintName("fk_subtitle_streams_file_system_entries_file_system_file_id");
                         });
 
-                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile.VideoStreams#Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.VideoStream", "VideoStreams", b1 =>
+                    b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.VideoStream", "VideoStreams", b1 =>
                         {
                             b1.Property<Guid>("FileSystemFileId")
                                 .HasColumnType("uuid")
@@ -733,7 +758,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasForeignKey("FileSystemFileId")
                                 .HasConstraintName("fk_video_streams_file_system_entries_file_system_file_id");
 
-                            b1.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile.VideoStreams#Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.VideoStream.Quality#Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.VideoQuality", "Quality", b2 =>
+                            b1.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.VideoQuality", "Quality", b2 =>
                                 {
                                     b2.Property<Guid>("VideoStreamFileSystemFileId")
                                         .HasColumnType("uuid")

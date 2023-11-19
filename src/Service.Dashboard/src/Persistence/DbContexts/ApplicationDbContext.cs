@@ -29,14 +29,15 @@ public class ApplicationDbContext : SagaDbContext
 
     public DbSet<Transcode> Transcodes => Set<Transcode>();
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(builder);
 
-        modelBuilder.AddTransactionalOutboxEntities();
 
-        modelBuilder.HasDefaultSchema("dashboard");
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        builder.AddTransactionalOutboxEntities();
+
+        builder.HasDefaultSchema("dashboard");
+        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 
     protected override IEnumerable<ISagaClassMap> Configurations

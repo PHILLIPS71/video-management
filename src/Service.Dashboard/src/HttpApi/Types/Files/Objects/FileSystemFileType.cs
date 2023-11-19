@@ -1,5 +1,7 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Dashboard.HttpApi.Types.Entries.Interfaces;
+using Giantnodes.Service.Dashboard.Persistence.DbContexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Files.Objects;
 
@@ -11,7 +13,9 @@ public class FileSystemFileType : ObjectType<FileSystemFile>
 
         descriptor
             .ImplementsNode()
-            .IdField(p => p.Id);
+            .IdField(p => p.Id)
+            .ResolveNode((context, id) =>
+                context.Service<ApplicationDbContext>().FileSystemFiles.SingleOrDefaultAsync(x => x.Id == id));
 
         descriptor
             .Field(p => p.Id);

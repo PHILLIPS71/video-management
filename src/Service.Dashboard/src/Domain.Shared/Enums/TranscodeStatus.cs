@@ -6,5 +6,7 @@ public enum TranscodeStatus
     Queued,
     Transcoding,
     Completed,
+    Cancelled,
+    Degraded,
     Failed
 }

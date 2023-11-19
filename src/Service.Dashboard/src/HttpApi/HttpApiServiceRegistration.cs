@@ -33,6 +33,7 @@ public static class HttpApiServiceRegistration
             .AddConvention<INamingConventions, SnakeCaseNamingConvention>()
             .AddGlobalObjectIdentification()
             .AddMutationConventions()
+            .AddQueryFieldToMutationPayloads()
             .AddHttpApiTypes()
             .AddQueryType()
             .AddMutationType()

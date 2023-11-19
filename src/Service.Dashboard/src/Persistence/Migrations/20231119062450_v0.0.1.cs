@@ -54,6 +54,8 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
                     is_watched = table.Column<bool>(type: "boolean", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     concurrency_token = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
@@ -138,6 +140,8 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     library_id = table.Column<Guid>(type: "uuid", nullable: false),
                     parent_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
                     size = table.Column<long>(type: "bigint", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
@@ -172,6 +176,8 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     library_id = table.Column<Guid>(type: "uuid", nullable: false),
                     parent_directory_id = table.Column<Guid>(type: "uuid", nullable: true),
                     size = table.Column<long>(type: "bigint", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     path_info_name = table.Column<string>(type: "text", nullable: false),
                     path_info_full_name = table.Column<string>(type: "text", nullable: false),
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
@@ -259,9 +265,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     file_id = table.Column<Guid>(type: "uuid", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
-                    percent = table.Column<float>(type: "real", nullable: true),
+                    percent = table.Column<float>(type: "real", precision: 3, scale: 2, nullable: true),
                     started_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     failed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    degraded_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    cancelled_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     completed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -317,7 +325,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 column: "library_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_file_system_directories_parent_directory_id",
+                name: "ix_file_system_entries_parent_directory_id",
                 schema: "dashboard",
                 table: "FileSystemDirectories",
                 column: "parent_directory_id");

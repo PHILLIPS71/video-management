@@ -1,4 +1,6 @@
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities;
+using Giantnodes.Service.Dashboard.Persistence.DbContexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Files.Objects;
 
@@ -7,7 +9,10 @@ public class TranscodeType : ObjectType<Transcode>
     protected override void Configure(IObjectTypeDescriptor<Transcode> descriptor)
     {
         descriptor
-            .Field(p => p.Id);
+            .ImplementsNode()
+            .IdField(p => p.Id)
+            .ResolveNode((context, id) =>
+                context.Service<ApplicationDbContext>().Transcodes.SingleOrDefaultAsync(x => x.Id == id));
 
         descriptor
             .Field(p => p.File);

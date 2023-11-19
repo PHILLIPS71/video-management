@@ -4,11 +4,11 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Files.Definitions;
 
-public class FileSubmitTranscodeConsumerDefinition : ConsumerDefinition<FileSubmitTranscodeConsumer>
+public class FileTranscodeCancelConsumerDefinition : ConsumerDefinition<FileTranscodeCancelConsumer>
 {
     protected override void ConfigureConsumer(
         IReceiveEndpointConfigurator endpointConfigurator,
-        IConsumerConfigurator<FileSubmitTranscodeConsumer> consumerConfigurator,
+        IConsumerConfigurator<FileTranscodeCancelConsumer> consumerConfigurator,
         IRegistrationContext context)
     {
         endpointConfigurator.UseEntityFrameworkOutbox<ApplicationDbContext>(context);

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231113081710_v0.0.1")]
+    [Migration("20231119062450_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -36,6 +36,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("concurrency_token");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
                     b.Property<Guid>("LibraryId")
                         .HasColumnType("uuid")
                         .HasColumnName("library_id");
@@ -47,6 +51,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.Property<long>("Size")
                         .HasColumnType("bigint")
                         .HasColumnName("size");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id");
 
@@ -67,6 +75,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<DateTime?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("cancelled_at");
+
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("completed_at");
@@ -81,6 +93,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<DateTime?>("DegradedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("degraded_at");
+
                     b.Property<DateTime?>("FailedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("failed_at");
@@ -90,6 +106,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnName("file_id");
 
                     b.Property<float?>("Percent")
+                        .HasPrecision(3, 2)
                         .HasColumnType("real")
                         .HasColumnName("percent");
 
@@ -127,6 +144,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("concurrency_token");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
                     b.Property<bool>("IsWatched")
                         .HasColumnType("boolean")
                         .HasColumnName("is_watched");
@@ -145,6 +166,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("status");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
 
                     b.HasKey("Id")
                         .HasName("pk_libraries");

@@ -17,6 +17,10 @@ public class Transcode : AggregateRoot<Guid>, ITimestampableEntity
 
     public DateTime? FailedAt { get; private set; }
 
+    public DateTime? DegradedAt { get; private set; }
+
+    public DateTime? CancelledAt { get; private set; }
+
     public DateTime? CompletedAt { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
@@ -36,10 +40,22 @@ public class Transcode : AggregateRoot<Guid>, ITimestampableEntity
 
     public void SetStatus(TranscodeStatus status)
     {
+        if (Status is TranscodeStatus.Completed or TranscodeStatus.Cancelled)
+            throw new InvalidOperationException($"the status cannot be changed when in a {Status} status");
+
         switch (status)
         {
             case TranscodeStatus.Transcoding:
                 StartedAt = DateTime.UtcNow;
+                break;
+
+            case TranscodeStatus.Cancelled:
+                Status = TranscodeStatus.Cancelled;
+                CancelledAt = DateTime.UtcNow;
+                break;
+
+            case TranscodeStatus.Degraded:
+                DegradedAt = DateTime.UtcNow;
                 break;
 
             case TranscodeStatus.Completed:
@@ -56,7 +72,8 @@ public class Transcode : AggregateRoot<Guid>, ITimestampableEntity
             throw new InvalidOperationException($"the transcode is not in a {TranscodeStatus.Transcoding} status.");
 
         if (progress is < 0 or > 1)
-            throw new ArgumentOutOfRangeException(nameof(progress), progress, "the percent value needs to be between 0 and 1.");
+            throw new ArgumentOutOfRangeException(nameof(progress), progress,
+                "the percent value needs to be between 0 and 1.");
 
         Percent = progress;
     }
