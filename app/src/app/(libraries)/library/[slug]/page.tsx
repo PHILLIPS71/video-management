@@ -7,7 +7,7 @@ import { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
-import TranscodeTable from '@/components/dashboard/TranscodeTable'
+import { TranscodeTable } from '@/components/dashboard'
 
 const LibraryDashboard = () => {
   const { library } = useLibraryContext()
@@ -25,7 +25,7 @@ const LibraryDashboard = () => {
     `,
     {
       first: 8,
-      order: [{ status: 'ASC' }],
+      order: [{ created_at: 'DESC' }],
       where: {
         file: {
           library: {
