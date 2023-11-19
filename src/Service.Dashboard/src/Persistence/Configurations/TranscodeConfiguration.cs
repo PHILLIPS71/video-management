@@ -9,10 +9,6 @@ public class TranscodeConfiguration : IEntityTypeConfiguration<Transcode>
     public void Configure(EntityTypeBuilder<Transcode> builder)
     {
         builder
-            .Property(p => p.Id)
-            .ValueGeneratedNever();
-
-        builder
             .Property(p => p.ConcurrencyToken)
             .IsRowVersion();
 

@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.Security;
 using Giantnodes.Infrastructure.Domain.Entities;
+using Giantnodes.Infrastructure.Domain.Entities.Auditing;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
@@ -11,7 +12,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
 
-public class Library : AggregateRoot<Guid>
+public class Library : AggregateRoot<Guid>, ITimestampableEntity
 {
     private readonly List<FileSystemEntry> _entries = new();
 
@@ -24,6 +25,10 @@ public class Library : AggregateRoot<Guid>
     public FileSystemStatus Status { get; private set; } = FileSystemStatus.Offline;
 
     public bool IsWatched { get; private set; }
+
+    public DateTime CreatedAt { get; private set; }
+
+    public DateTime? UpdatedAt { get; private set; }
 
     public FileSystemDirectory Directory => _entries
         .OfType<FileSystemDirectory>()

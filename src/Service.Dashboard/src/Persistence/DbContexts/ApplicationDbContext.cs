@@ -1,4 +1,5 @@
-﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries;
+﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities;
@@ -11,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.Persistence.DbContexts;
 
-public class ApplicationDbContext : SagaDbContext
+public class ApplicationDbContext : GiantnodesDbContext<ApplicationDbContext>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -33,6 +34,8 @@ public class ApplicationDbContext : SagaDbContext
     {
         base.OnModelCreating(builder);
 
+        foreach (var configuration in Configurations)
+            configuration.Configure(builder);
 
         builder.AddTransactionalOutboxEntities();
 
@@ -40,7 +43,7 @@ public class ApplicationDbContext : SagaDbContext
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 
-    protected override IEnumerable<ISagaClassMap> Configurations
+    private static IEnumerable<ISagaClassMap> Configurations
     {
         get { yield return new TranscodeSagaStateMap(); }
     }
