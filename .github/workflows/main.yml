@@ -3,14 +3,14 @@ name: main
 on:
   push:
     paths:
-      - 'src/**'
-      - 'app/**'
-      - '.github/workflows/main.yml'
+      - "src/**"
+      - "app/**"
+      - ".github/workflows/main.yml"
   pull_request:
     paths:
-      - 'src/**'
-      - 'app/**'
-      - '.github/workflows/main.yml'
+      - "src/**"
+      - "app/**"
+      - ".github/workflows/main.yml"
   workflow_dispatch:
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
       - name: setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "7.0.x"
+          dotnet-version: "8.0.x"
 
       - name: restore packages
         run: dotnet restore
@@ -44,7 +44,7 @@ jobs:
       - name: setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "7.0.x"
+          dotnet-version: "8.0.x"
 
       - name: restore packages
         run: dotnet restore
@@ -64,7 +64,7 @@ jobs:
       - name: setup
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "7.0.x"
+          dotnet-version: "8.0.x"
 
       - name: restore packages
         run: dotnet restore
