@@ -37,9 +37,9 @@ public class FileTranscodeCancelConsumer : IConsumer<FileTranscodeCancel.Command
                 return;
             }
 
-            transcode.SetStatus(TranscodeStatus.Cancelled);
+            transcode.SetStatus(TranscodeStatus.Cancelling);
 
-            await context.Publish(new FileTranscodeCancelledEvent
+            await context.Publish(new FileTranscodeCancellationEvent
             {
                 FileId = file.Id,
                 TranscodeId = transcode.Id

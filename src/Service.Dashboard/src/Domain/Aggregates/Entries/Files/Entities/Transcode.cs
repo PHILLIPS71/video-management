@@ -68,12 +68,12 @@ public class Transcode : AggregateRoot<Guid>, ITimestampableEntity
 
     public void SetProgress(float progress)
     {
-        if (Status is not TranscodeStatus.Transcoding)
+        // allow progress to continue being tracked if cancellation has been requested
+        if (Status is not TranscodeStatus.Transcoding or TranscodeStatus.Cancelling)
             throw new InvalidOperationException($"the transcode is not in a {TranscodeStatus.Transcoding} status.");
 
         if (progress is < 0 or > 1)
-            throw new ArgumentOutOfRangeException(nameof(progress), progress,
-                "the percent value needs to be between 0 and 1.");
+            throw new ArgumentOutOfRangeException(nameof(progress), progress, "the percent value needs to be between 0 and 1.");
 
         Percent = progress;
     }

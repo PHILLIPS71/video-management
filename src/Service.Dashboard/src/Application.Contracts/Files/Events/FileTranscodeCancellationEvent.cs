@@ -1,6 +1,6 @@
 namespace Giantnodes.Service.Dashboard.Application.Contracts.Files.Events;
 
-public sealed record FileTranscodeCancelledEvent
+public sealed record FileTranscodeCancellationEvent
 {
     public required Guid FileId { get; init; }
 

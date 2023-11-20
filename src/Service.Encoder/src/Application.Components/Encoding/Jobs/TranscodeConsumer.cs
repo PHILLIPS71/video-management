@@ -62,6 +62,19 @@ public class TranscodeConsumer : IJobConsumer<Transcode.Job>
             Log.Information("transcode progress on file {0} with job id {1} is {2:P}.", output, context.JobId, args.Percent / 100.0f);
         };
 
-        await conversion.Start(context.CancellationToken);
+        try
+        {
+            await conversion.Start(context.CancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            var info = _fs.FileInfo.New(output);
+            if (!info.Exists)
+                throw;
+
+            info.Delete();
+            Log.Information("transcode with job id {0} was cancelled and file {1} was deleted.", context.JobId, info.FullName);
+            throw;
+        }
     }
 }

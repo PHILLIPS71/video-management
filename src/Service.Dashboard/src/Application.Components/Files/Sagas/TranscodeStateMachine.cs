@@ -15,8 +15,9 @@ public class TranscodeStateMachine : MassTransitStateMachine<TranscodeSagaState>
         InstanceState(x => x.CurrentState);
 
         Event(() => Submitted, e => e.CorrelateById(context => context.Message.TranscodeId));
-        Event(() => Cancelled, e => e.CorrelateById(context => context.Message.TranscodeId));
+        Event(() => Cancellation, e => e.CorrelateById(context => context.Message.TranscodeId));
         Event(() => JobStarted, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
+        Event(() => Cancelled, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
         Event(() => JobFaulted, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
         Event(() => JobCompleted, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
         Event(() => JobProgressed, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
@@ -64,19 +65,30 @@ public class TranscodeStateMachine : MassTransitStateMachine<TranscodeSagaState>
 
         DuringAny(
             When(Cancelled)
-                .If(context => context.Saga.JobId != null,
-                    context => context.PublishAsync(x => x.Init<CancelJob>(new { x.Saga.JobId })))
+                .Activity(context => context.OfInstanceType<TranscodeCancelledActivity>())
                 .Finalize());
+
+        DuringAny(
+            When(Cancellation)
+                .IfElse(context => context.Saga.JobId != null,
+                    context => context
+                        .PublishAsync(x => x.Init<CancelJob>(new { x.Saga.JobId }))
+                        .TransitionTo(Cancelling),
+                    context => context
+                        .Activity(x => x.OfInstanceType<TranscodeCancelledActivity>())
+                        .Finalize()));
 
         SetCompletedWhenFinalized();
     }
 
     public required State Queued { get; set; }
     public required State Started { get; set; }
+    public required State Cancelling { get; set; }
     public required State Completed { get; set; }
 
     public required Event<FileTranscodeCreatedEvent> Submitted { get; set; }
-    public required Event<FileTranscodeCancelledEvent> Cancelled { get; set; }
+    public required Event<FileTranscodeCancellationEvent> Cancellation { get; set; }
+    public required Event<JobCanceled> Cancelled { get; set; }
     public required Event<JobStarted> JobStarted { get; set; }
     public required Event<JobFaulted> JobFaulted { get; set; }
     public required Event<JobCompleted> JobCompleted { get; set; }

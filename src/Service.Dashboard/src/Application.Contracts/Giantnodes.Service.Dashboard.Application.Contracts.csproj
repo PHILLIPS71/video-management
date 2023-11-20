@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Infrastructure\src\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj"/>
-        <ProjectReference Include="..\Domain.Shared\Giantnodes.Service.Dashboard.Domain.Shared.csproj"/>
+        <ProjectReference Include="..\..\..\Infrastructure\src\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj" />
+        <ProjectReference Include="..\Domain.Shared\Giantnodes.Service.Dashboard.Domain.Shared.csproj" />
     </ItemGroup>
 
 </Project>

@@ -65,6 +65,7 @@ const TranscodeTableRow: React.FC<TranscodeTablePropsProps> = ({ $key }) => {
       case 'TRANSCODING':
         return 'success'
 
+      case 'CANCELLING':
       case 'DEGRADED':
         return 'warning'
 
@@ -73,6 +74,9 @@ const TranscodeTableRow: React.FC<TranscodeTablePropsProps> = ({ $key }) => {
 
       case 'CANCELLED':
         return 'neutral'
+
+      case 'COMPLETED':
+        return 'success'
 
       default:
         return 'danger'
@@ -103,7 +107,7 @@ const TranscodeTableRow: React.FC<TranscodeTablePropsProps> = ({ $key }) => {
           {data.percent != null && <Chip color="info">{percent(data.percent)}</Chip>}
           <Chip color={getStatusColour(data.status)}>{data.status.toLowerCase()}</Chip>
 
-          {data.status !== 'COMPLETED' && data.status !== 'CANCELLED' && (
+          {data.status !== 'COMPLETED' && data.status !== 'CANCELLING' && data.status !== 'CANCELLED' && (
             <div className="cursor-pointer text-shark-200" onClick={() => cancel()}>
               <IconProgressX size={16} />
             </div>
