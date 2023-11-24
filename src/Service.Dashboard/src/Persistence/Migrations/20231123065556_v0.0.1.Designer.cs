@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231119062450_v0.0.1")]
+    [Migration("20231123065556_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("dashboard")
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -106,7 +106,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnName("file_id");
 
                     b.Property<float?>("Percent")
-                        .HasPrecision(3, 2)
                         .HasColumnType("real")
                         .HasColumnName("percent");
 
@@ -489,7 +488,38 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_transcodes_file_system_entries_file_id");
 
+                    b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.TranscodeSpeed", "Speed", b1 =>
+                        {
+                            b1.Property<Guid>("TranscodeId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<long>("Bitrate")
+                                .HasColumnType("bigint")
+                                .HasColumnName("speed_bitrate");
+
+                            b1.Property<float>("Frames")
+                                .HasPrecision(3, 2)
+                                .HasColumnType("real")
+                                .HasColumnName("speed_frames");
+
+                            b1.Property<float>("Scale")
+                                .HasPrecision(3, 2)
+                                .HasColumnType("real")
+                                .HasColumnName("speed_scale");
+
+                            b1.HasKey("TranscodeId");
+
+                            b1.ToTable("transcodes", "dashboard");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TranscodeId")
+                                .HasConstraintName("fk_transcodes_transcodes_id");
+                        });
+
                     b.Navigation("File");
+
+                    b.Navigation("Speed");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Library", b =>

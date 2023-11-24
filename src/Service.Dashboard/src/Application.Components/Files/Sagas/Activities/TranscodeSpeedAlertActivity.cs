@@ -1,17 +1,18 @@
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activities;
 
-public class TranscodeProgressedActivity : IStateMachineActivity<TranscodeSagaState, TranscodeProgressedEvent>
+public class TranscodeSpeedAlertActivity : IStateMachineActivity<TranscodeSagaState, TranscodeSpeedAlertEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IFileSystemFileRepository _fileRepository;
 
-    public TranscodeProgressedActivity(
+    public TranscodeSpeedAlertActivity(
         IUnitOfWorkService uow,
         IFileSystemFileRepository fileRepository)
     {
@@ -21,7 +22,7 @@ public class TranscodeProgressedActivity : IStateMachineActivity<TranscodeSagaSt
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<TranscodeProgressedActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<TranscodeSpeedAlertActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)
@@ -30,8 +31,8 @@ public class TranscodeProgressedActivity : IStateMachineActivity<TranscodeSagaSt
     }
 
     public async Task Execute(
-        BehaviorContext<TranscodeSagaState, TranscodeProgressedEvent> context,
-        IBehavior<TranscodeSagaState, TranscodeProgressedEvent> next)
+        BehaviorContext<TranscodeSagaState, TranscodeSpeedAlertEvent> context,
+        IBehavior<TranscodeSagaState, TranscodeSpeedAlertEvent> next)
     {
         using (var uow = _uow.Begin())
         {
@@ -39,7 +40,12 @@ public class TranscodeProgressedActivity : IStateMachineActivity<TranscodeSagaSt
 
             var transcode = file.Transcodes.First(x => x.Id == context.CorrelationId);
 
-            transcode.SetProgress(context.Message.Percent);
+            var speed = new TranscodeSpeed(
+                context.Message.Frames,
+                context.Message.Bitrate,
+                context.Message.Scale);
+
+            transcode.SetSpeed(speed);
             await uow.CommitAsync(context.CancellationToken);
         }
 
@@ -47,8 +53,8 @@ public class TranscodeProgressedActivity : IStateMachineActivity<TranscodeSagaSt
     }
 
     public Task Faulted<TException>(
-        BehaviorExceptionContext<TranscodeSagaState, TranscodeProgressedEvent, TException> context,
-        IBehavior<TranscodeSagaState, TranscodeProgressedEvent> next)
+        BehaviorExceptionContext<TranscodeSagaState, TranscodeSpeedAlertEvent, TException> context,
+        IBehavior<TranscodeSagaState, TranscodeSpeedAlertEvent> next)
         where TException : Exception
     {
         return next.Faulted(context);

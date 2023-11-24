@@ -19,5 +19,8 @@ public class TranscodeConfiguration : IEntityTypeConfiguration<Transcode>
         builder
             .Property(p => p.Percent)
             .HasPrecision(3, 2);
+
+        builder
+            .OwnsOne(p => p.Speed);
     }
 }

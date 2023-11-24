@@ -18,10 +18,13 @@ public class TranscodeType : ObjectType<Transcode>
             .Field(p => p.File);
 
         descriptor
+            .Field(p => p.Status);
+
+        descriptor
             .Field(p => p.Percent);
 
         descriptor
-            .Field(p => p.Status);
+            .Field(p => p.Speed);
 
         descriptor
             .Field(p => p.StartedAt);

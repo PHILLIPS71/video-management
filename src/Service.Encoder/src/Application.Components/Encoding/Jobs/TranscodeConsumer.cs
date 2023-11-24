@@ -1,4 +1,6 @@
-﻿using System.IO.Abstractions;
+﻿using System.Diagnostics;
+using System.IO.Abstractions;
+using System.Text.RegularExpressions;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Jobs;
 using MassTransit;
@@ -10,6 +12,9 @@ namespace Giantnodes.Service.Encoder.Application.Components.Encoding.Jobs;
 
 public class TranscodeConsumer : IJobConsumer<Transcode.Job>
 {
+    private const double PublishDelaySeconds = 2.5;
+    private const string RegexNumberGroup = "([+-]?[0-9]*[.]?[0-9]*)";
+
     private readonly IFileSystem _fs;
 
     public TranscodeConsumer(IFileSystem fs)
@@ -43,6 +48,29 @@ public class TranscodeConsumer : IJobConsumer<Transcode.Job>
             .SetOverwriteOutput(true)
             .UseMultiThread(true);
 
+        var stopwatch = new Stopwatch();
+        conversion.OnDataReceived += async (_, args) =>
+        {
+            if (string.IsNullOrWhiteSpace(args.Data) || args.Data.Contains("N/A"))
+                return;
+
+            if (stopwatch.IsRunning && stopwatch.Elapsed <= TimeSpan.FromSeconds(PublishDelaySeconds))
+                return;
+
+            try
+            {
+                if (!TryCreateEvent(context, args.Data, out var @event) || @event == null)
+                    return;
+
+                await context.Publish<TranscodeSpeedAlertEvent>(@event);
+                stopwatch.Restart();
+            }
+            catch (FormatException ex)
+            {
+                Log.Error(ex, "transcode data {0} with job id {1} was unable to be parsed.", args.Data, context.JobId);
+            }
+        };
+
         ConversionProgressEventArgs? progress = null;
         conversion.OnProgress += async (_, args) =>
         {
@@ -52,9 +80,6 @@ public class TranscodeConsumer : IJobConsumer<Transcode.Job>
             await context.Publish(new TranscodeProgressedEvent
             {
                 JobId = context.JobId,
-                FullPath = output,
-                Duration = args.Duration,
-                TotalLength = args.TotalLength,
                 Percent = args.Percent / 100.0f
             }, context.CancellationToken);
 
@@ -76,5 +101,32 @@ public class TranscodeConsumer : IJobConsumer<Transcode.Job>
             Log.Information("transcode with job id {0} was cancelled and file {1} was deleted.", context.JobId, info.FullName);
             throw;
         }
+    }
+
+    private static bool TryCreateEvent(JobContext context, string stout, out TranscodeSpeedAlertEvent? @event)
+    {
+        @event = null;
+
+        var fps = Regex.Match(stout, $"fps=[ ]*{RegexNumberGroup}");
+        if (!fps.Success)
+            return false;
+
+        var bitrate = Regex.Match(stout, $"bitrate=[ ]*{RegexNumberGroup}");
+        if (!bitrate.Success)
+            return false;
+
+        var speed = Regex.Match(stout, $"speed=[ ]*{RegexNumberGroup}x");
+        if (!speed.Success)
+            return false;
+
+        @event = new TranscodeSpeedAlertEvent
+        {
+            JobId = context.JobId,
+            Frames = float.Parse(fps.Groups[1].Value),
+            Bitrate = (long)float.Parse(bitrate.Groups[1].Value) * 1000L,
+            Scale = float.Parse(speed.Groups[1].Value)
+        };
+
+        return true;
     }
 }

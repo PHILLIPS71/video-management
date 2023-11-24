@@ -265,7 +265,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     file_id = table.Column<Guid>(type: "uuid", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
-                    percent = table.Column<float>(type: "real", precision: 3, scale: 2, nullable: true),
+                    percent = table.Column<float>(type: "real", nullable: true),
+                    speed_frames = table.Column<float>(type: "real", precision: 3, scale: 2, nullable: true),
+                    speed_bitrate = table.Column<long>(type: "bigint", nullable: true),
+                    speed_scale = table.Column<float>(type: "real", precision: 3, scale: 2, nullable: true),
                     started_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     failed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     degraded_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -325,7 +328,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 column: "library_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_file_system_entries_parent_directory_id",
+                name: "ix_file_system_directories_parent_directory_id",
                 schema: "dashboard",
                 table: "FileSystemDirectories",
                 column: "parent_directory_id");

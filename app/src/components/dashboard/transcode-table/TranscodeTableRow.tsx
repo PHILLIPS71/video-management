@@ -3,6 +3,7 @@ import type { TranscodeStatus, TranscodeTableRowFragment$key } from '@/__generat
 
 import { Chip, Table, Typography } from '@giantnodes/react'
 import { IconProgressX } from '@tabler/icons-react'
+import { filesize } from 'filesize'
 import { graphql, useFragment, useMutation } from 'react-relay'
 
 type TranscodeTablePropsProps = {
@@ -16,6 +17,11 @@ const TranscodeTableRow: React.FC<TranscodeTablePropsProps> = ({ $key }) => {
         id
         status
         percent
+        speed {
+          frames
+          bitrate
+          scale
+        }
         file {
           id
           library {
@@ -104,7 +110,20 @@ const TranscodeTableRow: React.FC<TranscodeTablePropsProps> = ({ $key }) => {
 
       <Table.Data align="right">
         <div className="flex flex-row items-center justify-end gap-2">
-          {data.percent != null && <Chip color="info">{percent(data.percent)}</Chip>}
+          {data.status !== 'COMPLETED' && (
+            <>
+              {data.speed != null && (
+                <>
+                  <Chip color="info">{data.speed.frames} fps</Chip>
+                  <Chip color="info">{filesize(data.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s</Chip>
+                  <Chip color="info">{data.speed.scale.toFixed(2)}x</Chip>
+                </>
+              )}
+
+              {data.percent != null && <Chip color="info">{percent(data.percent)}</Chip>}
+            </>
+          )}
+
           <Chip color={getStatusColour(data.status)}>{data.status.toLowerCase()}</Chip>
 
           {data.status !== 'COMPLETED' && data.status !== 'CANCELLING' && data.status !== 'CANCELLED' && (

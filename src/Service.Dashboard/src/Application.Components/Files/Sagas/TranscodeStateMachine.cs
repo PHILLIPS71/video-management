@@ -20,7 +20,8 @@ public class TranscodeStateMachine : MassTransitStateMachine<TranscodeSagaState>
         Event(() => Cancelled, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
         Event(() => JobFaulted, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
         Event(() => JobCompleted, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
-        Event(() => JobProgressed, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
+        Event(() => Progressed, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
+        Event(() => SpeedAlert, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
 
         Request(() => Encode);
 
@@ -52,8 +53,10 @@ public class TranscodeStateMachine : MassTransitStateMachine<TranscodeSagaState>
                 .TransitionTo(Started));
 
         During(Started,
-            When(JobProgressed)
+            When(Progressed)
                 .Activity(context => context.OfType<TranscodeProgressedActivity>()),
+            When(SpeedAlert)
+                .Activity(context => context.OfType<TranscodeSpeedAlertActivity>()),
             When(JobCompleted)
                 .Activity(context => context.OfType<TranscodeCompletedActivity>())
                 .TransitionTo(Completed)
@@ -92,7 +95,10 @@ public class TranscodeStateMachine : MassTransitStateMachine<TranscodeSagaState>
     public required Event<JobStarted> JobStarted { get; set; }
     public required Event<JobFaulted> JobFaulted { get; set; }
     public required Event<JobCompleted> JobCompleted { get; set; }
-    public required Event<TranscodeProgressedEvent> JobProgressed { get; set; }
+
+    public required Event<TranscodeProgressedEvent> Progressed { get; set; }
+
+    public required Event<TranscodeSpeedAlertEvent> SpeedAlert { get; set; }
 
     public required Request<TranscodeSagaState, Transcode.Job, JobSubmissionAccepted> Encode { get; set; }
 }

@@ -1,5 +1,6 @@
 using Giantnodes.Infrastructure.Domain.Entities;
 using Giantnodes.Infrastructure.Domain.Entities.Auditing;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using MassTransit;
 
@@ -12,6 +13,8 @@ public class Transcode : AggregateRoot<Guid>, ITimestampableEntity
     public TranscodeStatus Status { get; private set; }
 
     public float? Percent { get; private set; }
+
+    public TranscodeSpeed? Speed { get; private set; }
 
     public DateTime? StartedAt { get; private set; }
 
@@ -68,13 +71,20 @@ public class Transcode : AggregateRoot<Guid>, ITimestampableEntity
 
     public void SetProgress(float progress)
     {
-        // allow progress to continue being tracked if cancellation has been requested
-        if (Status is not TranscodeStatus.Transcoding or TranscodeStatus.Cancelling)
+        if (Status is not TranscodeStatus.Transcoding)
             throw new InvalidOperationException($"the transcode is not in a {TranscodeStatus.Transcoding} status.");
 
         if (progress is < 0 or > 1)
-            throw new ArgumentOutOfRangeException(nameof(progress), progress, "the percent value needs to be between 0 and 1.");
+            throw new ArgumentOutOfRangeException(nameof(progress), progress, "the progress percent value needs to be between 0 and 1.");
 
         Percent = progress;
+    }
+
+    public void SetSpeed(TranscodeSpeed speed)
+    {
+        if (Status is not TranscodeStatus.Transcoding)
+            throw new InvalidOperationException($"the transcode is not in a {TranscodeStatus.Transcoding} status.");
+
+        Speed = speed;
     }
 }
