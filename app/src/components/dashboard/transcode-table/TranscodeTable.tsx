@@ -2,7 +2,7 @@ import type { TranscodeTableFragment$key } from '@/__generated__/TranscodeTableF
 import type { TranscodeTablePaginationQuery } from '@/__generated__/TranscodeTablePaginationQuery.graphql'
 
 import { Button, Table } from '@giantnodes/react'
-import { graphql, usePaginationFragment } from 'react-relay'
+import { graphql, usePaginationFragment, useSubscription } from 'react-relay'
 
 import TranscodeTableRow from '@/components/dashboard/transcode-table/TranscodeTableRow'
 
@@ -38,6 +38,17 @@ const TranscodeTable: React.FC<TranscodeTableProps> = ({ $key }) => {
     TranscodeTableFragment,
     $key
   )
+
+  useSubscription({
+    subscription: graphql`
+      subscription TranscodeTableSubscription {
+        transcode_speed_change {
+          ...TranscodeTableRowFragment
+        }
+      }
+    `,
+    variables: {},
+  })
 
   return (
     <>

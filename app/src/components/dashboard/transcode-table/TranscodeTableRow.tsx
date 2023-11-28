@@ -110,7 +110,7 @@ const TranscodeTableRow: React.FC<TranscodeTablePropsProps> = ({ $key }) => {
 
       <Table.Data align="right">
         <div className="flex flex-row items-center justify-end gap-2">
-          {data.status !== 'COMPLETED' && (
+          {data.status !== 'COMPLETED' && data.status !== 'CANCELLED' && (
             <>
               {data.speed != null && (
                 <>
