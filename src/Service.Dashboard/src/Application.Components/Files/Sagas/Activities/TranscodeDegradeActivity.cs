@@ -60,7 +60,7 @@ public class TranscodeDegradeActivity : IStateMachineActivity<TranscodeSagaState
 
     private async Task Degrade(ConsumeContext context)
     {
-        using (var uow = _uow.Begin())
+        using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             var file = await _fileRepository.SingleAsync(x => x.Transcodes.Any(y => y.Id == context.CorrelationId));
 

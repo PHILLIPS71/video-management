@@ -55,7 +55,7 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
             return;
         }
 
-        using (var uow = _uow.Begin())
+        using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             try
             {

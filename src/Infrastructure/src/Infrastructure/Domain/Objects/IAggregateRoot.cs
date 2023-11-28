@@ -11,6 +11,6 @@ public interface IAggregateRoot : IEntity
 /// A aggregate root with a single primary key property.
 /// </summary>
 /// <typeparam name="TKey">Type of primary key property for the entity.</typeparam>
-public interface IAggregateRoot<out TKey> : IEntity<TKey>
+public interface IAggregateRoot<out TKey> : IAggregateRoot, IEntity<TKey>
 {
 }

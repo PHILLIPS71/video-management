@@ -31,5 +31,6 @@ public interface IUnitOfWork : IUnitOfWorkContext
     /// Begins the Uow with the provided options.
     /// </summary>
     /// <param name="options">The options to pass this Uow.</param>
-    IUnitOfWork Begin(UnitOfWorkOptions options);
+    /// <param name="cancellation">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    Task<IUnitOfWork> BeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default);
 }

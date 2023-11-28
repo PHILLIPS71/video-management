@@ -33,7 +33,7 @@ public class TranscodeProgressedActivity : IStateMachineActivity<TranscodeSagaSt
         BehaviorContext<TranscodeSagaState, TranscodeProgressedEvent> context,
         IBehavior<TranscodeSagaState, TranscodeProgressedEvent> next)
     {
-        using (var uow = _uow.Begin())
+        using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             var file = await _fileRepository.SingleAsync(x => x.Transcodes.Any(y => y.Id == context.CorrelationId));
 

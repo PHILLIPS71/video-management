@@ -15,13 +15,15 @@ public class UnitOfWorkService : IUnitOfWorkService, ITransientDependency
         _services = services;
     }
 
-    public IUnitOfWorkContext Begin()
+    public Task<IUnitOfWorkContext> BeginAsync(CancellationToken cancellation = default)
     {
-        return Begin(new UnitOfWorkOptions { Scope = TransactionScopeOption.Required });
+        return BeginAsync(new UnitOfWorkOptions { Scope = TransactionScopeOption.Required }, cancellation);
     }
 
-    public IUnitOfWorkContext Begin(UnitOfWorkOptions options)
+    public async Task<IUnitOfWorkContext> BeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         var uow = _services.GetRequiredService<IUnitOfWork>();
 
         uow.Completed += (sender, args) => Current = null;
@@ -30,7 +32,7 @@ public class UnitOfWorkService : IUnitOfWorkService, ITransientDependency
 
         uow.Disposed += (sender, args) => Current = null;
 
-        Current = uow.Begin(options);
+        Current = await uow.BeginAsync(options, cancellation);
 
         return uow;
     }

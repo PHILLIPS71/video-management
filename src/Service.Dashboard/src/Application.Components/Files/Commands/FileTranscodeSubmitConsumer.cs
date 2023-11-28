@@ -27,7 +27,7 @@ public class FileTranscodeSubmitConsumer : IConsumer<FileTranscodeSubmit.Command
             return;
         }
 
-        using (var uow = _uow.Begin())
+        using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             var transcode = file.Transcode();
 

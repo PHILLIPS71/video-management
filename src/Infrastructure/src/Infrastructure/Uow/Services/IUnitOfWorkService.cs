@@ -4,7 +4,7 @@ public interface IUnitOfWorkService
 {
     IUnitOfWork? Current { get; }
 
-    IUnitOfWorkContext Begin();
+    Task<IUnitOfWorkContext> BeginAsync(CancellationToken cancellation = default);
 
-    IUnitOfWorkContext Begin(UnitOfWorkOptions options);
+    Task<IUnitOfWorkContext> BeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default);
 }

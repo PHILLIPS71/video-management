@@ -1,20 +1,24 @@
 ﻿using Giantnodes.Infrastructure.Domain.Entities.Auditing;
+using Giantnodes.Infrastructure.Domain.Events;
 using Giantnodes.Infrastructure.Domain.Objects;
 
 namespace Giantnodes.Infrastructure.Domain.Entities;
 
 /// <inheritdoc cref="IAggregateRoot" />
-public abstract class AggregateRoot : Entity,
-    IAggregateRoot,
-    IHasConcurrencyToken
+public abstract class AggregateRoot : Entity, IAggregateRoot, IHasConcurrencyToken
 {
-    public virtual byte[]? ConcurrencyToken { get; private set; }
+    public readonly ICollection<IEvent> DomainEvents = new List<IEvent>();
+
+    public byte[]? ConcurrencyToken { get; private set; }
 }
 
 /// <inheritdoc cref="IAggregateRoot{TKey}" />
-public abstract class AggregateRoot<TKey> : Entity<TKey>,
-    IAggregateRoot,
-    IHasConcurrencyToken
+public class AggregateRoot<TKey> : AggregateRoot, IAggregateRoot<TKey>
 {
-    public virtual byte[]? ConcurrencyToken { get; private set; }
+    public TKey Id { get; protected init; } = default!;
+
+    public override object[] GetKeys()
+    {
+        return new object[] { Id };
+    }
 }

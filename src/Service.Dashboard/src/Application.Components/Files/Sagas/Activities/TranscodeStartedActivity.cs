@@ -34,7 +34,7 @@ public class TranscodeStartedActivity : IStateMachineActivity<TranscodeSagaState
         BehaviorContext<TranscodeSagaState, JobStarted> context,
         IBehavior<TranscodeSagaState, JobStarted> next)
     {
-        using (var uow = _uow.Begin())
+        using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             var file = await _fileRepository.SingleAsync(x => x.Transcodes.Any(y => y.Id == context.CorrelationId));
 

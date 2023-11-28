@@ -1,10 +1,17 @@
-﻿namespace Giantnodes.Infrastructure.Uow;
+﻿using Giantnodes.Infrastructure.Domain.Events;
+using Giantnodes.Infrastructure.Uow.Execution;
+
+namespace Giantnodes.Infrastructure.Uow;
 
 public abstract class UnitOfWork : IUnitOfWork
 {
+    private readonly IUnitOfWorkExecutor _executor;
+
     private bool _started;
     private bool _committed;
     private Exception? _exception;
+
+    protected List<IEvent> DomainEvents { get; }
 
     public Guid CorrelationId { get; }
 
@@ -22,12 +29,17 @@ public abstract class UnitOfWork : IUnitOfWork
 
     public UnitOfWorkOptions? Options { get; private set; }
 
-    protected UnitOfWork()
+    public IReadOnlyCollection<object> Events => DomainEvents.ToList().AsReadOnly();
+
+    protected UnitOfWork(IUnitOfWorkExecutor executor)
     {
+        _executor = executor;
+
         CorrelationId = Guid.NewGuid();
+        DomainEvents = new List<IEvent>();
     }
 
-    public IUnitOfWork Begin(UnitOfWorkOptions options)
+    public async Task<IUnitOfWork> BeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default)
     {
         ArgumentNullException.ThrowIfNull(options);
 
@@ -36,8 +48,17 @@ public abstract class UnitOfWork : IUnitOfWork
 
         Options = options;
 
-        _started = true;
-        return this;
+        try
+        {
+            await OnBeginAsync(options, cancellation);
+            _started = true;
+            return this;
+        }
+        catch (Exception ex)
+        {
+            _exception = ex;
+            throw;
+        }
     }
 
     public async Task CommitAsync(CancellationToken cancellation = default)
@@ -47,7 +68,8 @@ public abstract class UnitOfWork : IUnitOfWork
 
         try
         {
-            await SaveChangesAsync(cancellation);
+            await OnCommitAsync(cancellation);
+            await _executor.OnAfterCommitAsync(this, cancellation);
             _committed = true;
             Completed?.Invoke(this, EventArgs.Empty);
         }
@@ -78,5 +100,7 @@ public abstract class UnitOfWork : IUnitOfWork
         Disposed?.Invoke(this, EventArgs.Empty);
     }
 
-    protected abstract Task SaveChangesAsync(CancellationToken cancellation = default);
+    protected abstract Task OnBeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default);
+
+    protected abstract Task OnCommitAsync(CancellationToken cancellation = default);
 }

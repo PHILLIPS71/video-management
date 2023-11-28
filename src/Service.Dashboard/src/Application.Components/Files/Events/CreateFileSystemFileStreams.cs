@@ -20,7 +20,7 @@ public class CreateFileSystemFileStreams : IConsumer<FileProbedEvent>
 
     public async Task Consume(ConsumeContext<FileProbedEvent> context)
     {
-        using (var uow = _uow.Begin())
+        using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             var files = await _repository
                 .ToListAsync(x => x.PathInfo.FullName == context.Message.FullPath, context.CancellationToken);

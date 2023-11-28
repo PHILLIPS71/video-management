@@ -21,7 +21,7 @@ public class FileTranscodeCancelConsumer : IConsumer<FileTranscodeCancel.Command
 
     public async Task Consume(ConsumeContext<FileTranscodeCancel.Command> context)
     {
-        using (var uow = _uow.Begin())
+        using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             var file = await _fileRepository.SingleOrDefaultAsync(x => x.Id == context.Message.FileId);
             if (file == null)
