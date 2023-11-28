@@ -1,5 +1,6 @@
 using Giantnodes.Infrastructure.Domain.Entities;
 using Giantnodes.Infrastructure.Domain.Entities.Auditing;
+using Giantnodes.Service.Dashboard.Application.Contracts.Files.Events;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using MassTransit;
@@ -86,5 +87,14 @@ public class Transcode : AggregateRoot<Guid>, ITimestampableEntity
             throw new InvalidOperationException($"the transcode is not in a {TranscodeStatus.Transcoding} status.");
 
         Speed = speed;
+        DomainEvents.Add(new FileTranscodeSpeedChangedEvent
+        {
+            FileId = File.Id,
+            TranscodeId = Id,
+            Frames = Speed.Frames,
+            Bitrate = Speed.Bitrate,
+            Scale = Speed.Scale,
+            RaisedAt = DateTime.UtcNow
+        });
     }
 }

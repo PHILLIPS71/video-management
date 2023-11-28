@@ -30,6 +30,7 @@ public class Startup
 
         app
             .UseRouting()
+            .UseWebSockets()
             .UseCors()
             .UseEndpoints(endpoint =>
             {

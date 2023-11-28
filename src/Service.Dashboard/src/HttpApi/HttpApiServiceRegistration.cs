@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Reflection;
+﻿using System.Reflection;
 using Giantnodes.Infrastructure.GraphQL;
 using Giantnodes.Infrastructure.GraphQL.Scalars;
 using Giantnodes.Infrastructure.Masstransit.Validation;
@@ -28,6 +27,7 @@ public static class HttpApiServiceRegistration
             .ModifyOptions(opt => opt.DefaultFieldBindingFlags = FieldBindingFlags.Default)
             .SetPagingOptions(new PagingOptions { IncludeTotalCount = true })
             .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled)
+            .AddInMemorySubscriptions()
             .AddType<CharType>()
             .AddConvention<IFilterConvention, CharFilterConvention>()
             .AddConvention<INamingConventions, SnakeCaseNamingConvention>()
@@ -37,6 +37,7 @@ public static class HttpApiServiceRegistration
             .AddHttpApiTypes()
             .AddQueryType()
             .AddMutationType()
+            .AddSubscriptionType()
             .AddProjections()
             .AddFiltering()
             .AddSorting();
