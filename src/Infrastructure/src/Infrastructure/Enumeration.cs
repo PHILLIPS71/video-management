@@ -51,7 +51,21 @@ public abstract class Enumeration : IComparable
         return match;
     }
 
-    public static TValue? TryParse<TValue>(string name) where TValue : Enumeration
+    public static TValue? TryParse<TValue>(int id)
+        where TValue : Enumeration
+    {
+        try
+        {
+            return Parse<TValue, int>(id, item => item.Id == id);
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+    }
+    
+    public static TValue? TryParse<TValue>(string name)
+        where TValue : Enumeration
     {
         try
         {

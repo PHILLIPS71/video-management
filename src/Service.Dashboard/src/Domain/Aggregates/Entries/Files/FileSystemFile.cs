@@ -17,16 +17,18 @@ public class FileSystemFile : FileSystemEntry
 
     public IReadOnlyCollection<SubtitleStream> SubtitleStreams { get; private set; } = new List<SubtitleStream>();
     
-    public IReadOnlyCollection<Transcode> Transcodes => _transcodes.AsReadOnly();
+    public IReadOnlyCollection<Transcode> Transcodes { get; private set; }
 
     private FileSystemFile()
     {
+        Transcodes = _transcodes;
     }
 
     public FileSystemFile(Library library, FileSystemDirectory parent, IFileInfo file)
         : base(library, parent, file)
     {
         Size = file.Length;
+        Transcodes = _transcodes;
     }
 
     public void SetSize(IFileInfo file)

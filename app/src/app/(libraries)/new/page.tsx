@@ -118,7 +118,7 @@ const LibraryCreatePage = () => {
               )}
 
               <div className="flex flex-row gap-4 flex-wrap md:flex-nowrap">
-                <Form.Group error={form.formState.errors.name}>
+                <Form.Group error={!!form.formState.errors.name}>
                   <Form.Label htmlFor="name">Name</Form.Label>
                   <Input>
                     <Input.Control id="name" type="text" {...form.register('name')} />
@@ -126,7 +126,7 @@ const LibraryCreatePage = () => {
                   <Form.Feedback type="invalid">{form.formState.errors.name?.message}</Form.Feedback>
                 </Form.Group>
 
-                <Form.Group error={form.formState.errors.slug}>
+                <Form.Group error={!!form.formState.errors.slug}>
                   <Form.Label htmlFor="slug">Slug</Form.Label>
                   <Input>
                     <Input.Control id="slug" type="text" {...form.register('slug')} />
@@ -143,7 +143,7 @@ const LibraryCreatePage = () => {
                 </Form.Group>
               </div>
 
-              <Form.Group error={form.formState.errors.path}>
+              <Form.Group error={!!form.formState.errors.path}>
                 <Form.Label htmlFor="folder">Folder</Form.Label>
                 <Input>
                   <Input.Control id="folder" type="text" {...form.register('path')} />
@@ -151,7 +151,7 @@ const LibraryCreatePage = () => {
                 <Form.Feedback type="invalid">{form.formState.errors.path?.message}</Form.Feedback>
               </Form.Group>
 
-              <Button className="self-end" color="primary" disabled={isLoading} size="xs" type="submit">
+              <Button className="self-end" color="brand" disabled={isLoading} size="xs" type="submit">
                 Create library
               </Button>
             </div>

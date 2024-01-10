@@ -53,17 +53,19 @@ const ExplorePath: React.FC<ExplorePathProps> = ({ $key }) => {
 
   return (
     <Breadcrumb>
-      {Array.from(directories.keys()).map((directory, index) => (
-        <Breadcrumb.Item>
-          {isBreadcrumbLink(index) ? (
+      {Array.from(directories.keys()).map((directory, index) =>
+        isBreadcrumbLink(index) ? (
+          <Breadcrumb.Item key={directory}>
             <NextLink legacyBehavior href={`/library/${library.slug}/explore/${directories.get(directory)}`}>
               <Link className="font-semibold">{directory}</Link>
             </NextLink>
-          ) : (
-            directory
-          )}
-        </Breadcrumb.Item>
-      ))}
+          </Breadcrumb.Item>
+        ) : (
+          <Breadcrumb.Item key={directory} disabled>
+            {directory}
+          </Breadcrumb.Item>
+        )
+      )}
     </Breadcrumb>
   )
 }

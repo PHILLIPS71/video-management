@@ -18,7 +18,7 @@ public class FileTranscodeSubmitMutation
     public async Task<IQueryable<Transcode>> FileTranscodeSubmit(
         [Service] ApplicationDbContext database,
         [Service] IRequestClient<FileTranscodeSubmit.Command> request,
-        Guid id,
+        [ID] Guid id,
         CancellationToken cancellation = default)
     {
         var command = new FileTranscodeSubmit.Command

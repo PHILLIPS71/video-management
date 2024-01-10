@@ -8,14 +8,15 @@ import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useFragment, useMutation } from 'react-relay'
 
-type ExploreControlsProps = {
+type ExploreControlsProps = React.PropsWithChildren & {
   $key: ExploreControlsFragment$key
 }
 
-const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
+const ExploreControls: React.FC<ExploreControlsProps> = ({ $key, children }) => {
   const data = useFragment(
     graphql`
       fragment ExploreControlsFragment on FileSystemDirectory {
+        id
         size
         path_info {
           full_name
@@ -31,7 +32,7 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
   )
 
   const [commit, isLoading] = useMutation<ExploreControls_DirectoryProbeMutation>(graphql`
-    mutation ExploreControls_LibraryProbeMutation($input: Directory_probeInput!) {
+    mutation ExploreControls_DirectoryProbeMutation($input: Directory_probeInput!) {
       directory_probe(input: $input) {
         string
         errors {
@@ -50,15 +51,15 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
     commit({
       variables: {
         input: {
-          path: data.path_info.full_name,
+          directory_id: data.id,
         },
       },
     })
   }
 
   return (
-    <div className="flex gap-4 flex-col sm:flex-row">
-      <div className="flex flex-grow gap-4 justify-around flex-wrap sm:justify-normal">
+    <div className="flex gap-3 flex-col sm:flex-row">
+      <div className="flex flex-grow gap-3 justify-around flex-wrap sm:justify-normal">
         <div className="flex items-center gap-1">
           <IconFolderFilled size={16} />
           <Typography.Text as="strong">0</Typography.Text>
@@ -78,7 +79,9 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
         </div>
       </div>
 
-      <Button color="brand" disabled={isLoading} size="sm" onClick={() => onScanClick()}>
+      {children}
+
+      <Button color="brand" disabled={isLoading} size="xs" onClick={() => onScanClick()}>
         <IconFolderSearch size={16} /> Scan
       </Button>
     </div>

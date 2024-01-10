@@ -52,5 +52,12 @@ public class FileSystemFileType : ObjectType<FileSystemFile>
             // .UseProjection()
             .UseFiltering()
             .UseSorting();
+        
+        descriptor
+            .Field(p => p.Transcodes)
+            // .UsePaging()
+            // .UseProjection()
+            .UseFiltering()
+            .UseSorting();
     }
 }

@@ -1,18 +1,19 @@
 'use client'
 
+import type { page_FileTranscodeSubmitMutation } from '@/__generated__/page_FileTranscodeSubmitMutation.graphql'
 import type { page_LibrarySlugExploreQuery } from '@/__generated__/page_LibrarySlugExploreQuery.graphql'
 
-import { Card, Typography } from '@giantnodes/react'
+import { Button, Card, Typography } from '@giantnodes/react'
 import { notFound } from 'next/navigation'
 import React, { Suspense } from 'react'
-import { graphql, useLazyLoadQuery } from 'react-relay'
+import { graphql, useLazyLoadQuery, useMutation } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
 import ExploreCodecs from '@/components/explore/ExploreCodecs'
 import ExploreControls from '@/components/explore/ExploreControls'
 import ExplorePath from '@/components/explore/ExplorePath'
-import ExploreTable from '@/components/explore/table/ExploreTable'
 import ExploreResolution from '@/components/explore/ExploreResolution'
+import ExploreTable from '@/components/explore/ExploreTable'
 
 type LibraryExplorePageProps = {
   params: {
@@ -23,6 +24,7 @@ type LibraryExplorePageProps = {
 
 const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
   const { library } = useLibraryContext()
+  const [selected, setSelected] = React.useState<Set<string>>(new Set())
 
   const path = React.useMemo<string>(() => {
     const separator = library.path_info.directory_separator_char
@@ -77,6 +79,29 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
     notFound()
   }
 
+  const [commit, isLoading] = useMutation<page_FileTranscodeSubmitMutation>(graphql`
+    mutation page_FileTranscodeSubmitMutation($input: File_transcode_submitInput!) {
+      file_transcode_submit(input: $input) {
+        transcode {
+          id
+          file {
+            ...ExploreTableFileFragment
+          }
+        }
+      }
+    }
+  `)
+
+  const onTranscodeSubmit = () => {
+    commit({
+      variables: {
+        input: {
+          id: selected.values().next().value,
+        },
+      },
+    })
+  }
+
   return (
     <div className="flex lg:flex-row flex-col gap-2">
       <div className="flex flex-col flex-1 gap-2">
@@ -91,14 +116,18 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
         <Card transparent>
           <Card.Header>
             <Suspense fallback="LOADING...">
-              <ExploreControls $key={query.file_system_directory} />
+              <ExploreControls $key={query.file_system_directory}>
+                <Button color="brand" disabled={isLoading} size="xs" onClick={() => onTranscodeSubmit()}>
+                  Transcode
+                </Button>
+              </ExploreControls>
             </Suspense>
           </Card.Header>
         </Card>
 
         <Card>
           <Suspense fallback="LOADING...">
-            <ExploreTable $key={query.file_system_directory} />
+            <ExploreTable $key={query.file_system_directory} onChange={setSelected} />
           </Suspense>
         </Card>
       </div>

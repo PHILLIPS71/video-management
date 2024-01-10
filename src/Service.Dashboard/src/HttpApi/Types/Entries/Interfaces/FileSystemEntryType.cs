@@ -9,6 +9,10 @@ public class FileSystemEntryType : InterfaceType<FileSystemEntry>
         descriptor.BindFieldsExplicitly();
 
         descriptor
+            .Field(p => p.Id)
+            .Type<NonNullType<IdType>>();
+
+        descriptor
             .Field(p => p.Size);
 
         descriptor
