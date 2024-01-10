@@ -25,6 +25,7 @@ public class FileSystemDirectoryRepository : IFileSystemDirectoryRepository
             .FileSystemDirectories
             .Include(x => x.Library)
             .Include(x => x.ParentDirectory)
+            .Include(x => x.Entries)
             .AsQueryable();
     }
 

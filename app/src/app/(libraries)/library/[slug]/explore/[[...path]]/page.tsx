@@ -9,10 +9,10 @@ import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
 import ExploreCodecs from '@/components/explore/ExploreCodecs'
-import ExploreContainers from '@/components/explore/ExploreContainers'
 import ExploreControls from '@/components/explore/ExploreControls'
 import ExplorePath from '@/components/explore/ExplorePath'
 import ExploreTable from '@/components/explore/table/ExploreTable'
+import ExploreResolution from '@/components/explore/ExploreResolution'
 
 type LibraryExplorePageProps = {
   params: {
@@ -39,6 +39,7 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
     graphql`
       query page_LibrarySlugExploreQuery($where: FileSystemDirectoryFilterInput, $order: [FileSystemEntrySortInput!]) {
         file_system_directory(where: $where) {
+          id
           ...ExplorePathFragment
           ...ExploreControlsFragment
           ...ExploreTableFragment @arguments(order: $order)
@@ -105,21 +106,13 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
       <div className="flex flex-col gap-2">
         <Card className="h-fit lg:w-80">
           <Card.Header>
-            <Typography.Text as="strong">Containers</Typography.Text>
+            <Typography.Text as="strong">Resolution</Typography.Text>
           </Card.Header>
 
           <Card.Body>
-            <ExploreContainers />
-          </Card.Body>
-        </Card>
-
-        <Card className="h-fit lg:w-80">
-          <Card.Header>
-            <Typography.Text as="strong">Codecs</Typography.Text>
-          </Card.Header>
-
-          <Card.Body>
-            <ExploreCodecs />
+            <Suspense fallback="LOADING...">
+              <ExploreResolution directory_id={query.file_system_directory.id} />
+            </Suspense>
           </Card.Body>
         </Card>
       </div>
