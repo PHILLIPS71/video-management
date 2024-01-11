@@ -5,6 +5,8 @@ import { RelayEnvironmentProvider } from 'react-relay'
 
 import { environment } from '@/libraries/relay/environment'
 
+import '@/libraries/dayjs'
+
 type ApplicationProvidersProps = React.PropsWithChildren
 
 const ApplicationProviders: React.FC<ApplicationProvidersProps> = ({ children }) => (

@@ -2,12 +2,12 @@ using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
+using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using MassTransit;
-using MassTransit.Contracts.JobService;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activities;
 
-public class EncodeCompletedActivity : IStateMachineActivity<EncodeSagaState, JobCompleted>
+public class EncodeCompletedActivity : IStateMachineActivity<EncodeSagaState, EncodeCompletedEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IFileSystemFileRepository _repository;
@@ -31,8 +31,8 @@ public class EncodeCompletedActivity : IStateMachineActivity<EncodeSagaState, Jo
     }
 
     public async Task Execute(
-        BehaviorContext<EncodeSagaState, JobCompleted> context,
-        IBehavior<EncodeSagaState, JobCompleted> next)
+        BehaviorContext<EncodeSagaState, EncodeCompletedEvent> context,
+        IBehavior<EncodeSagaState, EncodeCompletedEvent> next)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
@@ -47,8 +47,8 @@ public class EncodeCompletedActivity : IStateMachineActivity<EncodeSagaState, Jo
     }
 
     public Task Faulted<TException>(
-        BehaviorExceptionContext<EncodeSagaState, JobCompleted, TException> context,
-        IBehavior<EncodeSagaState, JobCompleted> next) where TException : Exception
+        BehaviorExceptionContext<EncodeSagaState, EncodeCompletedEvent, TException> context,
+        IBehavior<EncodeSagaState, EncodeCompletedEvent> next) where TException : Exception
     {
         return next.Faulted(context);
     }

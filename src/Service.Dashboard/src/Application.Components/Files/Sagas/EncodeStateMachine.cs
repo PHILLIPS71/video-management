@@ -13,72 +13,62 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
     {
         InstanceState(x => x.CurrentState);
 
-        Event(() => EncodeCreated, e => e.CorrelateById(context => context.Message.EncodeId));
+        Event(() => Submitted, e => e.CorrelateById(context => context.Message.EncodeId));
+        Event(() => Cancelled, e => e.CorrelateById(context => context.Message.EncodeId));
         Event(() => EncodeStarted);
         Event(() => EncodeCompleted);
-        Event(() => EncodeFailed);
-        Event(() => EncodeProgressed);
-        Event(() => EncodeHeartbeat);
+        Event(() => Heartbeat);
+        Event(() => Progressed);
+        Event(() => Failed);
 
-        Request(() => EncodeSubmitRequest);
+        Request(() => EncodeRequest);
 
         Initially(
-            When(EncodeCreated)
+            When(Submitted)
                 .Then(context =>
                 {
                     context.Saga.InputFullPath = context.Message.FullPath;
                     context.Saga.SubmittedAt = DateTime.UtcNow;
                 })
-                .Request(EncodeSubmitRequest, context => new EncodeSubmit.Command
+                .Request(EncodeRequest, context => new EncodeSubmit.Command
                 {
                     CorrelationId = context.Saga.CorrelationId,
                     InputPath = context.Saga.InputFullPath,
                     OutputDirectoryPath = context.Message.FullPath,
                     IsDeletingInput = false
                 })
-                .TransitionTo(EncodeSubmitRequest?.Pending));
+                .TransitionTo(EncodeRequest?.Pending));
 
-        During(EncodeSubmitRequest?.Pending,
-            When(EncodeSubmitRequest?.Completed)
+        During(EncodeRequest?.Pending,
+            When(EncodeRequest?.Completed)
                 .TransitionTo(Queued),
-            When(EncodeSubmitRequest?.TimeoutExpired)
-                .Activity(context => context.OfInstanceType<EncodeDegradeActivity>())
-                .Finalize(),
-            When(EncodeSubmitRequest?.Faulted)
+            When(EncodeRequest?.TimeoutExpired)
+                .Activity(context => context.OfInstanceType<EncodeDegradeActivity>()),
+            When(EncodeRequest?.Faulted)
                 .Activity(context => context.OfInstanceType<EncodeDegradeActivity>())
                 .Finalize());
 
-        During(EncodeSubmitRequest?.Pending, Queued,
+        During(EncodeRequest?.Pending, Queued,
             When(EncodeStarted)
                 .Activity(context => context.OfType<EncodeStartedActivity>())
                 .TransitionTo(Processing));
 
         During(Processing,
-            When(EncodeHeartbeat)
+            When(Heartbeat)
                 .Activity(context => context.OfType<EncodeHeartbeatActivity>()),
-            When(EncodeProgressed)
+            When(Progressed)
                 .Activity(context => context.OfType<EncodeProgressedActivity>()),
             When(EncodeCompleted)
+                .Activity(context => context.OfType<EncodeCompletedActivity>())
                 .Finalize());
 
         DuringAny(
-            When(EncodeFailed)
+            When(Failed)
+                .Activity(context => context.OfType<EncodeFailedActivity>())
+                .Finalize(),
+            When(Cancelled)
+                .PublishAsync(context => context.Init<EncodeCancel.Command>(new { context.Saga.CorrelationId }))
                 .Finalize());
-
-        // DuringAny(
-        //     When(Cancelled)
-        //         .Activity(context => context.OfInstanceType<TranscodeCancelledActivity>())
-        //         .Finalize());
-
-        // DuringAny(
-        //     When(Cancellation)
-        //         .IfElse(context => context.Saga.JobId != null,
-        //             context => context
-        //                 .PublishAsync(x => x.Init<CancelJob>(new { x.Saga.JobId }))
-        //                 .TransitionTo(Cancelling),
-        //             context => context
-        //                 .Activity(x => x.OfInstanceType<TranscodeCancelledActivity>())
-        //                 .Finalize()));
 
         SetCompletedWhenFinalized();
     }
@@ -86,12 +76,13 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
     public required State Queued { get; set; }
     public required State Processing { get; set; }
 
-    public required Event<FileEncodeCreatedEvent> EncodeCreated { get; set; }
+    public required Event<FileEncodeCreatedEvent> Submitted { get; set; }
     public required Event<EncodeStartedEvent> EncodeStarted { get; set; }
     public required Event<EncodeCompletedEvent> EncodeCompleted { get; set; }
-    public required Event<EncodeFailedEvent> EncodeFailed { get; set; }
-    public required Event<EncodeHeartbeatEvent> EncodeHeartbeat { get; set; }
-    public required Event<EncodeProgressedEvent> EncodeProgressed { get; set; }
+    public required Event<EncodeHeartbeatEvent> Heartbeat { get; set; }
+    public required Event<EncodeProgressedEvent> Progressed { get; set; }
+    public required Event<FileEncodeCancelledEvent> Cancelled { get; set; }
+    public required Event<EncodeFailedEvent> Failed { get; set; }
 
-    public required Request<EncodeSagaState, EncodeSubmit.Command, EncodeSubmit.Result> EncodeSubmitRequest { get; set; }
+    public required Request<EncodeSagaState, EncodeSubmit.Command, EncodeSubmit.Result> EncodeRequest { get; set; }
 }

@@ -17,7 +17,8 @@ public class EncodeJobStateMachine : MassTransitStateMachine<EncodeJobSaga>
         Event(() => Started);
         Event(() => Completed);
         Event(() => Faulted, e => e.CorrelateById(context => context.Message.JobId));
-
+        Event(() => Cancelled);
+        
         Request(() => Encode);
 
         Initially(
@@ -53,9 +54,12 @@ public class EncodeJobStateMachine : MassTransitStateMachine<EncodeJobSaga>
                 .Finalize());
 
         DuringAny(
+            When(Cancelled)
+                .If(context => context.Saga.JobId != null,
+                    context => context.PublishAsync(ctx => ctx.Init<CancelJob>(new { ctx.Saga.JobId })))
+                .Finalize(),
             When(Faulted)
-                .PublishAsync(context => 
-                    context.Init<EncodeFailedEvent>(new { context.Saga.CorrelationId, context.Message.Exceptions }))
+                .PublishAsync(context => context.Init<EncodeFailedEvent>(new { context.Saga.CorrelationId, context.Message.Exceptions }))
                 .Finalize());
 
         SetCompletedWhenFinalized();
@@ -69,6 +73,7 @@ public class EncodeJobStateMachine : MassTransitStateMachine<EncodeJobSaga>
     public required Event<EncodeStartedEvent> Started { get; set; }
     public required Event<JobFaulted> Faulted { get; set; }
     public required Event<EncodeCompletedEvent> Completed { get; set; }
+    public required Event<EncodeCancel.Command> Cancelled { get; set; }
 
     public required Request<EncodeJobSaga, Encode.Job, JobSubmissionAccepted> Encode { get; set; }
 }

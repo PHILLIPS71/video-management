@@ -15,12 +15,12 @@ public class DirectoryProbeMutation
     [UseProjection]
     public async Task<string> DirectoryProbe(
         [Service] IRequestClient<DirectoryProbe.Command> request,
-        [ID] Guid directoryId,
+        [ID] Guid directory_id,
         CancellationToken cancellation = default)
     {
         var command = new DirectoryProbe.Command
         {
-            DirectoryId = directoryId,
+            DirectoryId = directory_id,
         };
 
         Response response = await request.GetResponse<DirectoryProbe.Result, DomainFault, ValidationFault>(command, cancellation);

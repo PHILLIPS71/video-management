@@ -29,6 +29,7 @@
     "@hookform/resolvers": "^3.3.2",
     "@tabler/icons-react": "^2.39.0",
     "clsx": "^2.0.0",
+    "dayjs": "^1.11.10",
     "filesize": "^10.1.0",
     "graphql-ws": "^5.14.2",
     "next": "^13.5.6",

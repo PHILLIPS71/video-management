@@ -37,9 +37,9 @@ public class FileEncodeCancelConsumer : IConsumer<FileEncodeCancel.Command>
                 return;
             }
 
-            encode.SetStatus(EncodeStatus.Cancelling);
+            encode.SetStatus(EncodeStatus.Cancelled);
 
-            await context.Publish(new FileEncodeCancellationEvent
+            await context.Publish(new FileEncodeCancelledEvent
             {
                 FileId = file.Id,
                 EncodeId = encode.Id

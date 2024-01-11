@@ -62,6 +62,10 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
                 DegradedAt = DateTime.UtcNow;
                 break;
 
+            case EncodeStatus.Failed:
+                FailedAt = DateTime.UtcNow;
+                break;
+
             case EncodeStatus.Completed:
                 Percent = 1.0f;
                 CompletedAt = DateTime.UtcNow;
@@ -88,6 +92,7 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
             throw new InvalidOperationException($"the encode is not in a {EncodeStatus.Encoding} status.");
 
         Speed = speed;
+
         DomainEvents.Add(new FileEncodeSpeedChangedEvent
         {
             FileId = File.Id,

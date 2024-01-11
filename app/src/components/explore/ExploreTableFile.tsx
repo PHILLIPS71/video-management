@@ -60,7 +60,7 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
 
       {data.encodes && data.encodes.length > 0 && (
         <Chip color="info" size="sm">
-          transcoding
+          encoding
         </Chip>
       )}
     </>

@@ -28,7 +28,7 @@ const DashboardPage = () => {
 
   return (
     <Card className="max-w-6xl">
-      <Card.Header>Transcoding</Card.Header>
+      <Card.Header>Encoding</Card.Header>
 
       <Suspense>
         <EncodeTable $key={query} />

@@ -10,6 +10,7 @@ import { IconProgressX } from '@tabler/icons-react'
 import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useMutation, usePaginationFragment, useSubscription } from 'react-relay'
+import dayjs from 'dayjs'
 
 const EncodeTableFragment = graphql`
   fragment EncodeTableFragment on Query
@@ -27,6 +28,8 @@ const EncodeTableFragment = graphql`
           id
           status
           percent
+          started_at
+          completed_at
           speed {
             frames
             bitrate
@@ -113,7 +116,6 @@ const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
       case 'ENCODING':
         return 'success'
 
-      case 'CANCELLING':
       case 'DEGRADED':
         return 'warning'
 
@@ -170,14 +172,16 @@ const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
 
               <Chip color={getStatusColour(item.status)}>{item.status.toLowerCase()}</Chip>
 
-              {item.status !== 'COMPLETED' && item.status !== 'CANCELLING' && item.status !== 'CANCELLED' && (
-                <div
-                  className="cursor-pointer text-shark-200"
-                  onClick={() => cancel(item)}
-                  onKeyDown={() => cancel(item)}
-                >
+              {item.status === 'COMPLETED' && (
+                <Chip color="info">
+                  {dayjs.duration(dayjs(item.completed_at).diff(item.started_at)).format('H[h] m[m] s[s]')}
+                </Chip>
+              )}
+
+              {item.status !== 'COMPLETED' && item.status !== 'CANCELLED' && (
+                <Button color="neutral" size="xs" variant="blank" onClick={() => cancel(item)}>
                   <IconProgressX size={16} />
-                </div>
+                </Button>
               )}
             </div>
           )

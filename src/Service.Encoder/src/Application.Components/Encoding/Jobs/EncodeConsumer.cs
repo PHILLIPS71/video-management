@@ -113,6 +113,8 @@ public class EncodeConsumer : IJobConsumer<Encode.Job>
 
             info.Delete();
             Log.Information("encode with job id {0} was cancelled and file {1} was deleted.", context.JobId, info.FullName);
+
+            await context.Publish(new EncodeCancelledEvent { CorrelationId = context.CorrelationId ?? context.JobId });
             throw;
         }
     }

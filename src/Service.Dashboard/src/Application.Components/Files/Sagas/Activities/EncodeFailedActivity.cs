@@ -1,17 +1,18 @@
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
+using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activities;
 
-public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, EncodeProgressedEvent>
+public class EncodeFailedActivity : IStateMachineActivity<EncodeSagaState, EncodeFailedEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IFileSystemFileRepository _repository;
 
-    public EncodeProgressedActivity(
+    public EncodeFailedActivity(
         IUnitOfWorkService uow,
         IFileSystemFileRepository repository)
     {
@@ -21,7 +22,7 @@ public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, E
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeProgressedActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeCompletedActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)
@@ -30,15 +31,15 @@ public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, E
     }
 
     public async Task Execute(
-        BehaviorContext<EncodeSagaState, EncodeProgressedEvent> context,
-        IBehavior<EncodeSagaState, EncodeProgressedEvent> next)
+        BehaviorContext<EncodeSagaState, EncodeFailedEvent> context,
+        IBehavior<EncodeSagaState, EncodeFailedEvent> next)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             var file = await _repository.SingleAsync(x => x.Encodes.Any(y => y.Id == context.CorrelationId));
             var encode = file.Encodes.Single(x => x.Id == context.CorrelationId);
 
-            encode.SetProgress(context.Message.Percent);
+            encode.SetStatus(EncodeStatus.Failed);
             await uow.CommitAsync(context.CancellationToken);
         }
 
@@ -46,8 +47,8 @@ public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, E
     }
 
     public Task Faulted<TException>(
-        BehaviorExceptionContext<EncodeSagaState, EncodeProgressedEvent, TException> context,
-        IBehavior<EncodeSagaState, EncodeProgressedEvent> next)
+        BehaviorExceptionContext<EncodeSagaState, EncodeFailedEvent, TException> context,
+        IBehavior<EncodeSagaState, EncodeFailedEvent> next)
         where TException : Exception
     {
         return next.Faulted(context);

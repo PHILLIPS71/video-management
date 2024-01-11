@@ -6,7 +6,6 @@ public enum EncodeStatus
     Queued,
     Encoding,
     Completed,
-    Cancelling,
     Cancelled,
     Degraded,
     Failed

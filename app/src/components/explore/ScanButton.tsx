@@ -27,7 +27,7 @@ const SCAN_MUTATION = graphql`
 const ScanButton: React.FC<ScanButtonProps> = ({ directory_id }) => {
   const [commit, isLoading] = useMutation<ScanButton_DirectoryProbeMutation>(SCAN_MUTATION)
 
-  const onScanClick = () => {
+  const onClick = () => {
     commit({
       variables: {
         input: {
@@ -38,7 +38,7 @@ const ScanButton: React.FC<ScanButtonProps> = ({ directory_id }) => {
   }
 
   return (
-    <Button color="brand" disabled={isLoading} size="xs" onClick={() => onScanClick()}>
+    <Button color="brand" disabled={isLoading} size="xs" onClick={() => onClick()}>
       <IconFolderSearch size={16} /> Scan
     </Button>
   )
