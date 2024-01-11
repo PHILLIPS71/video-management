@@ -61,7 +61,6 @@ public class GiantnodesDbContext<TDbContext> : DbContext
             return;
 
         var identifier = builder.Entity<TEntity>().Property(x => ((IEntity<Guid>)x).Id);
-
         if (identifier.Metadata.PropertyInfo != null &&
             identifier.Metadata.PropertyInfo.IsDefined(typeof(DatabaseGeneratedAttribute), true))
             return;
