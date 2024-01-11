@@ -1,12 +1,11 @@
-import type { ExploreControls_DirectoryProbeMutation } from '@/__generated__/ExploreControls_DirectoryProbeMutation.graphql'
 import type { ExploreControlsFragment$key } from '@/__generated__/ExploreControlsFragment.graphql'
 import type { FileSizeReturnObject } from 'filesize'
 
-import { Button, Typography } from '@giantnodes/react'
-import { IconDeviceFloppy, IconFile, IconFolderFilled, IconFolderSearch } from '@tabler/icons-react'
+import { Typography } from '@giantnodes/react'
+import { IconDeviceFloppy, IconFile, IconFolderFilled } from '@tabler/icons-react'
 import { filesize } from 'filesize'
 import React from 'react'
-import { graphql, useFragment, useMutation } from 'react-relay'
+import { graphql, useFragment } from 'react-relay'
 
 type ExploreControlsProps = React.PropsWithChildren & {
   $key: ExploreControlsFragment$key
@@ -31,32 +30,6 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key, children }) => 
     [data.size]
   )
 
-  const [commit, isLoading] = useMutation<ExploreControls_DirectoryProbeMutation>(graphql`
-    mutation ExploreControls_DirectoryProbeMutation($input: Directory_probeInput!) {
-      directory_probe(input: $input) {
-        string
-        errors {
-          ... on DomainError {
-            message
-          }
-          ... on ValidationError {
-            message
-          }
-        }
-      }
-    }
-  `)
-
-  const onScanClick = () => {
-    commit({
-      variables: {
-        input: {
-          directory_id: data.id,
-        },
-      },
-    })
-  }
-
   return (
     <div className="flex gap-3 flex-col sm:flex-row">
       <div className="flex flex-grow gap-3 justify-around flex-wrap sm:justify-normal">
@@ -80,10 +53,6 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key, children }) => 
       </div>
 
       {children}
-
-      <Button color="brand" disabled={isLoading} size="xs" onClick={() => onScanClick()}>
-        <IconFolderSearch size={16} /> Scan
-      </Button>
     </div>
   )
 }
