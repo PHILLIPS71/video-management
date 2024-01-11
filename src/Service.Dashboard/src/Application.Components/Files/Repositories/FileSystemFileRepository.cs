@@ -25,7 +25,7 @@ public class FileSystemFileRepository : IFileSystemFileRepository
             .FileSystemFiles
             .Include(x => x.Library)
             .Include(x => x.ParentDirectory)
-            .Include(x => x.Transcodes)
+            .Include(x => x.Encodes)
             .Include(x => x.VideoStreams)
             .Include(x => x.AudioStreams)
             .Include(x => x.SubtitleStreams)

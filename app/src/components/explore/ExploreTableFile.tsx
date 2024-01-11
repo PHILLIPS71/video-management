@@ -31,7 +31,7 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
             }
           }
         }
-        transcodes {
+        encodes {
           id
         }
       }
@@ -58,7 +58,7 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
         </>
       ))}
 
-      {data.transcodes && data.transcodes.length > 0 && (
+      {data.encodes && data.encodes.length > 0 && (
         <Chip color="info" size="sm">
           transcoding
         </Chip>

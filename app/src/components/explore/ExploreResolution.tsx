@@ -1,7 +1,7 @@
 import type { ExploreResolutionQuery } from '@/__generated__/ExploreResolutionQuery.graphql'
 
 import { Progress, Typography } from '@giantnodes/react'
-import { IconLockSquareRounded, IconPointFilled } from '@tabler/icons-react'
+import { IconPointFilled } from '@tabler/icons-react'
 import React from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 

@@ -14,6 +14,8 @@ namespace Giantnodes.Service.Dashboard.Persistence.DbContexts;
 
 public class ApplicationDbContext : GiantnodesDbContext<ApplicationDbContext>
 {
+    internal const string Schema = "dashboard";
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
@@ -28,7 +30,7 @@ public class ApplicationDbContext : GiantnodesDbContext<ApplicationDbContext>
     public DbSet<AudioStream> AudioStreams => Set<AudioStream>();
     public DbSet<SubtitleStream> SubtitleStreams => Set<SubtitleStream>();
 
-    public DbSet<Transcode> Transcodes => Set<Transcode>();
+    public DbSet<Encode> Encodes => Set<Encode>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -39,12 +41,12 @@ public class ApplicationDbContext : GiantnodesDbContext<ApplicationDbContext>
 
         builder.AddTransactionalOutboxEntities();
 
-        builder.HasDefaultSchema("dashboard");
+        builder.HasDefaultSchema(Schema);
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 
     private static IEnumerable<ISagaClassMap> Configurations
     {
-        get { yield return new TranscodeSagaStateMap(); }
+        get { yield return new EncodeSagaStateMap(); }
     }
 }

@@ -9,7 +9,7 @@ namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
 
 public class FileSystemFile : FileSystemEntry
 {
-    private readonly List<Transcode> _transcodes = new();
+    private readonly List<Encode> _encodes = new();
 
     public IReadOnlyCollection<VideoStream> VideoStreams { get; private set; } = new List<VideoStream>();
 
@@ -17,18 +17,18 @@ public class FileSystemFile : FileSystemEntry
 
     public IReadOnlyCollection<SubtitleStream> SubtitleStreams { get; private set; } = new List<SubtitleStream>();
     
-    public IReadOnlyCollection<Transcode> Transcodes { get; private set; }
+    public IReadOnlyCollection<Encode> Encodes { get; private set; }
 
     private FileSystemFile()
     {
-        Transcodes = _transcodes;
+        Encodes = _encodes;
     }
 
     public FileSystemFile(Library library, FileSystemDirectory parent, IFileInfo file)
         : base(library, parent, file)
     {
         Size = file.Length;
-        Transcodes = _transcodes;
+        Encodes = _encodes;
     }
 
     public void SetSize(IFileInfo file)
@@ -57,11 +57,11 @@ public class FileSystemFile : FileSystemEntry
             .ToList();
     }
 
-    public Transcode Transcode()
+    public Encode Encode()
     {
-        var transcode = new Transcode(this);
-        _transcodes.Add(transcode);
+        var encode = new Encode(this);
+        _encodes.Add(encode);
 
-        return transcode;
+        return encode;
     }
 }

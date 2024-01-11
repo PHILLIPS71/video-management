@@ -6,18 +6,18 @@ import { Card } from '@giantnodes/react'
 import { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import { TranscodeTable } from '@/components/dashboard'
+import { EncodeTable } from '@/components/dashboard'
 
 const DashboardPage = () => {
   const query = useLazyLoadQuery<page_DashboardPageQuery>(
     graphql`
       query page_DashboardPageQuery(
-        $where: TranscodeFilterInput
+        $where: EncodeFilterInput
         $first: Int
         $after: String
-        $order: [TranscodeSortInput!]
+        $order: [EncodeSortInput!]
       ) {
-        ...TranscodeTableFragment @arguments(where: $where, first: $first, after: $after, order: $order)
+        ...EncodeTableFragment @arguments(where: $where, first: $first, after: $after, order: $order)
       }
     `,
     {
@@ -31,7 +31,7 @@ const DashboardPage = () => {
       <Card.Header>Transcoding</Card.Header>
 
       <Suspense>
-        <TranscodeTable $key={query} />
+        <EncodeTable $key={query} />
       </Suspense>
     </Card>
   )

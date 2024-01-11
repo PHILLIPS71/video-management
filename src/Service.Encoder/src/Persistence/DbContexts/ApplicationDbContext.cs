@@ -1,11 +1,16 @@
-﻿using MassTransit.EntityFrameworkCoreIntegration;
+﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
+using Giantnodes.Service.Encoder.Persistence.Sagas;
+using MassTransit;
+using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Encoder.Persistence.DbContexts;
 
-public class ApplicationDbContext : SagaDbContext
+public class ApplicationDbContext : GiantnodesDbContext<ApplicationDbContext>
 {
-    public ApplicationDbContext(DbContextOptions options)
+    internal const string Schema = "encoder";
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
@@ -13,16 +18,24 @@ public class ApplicationDbContext : SagaDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.HasDefaultSchema("encoder");
+
+        foreach (var configuration in Configurations)
+            configuration.Configure(builder);
+
+        builder.AddTransactionalOutboxEntities();
+
+        builder.HasDefaultSchema(Schema);
+        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 
-    protected override IEnumerable<ISagaClassMap> Configurations
+    private static IEnumerable<ISagaClassMap> Configurations
     {
         get
         {
             yield return new JobTypeSagaMap(true);
             yield return new JobSagaMap(true);
             yield return new JobAttemptSagaMap(true);
+            yield return new EncodeJobSagaMap();
         }
     }
 }

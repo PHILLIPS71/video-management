@@ -1,1 +1,1 @@
-export { default as TranscodeTable } from '@/components/dashboard/TranscodeTable'
+export { default as EncodeTable } from '@/components/dashboard/EncodeTable'

@@ -16,7 +16,7 @@ public static class Setup
                 options
                     .UseNpgsql(configuration.GetConnectionString(name: "DatabaseConnection"), optionsBuilder =>
                     {
-                        optionsBuilder.MigrationsHistoryTable("__migrations", "dashboard");
+                        optionsBuilder.MigrationsHistoryTable("__migrations", ApplicationDbContext.Schema);
                         optionsBuilder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
                     })
                     .UseSnakeCaseNamingConvention()

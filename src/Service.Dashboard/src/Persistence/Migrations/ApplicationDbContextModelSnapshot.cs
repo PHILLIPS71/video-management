@@ -18,7 +18,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("dashboard")
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -55,18 +55,16 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LibraryId")
-                        .HasDatabaseName("ix_file_system_entries_library_id");
+                    b.HasIndex("LibraryId");
 
-                    b.HasIndex("ParentDirectoryId")
-                        .HasDatabaseName("ix_file_system_entries_parent_directory_id");
+                    b.HasIndex("ParentDirectoryId");
 
                     b.ToTable((string)null);
 
                     b.UseTpcMappingStrategy();
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities.Transcode", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities.Encode", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -81,8 +79,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnName("completed_at");
 
                     b.Property<byte[]>("ConcurrencyToken")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
                         .HasColumnName("concurrency_token");
 
@@ -103,6 +99,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnName("file_id");
 
                     b.Property<float?>("Percent")
+                        .HasPrecision(3, 2)
                         .HasColumnType("real")
                         .HasColumnName("percent");
 
@@ -120,12 +117,12 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id")
-                        .HasName("pk_transcodes");
+                        .HasName("pk_encodes");
 
                     b.HasIndex("FileId")
-                        .HasDatabaseName("ix_transcodes_file_id");
+                        .HasDatabaseName("ix_encodes_file_id");
 
-                    b.ToTable("transcodes", "dashboard");
+                    b.ToTable("encodes", "dashboard");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Library", b =>
@@ -135,8 +132,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnName("id");
 
                     b.Property<byte[]>("ConcurrencyToken")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
                         .HasColumnName("concurrency_token");
 
@@ -177,7 +172,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.ToTable("libraries", "dashboard");
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Persistence.Sagas.TranscodeSagaState", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Persistence.Sagas.EncodeSagaState", b =>
                 {
                     b.Property<Guid>("CorrelationId")
                         .HasColumnType("uuid")
@@ -192,10 +187,6 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("input_full_path");
-
-                    b.Property<Guid?>("JobId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("job_id");
 
                     b.Property<string>("OutputFullPath")
                         .HasColumnType("text")
@@ -212,17 +203,13 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnName("submitted_at");
 
                     b.HasKey("CorrelationId")
-                        .HasName("pk_transcode_saga_state");
-
-                    b.HasIndex("JobId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_transcode_saga_state_job_id");
+                        .HasName("pk_encode_saga_state");
 
                     b.HasIndex("OutputFullPath")
                         .IsUnique()
-                        .HasDatabaseName("ix_transcode_saga_state_output_full_path");
+                        .HasDatabaseName("ix_encode_saga_state_output_full_path");
 
-                    b.ToTable("transcode_saga_state", "dashboard");
+                    b.ToTable("encode_saga_state", "dashboard");
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
@@ -447,14 +434,14 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 {
                     b.HasBaseType("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry");
 
-                    b.ToTable("FileSystemDirectories", "dashboard");
+                    b.ToTable("file_system_directory", "dashboard");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile", b =>
                 {
                     b.HasBaseType("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry");
 
-                    b.ToTable("FileSystemFiles", "dashboard");
+                    b.ToTable("file_system_file", "dashboard");
                 });
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.FileSystemEntry", b =>
@@ -469,25 +456,25 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.FileSystemDirectory", "ParentDirectory")
                         .WithMany("Entries")
                         .HasForeignKey("ParentDirectoryId")
-                        .HasConstraintName("fk_file_system_entries_file_system_directories_parent_directory_id");
+                        .HasConstraintName("fk_file_system_entries_file_system_entries_parent_directory_id");
 
                     b.Navigation("Library");
 
                     b.Navigation("ParentDirectory");
                 });
 
-            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities.Transcode", b =>
+            modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities.Encode", b =>
                 {
                     b.HasOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile", "File")
-                        .WithMany("Transcodes")
+                        .WithMany("Encodes")
                         .HasForeignKey("FileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_transcodes_file_system_entries_file_id");
+                        .HasConstraintName("fk_encodes_file_system_entries_file_id");
 
-                    b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.TranscodeSpeed", "Speed", b1 =>
+                    b.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.EncodeSpeed", "Speed", b1 =>
                         {
-                            b1.Property<Guid>("TranscodeId")
+                            b1.Property<Guid>("EncodeId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
@@ -496,22 +483,20 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .HasColumnName("speed_bitrate");
 
                             b1.Property<float>("Frames")
-                                .HasPrecision(3, 2)
                                 .HasColumnType("real")
                                 .HasColumnName("speed_frames");
 
                             b1.Property<float>("Scale")
-                                .HasPrecision(3, 2)
                                 .HasColumnType("real")
                                 .HasColumnName("speed_scale");
 
-                            b1.HasKey("TranscodeId");
+                            b1.HasKey("EncodeId");
 
-                            b1.ToTable("transcodes", "dashboard");
+                            b1.ToTable("encodes", "dashboard");
 
                             b1.WithOwner()
-                                .HasForeignKey("TranscodeId")
-                                .HasConstraintName("fk_transcodes_transcodes_id");
+                                .HasForeignKey("EncodeId")
+                                .HasConstraintName("fk_encodes_encodes_id");
                         });
 
                     b.Navigation("File");
@@ -594,11 +579,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                             b1.HasKey("FileSystemDirectoryId");
 
-                            b1.ToTable("FileSystemDirectories", "dashboard");
+                            b1.ToTable("file_system_directory", "dashboard");
 
                             b1.WithOwner()
                                 .HasForeignKey("FileSystemDirectoryId")
-                                .HasConstraintName("fk_file_system_directories_file_system_directories_id");
+                                .HasConstraintName("fk_file_system_directory_file_system_directory_id");
                         });
 
                     b.Navigation("PathInfo")
@@ -637,11 +622,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                             b1.HasKey("FileSystemFileId");
 
-                            b1.ToTable("FileSystemFiles", "dashboard");
+                            b1.ToTable("file_system_file", "dashboard");
 
                             b1.WithOwner()
                                 .HasForeignKey("FileSystemFileId")
-                                .HasConstraintName("fk_file_system_files_file_system_files_id");
+                                .HasConstraintName("fk_file_system_file_file_system_file_id");
                         });
 
                     b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.AudioStream", "AudioStreams", b1 =>
@@ -697,7 +682,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("FileSystemFileId")
-                                .HasConstraintName("fk_audio_streams_file_system_entries_file_system_file_id");
+                                .HasConstraintName("fk_audio_streams_file_system_file_file_system_file_id");
                         });
 
                     b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.SubtitleStream", "SubtitleStreams", b1 =>
@@ -737,7 +722,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("FileSystemFileId")
-                                .HasConstraintName("fk_subtitle_streams_file_system_entries_file_system_file_id");
+                                .HasConstraintName("fk_subtitle_streams_file_system_file_file_system_file_id");
                         });
 
                     b.OwnsMany("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.VideoStream", "VideoStreams", b1 =>
@@ -786,7 +771,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("FileSystemFileId")
-                                .HasConstraintName("fk_video_streams_file_system_entries_file_system_file_id");
+                                .HasConstraintName("fk_video_streams_file_system_file_file_system_file_id");
 
                             b1.OwnsOne("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.VideoQuality", "Quality", b2 =>
                                 {
@@ -850,7 +835,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 
             modelBuilder.Entity("Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.FileSystemFile", b =>
                 {
-                    b.Navigation("Transcodes");
+                    b.Navigation("Encodes");
                 });
 #pragma warning restore 612, 618
         }

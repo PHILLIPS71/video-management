@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Infrastructure\src\EntityFrameworkCore\Giantnodes.Infrastructure.EntityFrameworkCore.csproj" />
         <ProjectReference Include="..\Domain\Giantnodes.Service.Encoder.Domain.csproj" />
     </ItemGroup>
 

@@ -54,7 +54,7 @@ public class FileSystemFileType : ObjectType<FileSystemFile>
             .UseSorting();
         
         descriptor
-            .Field(p => p.Transcodes)
+            .Field(p => p.Encodes)
             // .UsePaging()
             // .UseProjection()
             .UseFiltering()

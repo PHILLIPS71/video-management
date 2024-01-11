@@ -39,6 +39,25 @@ public static class ConsoleServiceRegistration
                     .AddConsumers(Assembly.Load("Giantnodes.Service.Encoder.Application.Components"));
 
                 options
+                    .AddSagaStateMachines(Assembly.Load("Giantnodes.Service.Encoder.Application.Components"));
+
+                options
+                    .SetEntityFrameworkSagaRepositoryProvider(configure =>
+                    {
+                        configure.ConcurrencyMode = ConcurrencyMode.Optimistic;
+
+                        configure.ExistingDbContext<ApplicationDbContext>();
+                        configure.UsePostgres();
+                    });
+
+                options
+                    .AddEntityFrameworkOutbox<ApplicationDbContext>(configure =>
+                    {
+                        configure.UsePostgres();
+                        configure.UseBusOutbox();
+                    });
+
+                options
                     .UsingRabbitMq((context, config) =>
                     {
                         config.UseDelayedMessageScheduler();

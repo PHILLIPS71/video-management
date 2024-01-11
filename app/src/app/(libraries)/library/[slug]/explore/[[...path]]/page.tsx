@@ -1,6 +1,6 @@
 'use client'
 
-import type { page_FileTranscodeSubmitMutation } from '@/__generated__/page_FileTranscodeSubmitMutation.graphql'
+import type { page_FileEncodeSubmitMutation } from '@/__generated__/page_FileEncodeSubmitMutation.graphql'
 import type { page_LibrarySlugExploreQuery } from '@/__generated__/page_LibrarySlugExploreQuery.graphql'
 
 import { Button, Card, Typography } from '@giantnodes/react'
@@ -9,7 +9,6 @@ import React, { Suspense } from 'react'
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
-import ExploreCodecs from '@/components/explore/ExploreCodecs'
 import ExploreControls from '@/components/explore/ExploreControls'
 import ExplorePath from '@/components/explore/ExplorePath'
 import ExploreResolution from '@/components/explore/ExploreResolution'
@@ -79,10 +78,10 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
     notFound()
   }
 
-  const [commit, isLoading] = useMutation<page_FileTranscodeSubmitMutation>(graphql`
-    mutation page_FileTranscodeSubmitMutation($input: File_transcode_submitInput!) {
-      file_transcode_submit(input: $input) {
-        transcode {
+  const [commit, isLoading] = useMutation<page_FileEncodeSubmitMutation>(graphql`
+    mutation page_FileEncodeSubmitMutation($input: File_encode_submitInput!) {
+      file_encode_submit(input: $input) {
+        encode {
           id
           file {
             ...ExploreTableFileFragment
@@ -92,7 +91,7 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
     }
   `)
 
-  const onTranscodeSubmit = () => {
+  const onEncodeSubmit = () => {
     commit({
       variables: {
         input: {
@@ -117,8 +116,8 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
           <Card.Header>
             <Suspense fallback="LOADING...">
               <ExploreControls $key={query.file_system_directory}>
-                <Button color="brand" disabled={isLoading} size="xs" onClick={() => onTranscodeSubmit()}>
-                  Transcode
+                <Button color="brand" disabled={isLoading} size="xs" onClick={() => onEncodeSubmit()}>
+                  Encode
                 </Button>
               </ExploreControls>
             </Suspense>

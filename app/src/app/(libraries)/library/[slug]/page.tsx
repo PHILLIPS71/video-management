@@ -7,7 +7,7 @@ import { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
-import { TranscodeTable } from '@/components/dashboard'
+import { EncodeTable } from '@/components/dashboard'
 
 const LibraryDashboard = () => {
   const { library } = useLibraryContext()
@@ -15,12 +15,12 @@ const LibraryDashboard = () => {
   const query = useLazyLoadQuery<page_LibraryDashboardQuery>(
     graphql`
       query page_LibraryDashboardQuery(
-        $where: TranscodeFilterInput
+        $where: EncodeFilterInput
         $first: Int
         $after: String
-        $order: [TranscodeSortInput!]
+        $order: [EncodeSortInput!]
       ) {
-        ...TranscodeTableFragment @arguments(where: $where, first: $first, after: $after, order: $order)
+        ...EncodeTableFragment @arguments(where: $where, first: $first, after: $after, order: $order)
       }
     `,
     {
@@ -43,7 +43,7 @@ const LibraryDashboard = () => {
       <Card.Header>Tasks</Card.Header>
 
       <Suspense>
-        <TranscodeTable $key={query} />
+        <EncodeTable $key={query} />
       </Suspense>
     </Card>
   )
