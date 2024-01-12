@@ -23,5 +23,8 @@ public class FileSystemEntryType : InterfaceType<FileSystemEntry>
 
         descriptor
             .Field(p => p.ParentDirectory);
+
+        descriptor
+            .Field(p => p.ScannedAt);
     }
 }

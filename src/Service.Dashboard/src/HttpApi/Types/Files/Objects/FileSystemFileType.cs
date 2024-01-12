@@ -33,6 +33,12 @@ public class FileSystemFileType : ObjectType<FileSystemFile>
             .Field(p => p.ParentDirectory);
 
         descriptor
+            .Field(p => p.ScannedAt);
+
+        descriptor
+            .Field(p => p.ProbedAt);
+
+        descriptor
             .Field(p => p.VideoStreams)
             // .UsePaging()
             // .UseProjection()
@@ -52,7 +58,7 @@ public class FileSystemFileType : ObjectType<FileSystemFile>
             // .UseProjection()
             .UseFiltering()
             .UseSorting();
-        
+
         descriptor
             .Field(p => p.Encodes)
             // .UsePaging()

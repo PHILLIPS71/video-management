@@ -29,6 +29,9 @@ public class FileSystemDirectoryType : ObjectType<FileSystemDirectory>
             .Field(p => p.ParentDirectory);
 
         descriptor
+            .Field(p => p.ScannedAt);
+
+        descriptor
             .Field(p => p.Entries)
             // .UsePaging()
             // .UseProjection()

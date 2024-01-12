@@ -115,6 +115,7 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
                             break;
                     }
 
+                    entry.SetScannedAt(DateTime.UtcNow);
                     paths.Add(info.FullName);
                 }
             }

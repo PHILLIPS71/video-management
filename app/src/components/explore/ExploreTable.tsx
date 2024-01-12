@@ -8,6 +8,7 @@ import { graphql, useFragment } from 'react-relay'
 
 import ExploreTableDirectory from '@/components/explore/ExploreTableDirectory'
 import ExploreTableFile from '@/components/explore/ExploreTableFile'
+import dayjs from 'dayjs'
 
 type ExploreTableProps = {
   $key: ExploreTableFragment$key
@@ -21,6 +22,7 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key, onChange }) => {
     graphql`
       fragment ExploreTableFragment on FileSystemDirectory
       @argumentDefinitions(order: { type: "[FileSystemEntrySortInput!]" }) {
+        scanned_at
         entries(order: $order) {
           __typename
           id
@@ -69,7 +71,7 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key, onChange }) => {
         </Table.Column>
         <Table.Column key="size" className="py-2 select-all">
           <Typography.Text className="text-xs text-right" variant="subtitle">
-            4 weeks ago
+            {dayjs(data.scanned_at).fromNow()}
           </Typography.Text>
         </Table.Column>
       </Table.Head>

@@ -20,6 +20,8 @@ public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntit
 
     public long Size { get; protected set; }
 
+    public DateTime ScannedAt { get; protected set; }
+
     public DateTime CreatedAt { get; private set; }
 
     public DateTime? UpdatedAt { get; private set; }
@@ -34,6 +36,12 @@ public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntit
         Library = library;
         ParentDirectory = parent;
         PathInfo = new PathInfo(entry);
+        ScannedAt = DateTime.UtcNow;
+    }
+
+    public void SetScannedAt(DateTime date)
+    {
+        ScannedAt = date;
     }
 
     public static FileSystemEntry Build(

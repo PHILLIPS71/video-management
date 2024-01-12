@@ -11,6 +11,8 @@ public class FileSystemFile : FileSystemEntry
 {
     private readonly List<Encode> _encodes = new();
 
+    public DateTime? ProbedAt { get; private set; }
+
     public IReadOnlyCollection<VideoStream> VideoStreams { get; private set; } = new List<VideoStream>();
 
     public IReadOnlyCollection<AudioStream> AudioStreams { get; private set; } = new List<AudioStream>();
@@ -55,6 +57,8 @@ public class FileSystemFile : FileSystemEntry
             .Union(streams.OfType<SubtitleStream>())
             .Intersect(streams.OfType<SubtitleStream>())
             .ToList();
+
+        ProbedAt = DateTime.UtcNow;
     }
 
     public Encode Encode()
