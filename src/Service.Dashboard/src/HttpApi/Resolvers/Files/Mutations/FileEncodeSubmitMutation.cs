@@ -13,23 +13,24 @@ public class FileEncodeSubmitMutation
 {
     [Error<DomainException>]
     [Error<ValidationException>]
-    [UseSingleOrDefault]
     [UseProjection]
+    [UseFiltering]
+    [UseSorting]
     public async Task<IQueryable<Encode>> FileEncodeSubmit(
         [Service] ApplicationDbContext database,
         [Service] IRequestClient<FileEncodeSubmit.Command> request,
-        [ID] Guid id,
+        [ID] Guid[] entries,
         CancellationToken cancellation = default)
     {
         var command = new FileEncodeSubmit.Command
         {
-            FileId = id
+            Entries = entries
         };
 
         Response response = await request.GetResponse<FileEncodeSubmit.Result, DomainFault, ValidationFault>(command, cancellation);
         return response switch
         {
-            (_, FileEncodeSubmit.Result result) => database.Encodes.Where(x => x.Id == result.EncodeId),
+            (_, FileEncodeSubmit.Result result) => database.Encodes.Where(x => result.Encodes.Contains(x.Id)),
             (_, DomainFault fault) => throw new DomainException(fault),
             (_, ValidationFault fault) => throw new ValidationException(fault),
             _ => throw new InvalidOperationException()

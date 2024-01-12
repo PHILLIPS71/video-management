@@ -28,7 +28,7 @@ const EncodeButton: React.FC<EncodeButtonProps> = ({ paths }) => {
     commit({
       variables: {
         input: {
-          id: paths.values().next().value,
+          entries: Array.from(paths.values()),
         },
       },
     })
