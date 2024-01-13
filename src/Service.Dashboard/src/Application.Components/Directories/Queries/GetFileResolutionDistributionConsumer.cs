@@ -17,16 +17,18 @@ public class GetFileResolutionDistributionConsumer : IConsumer<GetFileResolution
 
     public async Task Consume(ConsumeContext<GetFileResolutionDistribution.Query> context)
     {
-        var directory = await _repository.SingleOrDefaultAsync(x => x.Id == context.Message.DirectoryId);
-
+        var directory = await _repository.SingleOrDefaultAsync(x => x.Id == context.Message.DirectoryId, context.CancellationToken);
         if (directory == null)
         {
             await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.DirectoryId));
             return;
         }
 
-        var distribution = directory
-            .Entries
+        var directories = await _repository
+            .ToListAsync(x => x.PathInfo.FullName.StartsWith(directory.PathInfo.FullName), context.CancellationToken);
+
+        var distribution = directories
+            .SelectMany(x => x.Entries)
             .OfType<FileSystemFile>()
             .GroupBy(x => x.VideoStreams.SingleOrDefault(stream => stream.Index == 0)?.Quality.Resolution)
             .Select(x => new KeyValuePair<int?, int>(x.Key?.Id, x.Count()))
