@@ -38,7 +38,7 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
         var directory = _fileSystem.DirectoryInfo.New(context.Message.FullPath);
         if (!directory.Exists)
         {
-            await context.RejectAsync(LibraryCreate.Fault.DirectoryNotFound, nameof(context.Message.FullPath));
+            await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.FullPath));
             return;
         }
 

@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
-using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Events;
+using System.Reactive.Linq;
+using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 using MassTransit;
@@ -9,14 +10,15 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Services
 public class FileSystemWatcherService : IFileSystemWatcherService
 {
     private readonly Dictionary<Guid, IFileSystemWatcher> _libraries = new();
+    private readonly TimeSpan _interval = TimeSpan.FromSeconds(5);
 
-    private readonly IBus _bus;
     private readonly IFileSystemWatcherFactory _factory;
+    private readonly IBus _bus;
 
-    public FileSystemWatcherService(IBus bus, IFileSystemWatcherFactory factory)
+    public FileSystemWatcherService(IFileSystemWatcherFactory factory, IBus bus)
     {
-        _bus = bus;
         _factory = factory;
+        _bus = bus;
     }
 
     /// <inheritdoc />
@@ -46,11 +48,14 @@ public class FileSystemWatcherService : IFileSystemWatcherService
                                NotifyFilters.LastWrite |
                                NotifyFilters.Size;
 
-        watcher.Created += async (_, @event) =>
-            await _bus.Publish(new LibraryFileCreatedEvent { Id = library.Id, FullPath = @event.FullPath });
-
-        watcher.Deleted += async (_, @event) =>
-            await _bus.Publish(new LibraryFileDeletedEvent { Id = library.Id, FullPath = @event.FullPath });
+        Observable
+            .Merge(
+                Observable.FromEventPattern<FileSystemEventArgs>(watcher, nameof(watcher.Created)),
+                Observable.FromEventPattern<FileSystemEventArgs>(watcher, nameof(watcher.Renamed)),
+                Observable.FromEventPattern<FileSystemEventArgs>(watcher, nameof(watcher.Deleted))
+            )
+            .Sample(_interval)
+            .Subscribe(_ => _bus.Publish(new LibraryScan.Command { LibraryId = library.Id }));
 
         return watcher;
     }

@@ -10,11 +10,11 @@ public interface IFileSystemWatcherService : IApplicationService, ISingletonDepe
     /// </summary>
     /// <param name="library">A <see cref="Library" /> to watch for file system changes.</param>
     /// <seealso cref="FileSystemWatcher.EnableRaisingEvents" />
-    protected internal void Watch(Library library);
+    public void Watch(Library library);
 
     /// <summary>
     /// Stops watching the specified <paramref name="library" /> for file system changes.
     /// </summary>
     /// <param name="library">A <see cref="Library" /> to stop watching for file system changes.</param>
-    protected internal void Unwatch(Library library);
+    public void Unwatch(Library library);
 }

@@ -4,10 +4,10 @@ namespace Giantnodes.Service.Dashboard.HttpApi;
 
 public static class Program
 {
-    public static async Task Main(string[] args)
+    public static Task Main(string[] args)
     {
         var host = CreateHostBuilder(args).Build();
-        await host.RunAsync();
+        return host.RunAsync();
     }
 
     private static IHostBuilder CreateHostBuilder(string[] args) =>
