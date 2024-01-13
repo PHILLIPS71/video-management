@@ -1,3 +1,5 @@
+using Serilog;
+
 namespace Giantnodes.Service.Dashboard.HttpApi;
 
 public static class Program
@@ -10,5 +12,6 @@ public static class Program
 
     private static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>());
+            .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>())
+            .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 }
