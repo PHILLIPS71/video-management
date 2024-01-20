@@ -6,8 +6,7 @@ import { notFound } from 'next/navigation'
 import React from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import { LibraryProvider } from '@/app/(libraries)/library/[slug]/use-library.context'
-import { useLibrary } from '@/app/(libraries)/library/[slug]/use-library.hook'
+import { LibraryContext, useLibrary } from '@/app/(libraries)/library/[slug]/use-library.hook'
 import LibraryLayout from '@/layouts/library/LibraryLayout'
 
 const QUERY = graphql`
@@ -40,9 +39,9 @@ const LibrarySlugPageLayout: React.FC<LibrarySlugPageLayoutProps> = ({ children,
   const context = useLibrary({ $key: query.library })
 
   return (
-    <LibraryProvider value={context}>
+    <LibraryContext.Provider value={context}>
       <LibraryLayout>{children}</LibraryLayout>
-    </LibraryProvider>
+    </LibraryContext.Provider>
   )
 }
 

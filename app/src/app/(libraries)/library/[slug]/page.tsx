@@ -6,7 +6,7 @@ import { Card } from '@giantnodes/react'
 import { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
+import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.hook'
 import { EncodeTable } from '@/components/dashboard'
 
 const QUERY = graphql`

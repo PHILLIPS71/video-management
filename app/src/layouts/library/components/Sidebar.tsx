@@ -7,7 +7,7 @@ import { IconFolders, IconGauge, IconHome, IconSettings } from '@tabler/icons-re
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
+import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.hook'
 
 const Sidebar: React.FC<NavigationProps> = ({ ...rest }) => {
   const { library } = useLibraryContext()

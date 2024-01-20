@@ -5,7 +5,7 @@ import NextLink from 'next/link'
 import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
-import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
+import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.hook'
 
 const FRAGMENT = graphql`
   fragment ExplorePathFragment on FileSystemDirectory {

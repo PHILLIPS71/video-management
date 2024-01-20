@@ -3,6 +3,8 @@ import type { useLibraryFragment$data, useLibraryFragment$key } from '@/__genera
 import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
+import { createContext } from '@/utilities/context'
+
 const FRAGMENT = graphql`
   fragment useLibraryFragment on Library {
     id
@@ -19,6 +21,8 @@ type UseLibraryProps = {
   $key: useLibraryFragment$key
 }
 
+type UseLibraryReturn = ReturnType<typeof useLibrary>
+
 export const useLibrary = ({ $key }: UseLibraryProps) => {
   const fragment = useFragment<useLibraryFragment$key>(FRAGMENT, $key)
 
@@ -29,4 +33,9 @@ export const useLibrary = ({ $key }: UseLibraryProps) => {
   }
 }
 
-export type UseLibraryReturn = ReturnType<typeof useLibrary>
+export const [LibraryContext, useLibraryContext] = createContext<UseLibraryReturn>({
+  name: 'LibraryProvider',
+  strict: true,
+  errorMessage:
+    'useLibraryContext: `context` is undefined. Seems you forgot to wrap component within <LibraryContext.Provider />',
+})

@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation'
 import React, { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
+import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.hook'
 import EncodeButton from '@/components/explore/EncodeButton'
 import ExploreControls from '@/components/explore/ExploreControls'
 import ExplorePath from '@/components/explore/ExplorePath'
