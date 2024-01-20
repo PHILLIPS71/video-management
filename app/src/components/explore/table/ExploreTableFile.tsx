@@ -2,6 +2,7 @@ import type { ExploreTableFileFragment$key } from '@/__generated__/ExploreTableF
 
 import { Chip, Typography } from '@giantnodes/react'
 import { IconFile } from '@tabler/icons-react'
+import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
 const FRAGMENT = graphql`
@@ -45,7 +46,7 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
       <Typography.Text>{data.path_info.name}</Typography.Text>
 
       {data.video_streams?.map((stream) => (
-        <>
+        <React.Fragment key={stream.index}>
           <Chip color="info" size="sm">
             {stream.codec}
           </Chip>
@@ -55,7 +56,7 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
           <Chip color="warning" size="sm">
             {stream.quality.aspect_ratio}
           </Chip>
-        </>
+        </React.Fragment>
       ))}
 
       {data.encodes && data.encodes.length > 0 && (

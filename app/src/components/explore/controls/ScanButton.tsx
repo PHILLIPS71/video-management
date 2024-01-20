@@ -4,9 +4,7 @@ import { Button } from '@giantnodes/react'
 import { IconFolderSearch } from '@tabler/icons-react'
 import { graphql, useMutation } from 'react-relay'
 
-type ScanButtonProps = {
-  directory_id: string
-}
+import { useExploreContext } from '@/components/explore/use-explore.hook'
 
 const MUTATION = graphql`
   mutation ScanButton_DirectoryProbeMutation($input: Directory_probeInput!) {
@@ -24,14 +22,16 @@ const MUTATION = graphql`
   }
 `
 
-const ScanButton: React.FC<ScanButtonProps> = ({ directory_id }) => {
+const ScanButton: React.FC = () => {
+  const { directory } = useExploreContext()
+
   const [commit, isLoading] = useMutation<ScanButton_DirectoryProbeMutation>(MUTATION)
 
   const onClick = () => {
     commit({
       variables: {
         input: {
-          directory_id,
+          directory_id: directory,
         },
       },
     })

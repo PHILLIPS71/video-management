@@ -84,13 +84,13 @@ const SUBSCRIPTION = graphql`
   }
 `
 
-type EncodeTableProps = {
+type EncodeEntry = NonNullable<NonNullable<EncodeTableFragment$data['encodes']>['edges']>[0]['node']
+
+export type EncodeTableProps = {
   $key: EncodeTableFragment$key
 }
 
-type EncodeEntry = NonNullable<NonNullable<EncodeTableFragment$data['encodes']>['edges']>[0]['node']
-
-const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
+export const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
   const { data, hasNext, loadNext } = usePaginationFragment<EncodeTablePaginationQuery, EncodeTableFragment$key>(
     FRAGMENT,
     $key
@@ -151,62 +151,58 @@ const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
     [commit]
   )
 
-  const render = React.useCallback(
-    (item: EncodeEntry, key: React.Key) => {
-      switch (key) {
-        case 'name':
-          return <Typography.Text>{item.file.path_info.name}</Typography.Text>
+  return (
+    <>
+      <Table headingless aria-label="encode table">
+        <Table.Head>
+          <Table.Column key="name" isRowHeader>
+            name
+          </Table.Column>
+          <Table.Column key="stats">statistics</Table.Column>
+        </Table.Head>
 
-        case 'stats':
-          return (
-            <div className="flex flex-row items-center justify-end gap-2">
-              {item.status !== 'COMPLETED' && item.status !== 'CANCELLED' && (
-                <>
-                  {item.speed != null && (
+        <Table.Body items={data.encodes?.edges ?? []}>
+          {(item) => (
+            <Table.Row id={item.node.id}>
+              <Table.Cell>
+                <Typography.Text>{item.node.file.path_info.name}</Typography.Text>
+              </Table.Cell>
+              <Table.Cell>
+                <div className="flex flex-row items-center justify-end gap-2">
+                  {item.node.status !== 'COMPLETED' && item.node.status !== 'CANCELLED' && (
                     <>
-                      <Chip color="info">{item.speed.frames} fps</Chip>
-                      <Chip color="info">{filesize(item.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s</Chip>
-                      <Chip color="info">{item.speed.scale.toFixed(2)}x</Chip>
+                      {item.node.speed != null && (
+                        <>
+                          <Chip color="info">{item.node.speed.frames} fps</Chip>
+                          <Chip color="info">
+                            {filesize(item.node.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s
+                          </Chip>
+                          <Chip color="info">{item.node.speed.scale.toFixed(2)}x</Chip>
+                        </>
+                      )}
+
+                      {item.node.percent != null && <Chip color="info">{percent(item.node.percent)}</Chip>}
                     </>
                   )}
 
-                  {item.percent != null && <Chip color="info">{percent(item.percent)}</Chip>}
-                </>
-              )}
+                  <Chip color={getStatusColour(item.node.status)}>{item.node.status.toLowerCase()}</Chip>
 
-              <Chip color={getStatusColour(item.status)}>{item.status.toLowerCase()}</Chip>
+                  {item.node.status === 'COMPLETED' && (
+                    <Chip color="info">
+                      {dayjs
+                        .duration(dayjs(item.node.completed_at).diff(item.node.started_at))
+                        .format('H[h] m[m] s[s]')}
+                    </Chip>
+                  )}
 
-              {item.status === 'COMPLETED' && (
-                <Chip color="info">
-                  {dayjs.duration(dayjs(item.completed_at).diff(item.started_at)).format('H[h] m[m] s[s]')}
-                </Chip>
-              )}
-
-              {item.status !== 'COMPLETED' && item.status !== 'CANCELLED' && (
-                <Button color="neutral" size="xs" variant="blank" onClick={() => cancel(item)}>
-                  <IconProgressX size={16} />
-                </Button>
-              )}
-            </div>
-          )
-
-        default:
-          throw new Error(`the key '${key}' is unexpected`)
-      }
-    },
-    [cancel]
-  )
-
-  return (
-    <>
-      <Table headingless>
-        <Table.Head>
-          <Table.Column key="name">name</Table.Column>
-          <Table.Column key="stats">statistics</Table.Column>
-        </Table.Head>
-        <Table.Body items={data.encodes?.edges ?? []}>
-          {(item) => (
-            <Table.Row key={item.node.id}>{(key) => <Table.Cell>{render(item.node, key)}</Table.Cell>}</Table.Row>
+                  {item.node.status !== 'COMPLETED' && item.node.status !== 'CANCELLED' && (
+                    <Button color="neutral" size="xs" variant="blank" onClick={() => cancel(item.node)}>
+                      <IconProgressX size={16} />
+                    </Button>
+                  )}
+                </div>
+              </Table.Cell>
+            </Table.Row>
           )}
         </Table.Body>
       </Table>
@@ -221,5 +217,3 @@ const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
     </>
   )
 }
-
-export default EncodeTable

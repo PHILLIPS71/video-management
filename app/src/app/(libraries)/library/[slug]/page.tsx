@@ -7,7 +7,7 @@ import { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.hook'
-import { EncodeTable } from '@/components/dashboard'
+import { EncodeTable } from '@/components/encode-table'
 
 const QUERY = graphql`
   query page_LibraryDashboardQuery($where: EncodeFilterInput, $first: Int, $after: String, $order: [EncodeSortInput!]) {

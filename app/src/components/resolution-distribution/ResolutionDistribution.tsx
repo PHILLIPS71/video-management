@@ -1,4 +1,4 @@
-import type { ExploreResolutionQuery } from '@/__generated__/ExploreResolutionQuery.graphql'
+import type { ResolutionDistributionQuery } from '@/__generated__/ResolutionDistributionQuery.graphql'
 
 import { Progress, Typography } from '@giantnodes/react'
 import { IconPointFilled } from '@tabler/icons-react'
@@ -6,7 +6,7 @@ import React from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 const FRAGMENT = graphql`
-  query ExploreResolutionQuery($directory_id: ID!, $order: [FileResolutionDistributionSortInput!]) {
+  query ResolutionDistributionQuery($directory_id: ID!, $order: [FileResolutionDistributionSortInput!]) {
     file_resolution_distribution(directory_id: $directory_id, order: $order) {
       resolution {
         abbreviation
@@ -16,15 +16,15 @@ const FRAGMENT = graphql`
   }
 `
 
-type ExploreResolutionProps = {
-  directory_id: string
+export type ResolutionDistributionProps = {
+  directory: string
 }
 
-const ExploreResolution: React.FC<ExploreResolutionProps> = ({ directory_id }) => {
+export const ResolutionDistribution: React.FC<ResolutionDistributionProps> = ({ directory }) => {
   const colours = ['#178600', '#3178c6']
 
-  const data = useLazyLoadQuery<ExploreResolutionQuery>(FRAGMENT, {
-    directory_id,
+  const data = useLazyLoadQuery<ResolutionDistributionQuery>(FRAGMENT, {
+    directory_id: directory,
     order: [{ count: 'DESC' }],
   })
 
@@ -42,7 +42,11 @@ const ExploreResolution: React.FC<ExploreResolutionProps> = ({ directory_id }) =
     <div className="flex flex-col gap-2">
       <Progress>
         {data.file_resolution_distribution.map((item, index) => (
-          <Progress.Bar key={item.resolution?.abbreviation} color={colours[index]} width={(item.count / total) * 100} />
+          <Progress.Bar
+            key={item.resolution?.abbreviation ?? 'unknown'}
+            color={colours[index]}
+            width={(item.count / total) * 100}
+          />
         ))}
       </Progress>
 
@@ -62,5 +66,3 @@ const ExploreResolution: React.FC<ExploreResolutionProps> = ({ directory_id }) =
     </div>
   )
 }
-
-export default ExploreResolution

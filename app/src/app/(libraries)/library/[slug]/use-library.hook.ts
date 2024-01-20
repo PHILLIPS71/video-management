@@ -34,7 +34,7 @@ export const useLibrary = ({ $key }: UseLibraryProps) => {
 }
 
 export const [LibraryContext, useLibraryContext] = createContext<UseLibraryReturn>({
-  name: 'LibraryProvider',
+  name: 'LibraryContext',
   strict: true,
   errorMessage:
     'useLibraryContext: `context` is undefined. Seems you forgot to wrap component within <LibraryContext.Provider />',

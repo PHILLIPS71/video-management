@@ -1,4 +1,5 @@
-export { default as ExploreResolution } from '@/components/explore/ExploreResolution'
-export { default as ExploreControls } from '@/components/explore/ExploreControls'
-export { default as ExplorePath } from '@/components/explore/ExplorePath'
-export { default as ExploreTable } from '@/components/explore/ExploreTable'
+export { default as ExploreBreadcrumbs } from '@/components/explore/breadcrumbs/ExploreBreadcrumbs'
+export { default as ExploreControls } from '@/components/explore/controls/ExploreControls'
+export { default as ExploreTable } from '@/components/explore/table/ExploreTable'
+
+export { useExplore, useExploreContext, ExploreContext } from '@/components/explore/use-explore.hook'

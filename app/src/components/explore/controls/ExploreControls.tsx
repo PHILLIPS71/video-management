@@ -7,6 +7,9 @@ import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
+import EncodeButton from '@/components/explore/controls/EncodeButton'
+import ScanButton from '@/components/explore/controls/ScanButton'
+
 const FRAGMENT = graphql`
   fragment ExploreControlsFragment on FileSystemDirectory {
     id
@@ -17,11 +20,11 @@ const FRAGMENT = graphql`
   }
 `
 
-type ExploreControlsProps = React.PropsWithChildren & {
+type ExploreControlsProps = {
   $key: ExploreControlsFragment$key
 }
 
-const ExploreControls: React.FC<ExploreControlsProps> = ({ $key, children }) => {
+const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
   const data = useFragment(FRAGMENT, $key)
 
   const size = React.useMemo<FileSizeReturnObject>(
@@ -51,7 +54,8 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key, children }) => 
         </div>
       </div>
 
-      {children}
+      <EncodeButton />
+      <ScanButton />
     </div>
   )
 }

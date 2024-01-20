@@ -6,7 +6,7 @@ import { Card } from '@giantnodes/react'
 import { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import { EncodeTable } from '@/components/dashboard'
+import { EncodeTable } from '@/components/encode-table'
 
 const DASHBOARD_QUERY = graphql`
   query page_DashboardPageQuery($where: EncodeFilterInput, $first: Int, $after: String, $order: [EncodeSortInput!]) {
