@@ -9,9 +9,7 @@ import Link from 'next/link'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
 
-type SidebarProps = NavigationProps
-
-const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
+const Sidebar: React.FC<NavigationProps> = ({ ...rest }) => {
   const { library } = useLibraryContext()
 
   return (

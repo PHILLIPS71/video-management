@@ -3,16 +3,8 @@ import type { NavigationProps } from '@giantnodes/react'
 import { Input, Navigation } from '@giantnodes/react'
 import { IconBell, IconSearch } from '@tabler/icons-react'
 
-export type NavbarProps = NavigationProps
-
-const Navbar: React.FC<NavbarProps> = (props) => (
+const Navbar: React.FC<NavigationProps> = (props) => (
   <Navigation orientation="horizontal" {...props}>
-    <Navigation.Segment className="sm:hidden">
-      <Navigation.Trigger>
-        <IconBell strokeWidth={1.5} />
-      </Navigation.Trigger>
-    </Navigation.Segment>
-
     <Navigation.Segment className="grow">
       <Navigation.Item>
         <Input variant="none">
