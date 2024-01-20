@@ -13,6 +13,25 @@ import { ConnectionHandler, graphql, useMutation } from 'react-relay'
 import { ROOT_ID } from 'relay-runtime'
 import * as z from 'zod'
 
+const MUTATION = graphql`
+  mutation page_LibraryCreate_LibraryCreateMutation($connections: [ID!]!, $input: Library_createInput!) {
+    library_create(input: $input) {
+      library @appendNode(connections: $connections, edgeTypeName: "LibrariesEdge") {
+        slug
+        ...SidebarLibrarySegmentItemFragment
+      }
+      errors {
+        ... on DomainError {
+          message
+        }
+        ... on ValidationError {
+          message
+        }
+      }
+    }
+  }
+`
+
 const SlugTransform = z.string().transform(
   (val) =>
     val
@@ -35,24 +54,7 @@ const LibraryCreatePage = () => {
   const form = useForm<LibraryCreateInput>({ resolver: zodResolver(LibraryCreateSchema) })
   const [errors, setErrors] = React.useState<string[]>([])
 
-  const [commit, isLoading] = useMutation<page_LibraryCreate_LibraryCreateMutation>(graphql`
-    mutation page_LibraryCreate_LibraryCreateMutation($connections: [ID!]!, $input: Library_createInput!) {
-      library_create(input: $input) {
-        library @appendNode(connections: $connections, edgeTypeName: "LibrariesEdge") {
-          slug
-          ...SidebarLibrarySegmentItemFragment
-        }
-        errors {
-          ... on DomainError {
-            message
-          }
-          ... on ValidationError {
-            message
-          }
-        }
-      }
-    }
-  `)
+  const [commit, isLoading] = useMutation<page_LibraryCreate_LibraryCreateMutation>(MUTATION)
 
   const onSubmit: SubmitHandler<LibraryCreateInput> = (data) => {
     const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'SidebarLibrarySegmentFragment_libraries', [])

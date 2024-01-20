@@ -7,23 +7,22 @@ import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
+const FRAGMENT = graphql`
+  fragment ExploreControlsFragment on FileSystemDirectory {
+    id
+    size
+    path_info {
+      full_name
+    }
+  }
+`
+
 type ExploreControlsProps = React.PropsWithChildren & {
   $key: ExploreControlsFragment$key
 }
 
 const ExploreControls: React.FC<ExploreControlsProps> = ({ $key, children }) => {
-  const data = useFragment(
-    graphql`
-      fragment ExploreControlsFragment on FileSystemDirectory {
-        id
-        size
-        path_info {
-          full_name
-        }
-      }
-    `,
-    $key
-  )
+  const data = useFragment(FRAGMENT, $key)
 
   const size = React.useMemo<FileSizeReturnObject>(
     () => filesize(data.size, { base: 2, output: 'object' }),

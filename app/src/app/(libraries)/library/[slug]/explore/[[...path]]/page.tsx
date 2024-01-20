@@ -15,6 +15,17 @@ import ExploreResolution from '@/components/explore/ExploreResolution'
 import ExploreTable from '@/components/explore/ExploreTable'
 import ScanButton from '@/components/explore/ScanButton'
 
+const QUERY = graphql`
+  query page_LibrarySlugExploreQuery($where: FileSystemDirectoryFilterInput, $order: [FileSystemEntrySortInput!]) {
+    file_system_directory(where: $where) {
+      id
+      ...ExplorePathFragment
+      ...ExploreControlsFragment
+      ...ExploreTableFragment @arguments(order: $order)
+    }
+  }
+`
+
 type LibraryExplorePageProps = {
   params: {
     slug: string
@@ -37,43 +48,31 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
     return location
   }, [library.path_info.directory_separator_char, library.path_info.full_name, params.path])
 
-  const query = useLazyLoadQuery<page_LibrarySlugExploreQuery>(
-    graphql`
-      query page_LibrarySlugExploreQuery($where: FileSystemDirectoryFilterInput, $order: [FileSystemEntrySortInput!]) {
-        file_system_directory(where: $where) {
-          id
-          ...ExplorePathFragment
-          ...ExploreControlsFragment
-          ...ExploreTableFragment @arguments(order: $order)
-        }
-      }
-    `,
-    {
-      where: {
-        and: [
-          {
-            library: {
-              id: {
-                eq: library.id,
-              },
-            },
-          },
-          {
-            path_info: {
-              full_name: {
-                eq: path,
-              },
-            },
-          },
-        ],
-      },
-      order: [
+  const query = useLazyLoadQuery<page_LibrarySlugExploreQuery>(QUERY, {
+    where: {
+      and: [
         {
-          size: 'ASC',
+          library: {
+            id: {
+              eq: library.id,
+            },
+          },
+        },
+        {
+          path_info: {
+            full_name: {
+              eq: path,
+            },
+          },
         },
       ],
-    }
-  )
+    },
+    order: [
+      {
+        size: 'ASC',
+      },
+    ],
+  })
 
   if (query.file_system_directory == null) {
     notFound()

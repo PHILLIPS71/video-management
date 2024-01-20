@@ -4,40 +4,40 @@ import { Chip, Typography } from '@giantnodes/react'
 import { IconFile } from '@tabler/icons-react'
 import { graphql, useFragment } from 'react-relay'
 
+const FRAGMENT = graphql`
+  fragment ExploreTableFileFragment on FileSystemFile {
+    id
+    size
+    path_info {
+      name
+      full_name
+      extension
+      directory_path
+    }
+    video_streams {
+      index
+      codec
+      quality {
+        aspect_ratio
+        width
+        height
+        resolution {
+          abbreviation
+        }
+      }
+    }
+    encodes {
+      id
+    }
+  }
+`
+
 type ExploreTableFileProps = {
   $key: ExploreTableFileFragment$key
 }
 
 const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
-  const data = useFragment(
-    graphql`
-      fragment ExploreTableFileFragment on FileSystemFile {
-        id
-        size
-        path_info {
-          name
-          full_name
-          extension
-          directory_path
-        }
-        video_streams {
-          codec
-          quality {
-            aspect_ratio
-            width
-            height
-            resolution {
-              abbreviation
-            }
-          }
-        }
-        encodes {
-          id
-        }
-      }
-    `,
-    $key
-  )
+  const data = useFragment(FRAGMENT, $key)
 
   return (
     <>

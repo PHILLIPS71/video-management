@@ -4,29 +4,28 @@ import type {
   FileSystemStatus,
   SidebarLibrarySegmentItemFragment$key,
 } from '@/__generated__/SidebarLibrarySegmentItemFragment.graphql'
-import type { AvatarVariantProps } from '@giantnodes/react'
+import type { AvatarProps } from '@giantnodes/react'
 
 import { Avatar, Navigation } from '@giantnodes/react'
 import { IconFolderCheck, IconFolderExclamation, IconFolderQuestion, IconFolderX } from '@tabler/icons-react'
 import Link from 'next/link'
 import { graphql, useFragment } from 'react-relay'
 
+const FRAGMENT = graphql`
+  fragment SidebarLibrarySegmentItemFragment on Library {
+    id
+    name
+    slug
+    status
+  }
+`
+
 type SidebarLibrarySegmentItemProps = {
   $key: SidebarLibrarySegmentItemFragment$key
 }
 
 const SidebarLibrarySegmentItem: React.FC<SidebarLibrarySegmentItemProps> = ({ $key }) => {
-  const data = useFragment(
-    graphql`
-      fragment SidebarLibrarySegmentItemFragment on Library {
-        id
-        name
-        slug
-        status
-      }
-    `,
-    $key
-  )
+  const data = useFragment(FRAGMENT, $key)
 
   const getDriveStatusIcon = (status: FileSystemStatus) => {
     switch (status) {
@@ -41,7 +40,7 @@ const SidebarLibrarySegmentItem: React.FC<SidebarLibrarySegmentItemProps> = ({ $
     }
   }
 
-  const getDriveStatusColor = (status: FileSystemStatus): AvatarVariantProps['status'] => {
+  const getDriveStatusColor = (status: FileSystemStatus): AvatarProps['color'] => {
     switch (status) {
       case 'ONLINE':
         return 'success'
@@ -58,7 +57,7 @@ const SidebarLibrarySegmentItem: React.FC<SidebarLibrarySegmentItemProps> = ({ $
     <Navigation.Item>
       <Link legacyBehavior passHref href={`/library/${data.slug}`}>
         <Navigation.Link>
-          <Avatar radius="md" size="xs">
+          <Avatar radius="md" size="sm">
             <Avatar.Notification color={getDriveStatusColor(data.status)} />
             <Avatar.Icon icon={getDriveStatusIcon(data.status)} />
           </Avatar>

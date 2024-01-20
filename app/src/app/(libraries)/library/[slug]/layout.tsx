@@ -10,6 +10,14 @@ import { LibraryProvider } from '@/app/(libraries)/library/[slug]/use-library.co
 import { useLibrary } from '@/app/(libraries)/library/[slug]/use-library.hook'
 import LibraryLayout from '@/layouts/library/LibraryLayout'
 
+const QUERY = graphql`
+  query layout_LibrarySlugPageLayoutQuery($where: LibraryFilterInput) {
+    library(where: $where) {
+      ...useLibraryFragment
+    }
+  }
+`
+
 type LibrarySlugPageLayoutProps = React.PropsWithChildren & {
   params: {
     slug: string
@@ -17,22 +25,13 @@ type LibrarySlugPageLayoutProps = React.PropsWithChildren & {
 }
 
 const LibrarySlugPageLayout: React.FC<LibrarySlugPageLayoutProps> = ({ children, params }) => {
-  const query = useLazyLoadQuery<layout_LibrarySlugPageLayoutQuery>(
-    graphql`
-      query layout_LibrarySlugPageLayoutQuery($where: LibraryFilterInput) {
-        library(where: $where) {
-          ...useLibraryFragment
-        }
-      }
-    `,
-    {
-      where: {
-        slug: {
-          eq: params.slug,
-        },
+  const query = useLazyLoadQuery<layout_LibrarySlugPageLayoutQuery>(QUERY, {
+    where: {
+      slug: {
+        eq: params.slug,
       },
-    }
-  )
+    },
+  })
 
   if (query.library == null) {
     notFound()

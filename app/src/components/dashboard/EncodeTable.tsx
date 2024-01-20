@@ -7,12 +7,12 @@ import type { EncodeTablePaginationQuery } from '@/__generated__/EncodeTablePagi
 
 import { Button, Chip, Table, Typography } from '@giantnodes/react'
 import { IconProgressX } from '@tabler/icons-react'
+import dayjs from 'dayjs'
 import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useMutation, usePaginationFragment, useSubscription } from 'react-relay'
-import dayjs from 'dayjs'
 
-const EncodeTableFragment = graphql`
+const FRAGMENT = graphql`
   fragment EncodeTableFragment on Query
   @refetchable(queryName: "EncodeTablePaginationQuery")
   @argumentDefinitions(
@@ -53,6 +53,37 @@ const EncodeTableFragment = graphql`
   }
 `
 
+const MUTATION = graphql`
+  mutation EncodeTable_EncodeCancelMutation($input: File_encode_cancelInput!) {
+    file_encode_cancel(input: $input) {
+      encode {
+        status
+      }
+      errors {
+        ... on DomainError {
+          message
+        }
+        ... on ValidationError {
+          message
+        }
+      }
+    }
+  }
+`
+
+const SUBSCRIPTION = graphql`
+  subscription EncodeTableSubscription {
+    encode_speed_change {
+      percent
+      speed {
+        frames
+        bitrate
+        scale
+      }
+    }
+  }
+`
+
 type EncodeTableProps = {
   $key: EncodeTableFragment$key
 }
@@ -61,41 +92,14 @@ type EncodeEntry = NonNullable<NonNullable<EncodeTableFragment$data['encodes']>[
 
 const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
   const { data, hasNext, loadNext } = usePaginationFragment<EncodeTablePaginationQuery, EncodeTableFragment$key>(
-    EncodeTableFragment,
+    FRAGMENT,
     $key
   )
 
-  const [commit] = useMutation<EncodeTable_EncodeCancelMutation>(graphql`
-    mutation EncodeTable_EncodeCancelMutation($input: File_encode_cancelInput!) {
-      file_encode_cancel(input: $input) {
-        encode {
-          status
-        }
-        errors {
-          ... on DomainError {
-            message
-          }
-          ... on ValidationError {
-            message
-          }
-        }
-      }
-    }
-  `)
+  const [commit] = useMutation<EncodeTable_EncodeCancelMutation>(MUTATION)
 
   useSubscription({
-    subscription: graphql`
-      subscription EncodeTableSubscription {
-        encode_speed_change {
-          percent
-          speed {
-            frames
-            bitrate
-            scale
-          }
-        }
-      }
-    `,
+    subscription: SUBSCRIPTION,
     variables: {},
   })
 

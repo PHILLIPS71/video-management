@@ -7,6 +7,15 @@ import { graphql, useFragment } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.context'
 
+const FRAGMENT = graphql`
+  fragment ExplorePathFragment on FileSystemDirectory {
+    path_info {
+      full_name
+      directory_separator_char
+    }
+  }
+`
+
 type ExplorePathProps = {
   $key: ExplorePathFragment$key
 }
@@ -14,17 +23,7 @@ type ExplorePathProps = {
 const ExplorePath: React.FC<ExplorePathProps> = ({ $key }) => {
   const { library } = useLibraryContext()
 
-  const data = useFragment(
-    graphql`
-      fragment ExplorePathFragment on FileSystemDirectory {
-        path_info {
-          full_name
-          directory_separator_char
-        }
-      }
-    `,
-    $key
-  )
+  const data = useFragment(FRAGMENT, $key)
 
   const directories = React.useMemo<Map<string, string>>(() => {
     const parts = data.path_info.full_name.split(data.path_info.directory_separator_char)

@@ -8,20 +8,19 @@ import { graphql, useLazyLoadQuery } from 'react-relay'
 import Navbar from '@/layouts/default/components/navbar/Navbar'
 import Sidebar from '@/layouts/default/components/sidebar/Sidebar'
 
+const QUERY = graphql`
+  query DefaultLayoutQuery($first: Int, $after: String, $order: [LibrarySortInput!]) {
+    ...SidebarQuery @arguments(first: $first, after: $after, order: $order)
+  }
+`
+
 type DefaultLayoutProps = React.PropsWithChildren
 
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
-  const query = useLazyLoadQuery<DefaultLayoutQuery>(
-    graphql`
-      query DefaultLayoutQuery($first: Int, $after: String, $order: [LibrarySortInput!]) {
-        ...SidebarQuery @arguments(first: $first, after: $after, order: $order)
-      }
-    `,
-    {
-      first: 8,
-      order: [{ name: 'ASC' }],
-    }
-  )
+  const query = useLazyLoadQuery<DefaultLayoutQuery>(QUERY, {
+    first: 8,
+    order: [{ name: 'ASC' }],
+  })
 
   return (
     <div className="flex h-screen">

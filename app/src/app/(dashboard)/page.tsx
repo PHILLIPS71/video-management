@@ -8,23 +8,17 @@ import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { EncodeTable } from '@/components/dashboard'
 
+const DASHBOARD_QUERY = graphql`
+  query page_DashboardPageQuery($where: EncodeFilterInput, $first: Int, $after: String, $order: [EncodeSortInput!]) {
+    ...EncodeTableFragment @arguments(where: $where, first: $first, after: $after, order: $order)
+  }
+`
+
 const DashboardPage = () => {
-  const query = useLazyLoadQuery<page_DashboardPageQuery>(
-    graphql`
-      query page_DashboardPageQuery(
-        $where: EncodeFilterInput
-        $first: Int
-        $after: String
-        $order: [EncodeSortInput!]
-      ) {
-        ...EncodeTableFragment @arguments(where: $where, first: $first, after: $after, order: $order)
-      }
-    `,
-    {
-      first: 8,
-      order: [{ created_at: 'DESC' }],
-    }
-  )
+  const query = useLazyLoadQuery<page_DashboardPageQuery>(DASHBOARD_QUERY, {
+    first: 8,
+    order: [{ created_at: 'DESC' }],
+  })
 
   return (
     <Card className="max-w-6xl">

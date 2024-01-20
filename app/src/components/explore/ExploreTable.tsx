@@ -2,13 +2,31 @@ import type { ExploreTableFragment$data, ExploreTableFragment$key } from '@/__ge
 
 import { Input, Table, Typography } from '@giantnodes/react'
 import { IconSearch } from '@tabler/icons-react'
+import dayjs from 'dayjs'
 import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
 import ExploreTableDirectory from '@/components/explore/ExploreTableDirectory'
 import ExploreTableFile from '@/components/explore/ExploreTableFile'
-import dayjs from 'dayjs'
+
+const FRAGMENT = graphql`
+  fragment ExploreTableFragment on FileSystemDirectory
+  @argumentDefinitions(order: { type: "[FileSystemEntrySortInput!]" }) {
+    scanned_at
+    entries(order: $order) {
+      __typename
+      id
+      size
+      ... on FileSystemDirectory {
+        ...ExploreTableDirectoryFragment
+      }
+      ... on FileSystemFile {
+        ...ExploreTableFileFragment
+      }
+    }
+  }
+`
 
 type ExploreTableProps = {
   $key: ExploreTableFragment$key
@@ -17,27 +35,6 @@ type ExploreTableProps = {
 
 type ExploreTableEntry = ExploreTableFragment$data['entries'][0]
 
-const ExploreTable: React.FC<ExploreTableProps> = ({ $key, onChange }) => {
-  const data = useFragment(
-    graphql`
-      fragment ExploreTableFragment on FileSystemDirectory
-      @argumentDefinitions(order: { type: "[FileSystemEntrySortInput!]" }) {
-        scanned_at
-        entries(order: $order) {
-          __typename
-          id
-          size
-          ... on FileSystemDirectory {
-            ...ExploreTableDirectoryFragment
-          }
-          ... on FileSystemFile {
-            ...ExploreTableFileFragment
-          }
-        }
-      }
-    `,
-    $key
-  )
 
   const render = React.useCallback((item: ExploreTableEntry, key: React.Key) => {
     switch (key) {
@@ -57,6 +54,8 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key, onChange }) => {
         throw new Error(`the key '${key}' is unexpected`)
     }
   }, [])
+const ExploreTable: React.FC<ExploreTableProps> = ({ $key, keys, onChange }) => {
+  const data = useFragment(FRAGMENT, $key)
 
   return (
     <Table aria-label="a cool table" mode="multiple" onSelectionChange={onChange}>

@@ -8,7 +8,7 @@ type ScanButtonProps = {
   directory_id: string
 }
 
-const SCAN_MUTATION = graphql`
+const MUTATION = graphql`
   mutation ScanButton_DirectoryProbeMutation($input: Directory_probeInput!) {
     directory_probe(input: $input) {
       string
@@ -25,7 +25,7 @@ const SCAN_MUTATION = graphql`
 `
 
 const ScanButton: React.FC<ScanButtonProps> = ({ directory_id }) => {
-  const [commit, isLoading] = useMutation<ScanButton_DirectoryProbeMutation>(SCAN_MUTATION)
+  const [commit, isLoading] = useMutation<ScanButton_DirectoryProbeMutation>(MUTATION)
 
   const onClick = () => {
     commit({

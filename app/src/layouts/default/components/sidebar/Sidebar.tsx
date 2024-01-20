@@ -12,20 +12,19 @@ import { graphql, useFragment } from 'react-relay'
 
 import SidebarLibrarySegment from '@/layouts/default/components/sidebar/SidebarLibrarySegment'
 
+const FRAGMENT = graphql`
+  fragment SidebarQuery on Query
+  @argumentDefinitions(first: { type: "Int" }, after: { type: "String" }, order: { type: "[LibrarySortInput!]" }) {
+    ...SidebarLibrarySegmentFragment @arguments(first: $first, after: $after, order: $order)
+  }
+`
+
 type SidebarProps = NavigationProps & {
   $key: SidebarQuery$key
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
-  const fragment = useFragment<SidebarQuery$key>(
-    graphql`
-      fragment SidebarQuery on Query
-      @argumentDefinitions(first: { type: "Int" }, after: { type: "String" }, order: { type: "[LibrarySortInput!]" }) {
-        ...SidebarLibrarySegmentFragment @arguments(first: $first, after: $after, order: $order)
-      }
-    `,
-    $key
-  )
+  const fragment = useFragment<SidebarQuery$key>(FRAGMENT, $key)
 
   return (
     <Navigation orientation="vertical" size="lg" {...rest}>

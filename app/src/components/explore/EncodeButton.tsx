@@ -8,7 +8,7 @@ type EncodeButtonProps = {
   paths: Set<string>
 }
 
-const ENCODE_SUBMIT = graphql`
+const MUTATION = graphql`
   mutation EncodeButton_EncodeSubmitMutation($input: File_encode_submitInput!) {
     file_encode_submit(input: $input) {
       encode {
@@ -21,8 +21,8 @@ const ENCODE_SUBMIT = graphql`
   }
 `
 
-const EncodeButton: React.FC<EncodeButtonProps> = ({ paths }) => {
-  const [commit, isLoading] = useMutation<EncodeButton_EncodeSubmitMutation>(ENCODE_SUBMIT)
+const EncodeButton: React.FC<EncodeButtonProps> = ({ directory_id, keys }) => {
+  const [commit, isLoading] = useMutation<EncodeButton_EncodeSubmitMutation>(MUTATION)
 
   const onClick = () => {
     commit({

@@ -5,7 +5,7 @@ import { IconPointFilled } from '@tabler/icons-react'
 import React from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-const ExploreResolutionFragment = graphql`
+const FRAGMENT = graphql`
   query ExploreResolutionQuery($directory_id: ID!, $order: [FileResolutionDistributionSortInput!]) {
     file_resolution_distribution(directory_id: $directory_id, order: $order) {
       resolution {
@@ -23,7 +23,7 @@ type ExploreResolutionProps = {
 const ExploreResolution: React.FC<ExploreResolutionProps> = ({ directory_id }) => {
   const colours = ['#178600', '#3178c6']
 
-  const data = useLazyLoadQuery<ExploreResolutionQuery>(ExploreResolutionFragment, {
+  const data = useLazyLoadQuery<ExploreResolutionQuery>(FRAGMENT, {
     directory_id,
     order: [{ count: 'DESC' }],
   })

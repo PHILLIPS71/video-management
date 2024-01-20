@@ -10,7 +10,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 
 import SidebarLibrarySegmentItem from '@/layouts/default/components/sidebar/SidebarLibrarySegmentItem'
 
-const SidebarLibrarySegmentFragment = graphql`
+const FRAGMENT = graphql`
   fragment SidebarLibrarySegmentFragment on Query
   @refetchable(queryName: "SidebarLibrarySegmentPaginationQuery")
   @argumentDefinitions(first: { type: "Int" }, after: { type: "String" }, order: { type: "[LibrarySortInput!]" }) {
@@ -36,14 +36,14 @@ const SidebarLibrarySegment: React.FC<SidebarLibrarySegmentProps> = ({ $key }) =
   const { data, loadNext, hasNext } = usePaginationFragment<
     SidebarLibrarySegmentPaginationQuery,
     SidebarLibrarySegmentFragment$key
-  >(SidebarLibrarySegmentFragment, $key)
+  >(FRAGMENT, $key)
 
   return (
     <Navigation.Segment>
       <Navigation.Title className="flex justify-between items-center">
         Your Libraries
         <Link passHref href="/new">
-          <Button color="primary" size="xs">
+          <Button color="brand" size="xs">
             <IconAlbum size={16} /> New
           </Button>
         </Link>
