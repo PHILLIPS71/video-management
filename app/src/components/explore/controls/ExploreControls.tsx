@@ -38,19 +38,19 @@ const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
         <div className="flex items-center gap-1">
           <IconFolderFilled size={16} />
           <Typography.Text as="strong">0</Typography.Text>
-          <Typography.Text as="span">folders</Typography.Text>
+          <Typography.Text>folders</Typography.Text>
         </div>
 
         <div className="flex items-center gap-1">
           <IconFile size={16} />
           <Typography.Text as="strong">0</Typography.Text>
-          <Typography.Text as="span">files</Typography.Text>
+          <Typography.Text>files</Typography.Text>
         </div>
 
         <div className="flex items-center gap-1">
           <IconDeviceFloppy size={16} />
           <Typography.Text as="strong">{size.value}</Typography.Text>
-          <Typography.Text as="span">{size.symbol}</Typography.Text>
+          <Typography.Text>{size.symbol}</Typography.Text>
         </div>
       </div>
 

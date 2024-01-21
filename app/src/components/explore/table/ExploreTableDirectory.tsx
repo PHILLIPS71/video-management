@@ -32,7 +32,7 @@ const ExploreTableDirectory: React.FC<ExploreTableDirectoryProps> = ({ $key }) =
     <>
       <IconFolderFilled size={20} />
 
-      <NextLink legacyBehavior href={`${pathname}/${data.path_info.name}`}>
+      <NextLink legacyBehavior passHref href={`${pathname}/${data.path_info.name}`}>
         <Link>{data.path_info.name}</Link>
       </NextLink>
     </>

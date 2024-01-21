@@ -45,8 +45,8 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
       selectedKeys={keys}
       onSelectionChange={(selection) => setKeys(selection)}
     >
-      <Table.Head>
-        <Table.Column key="name" isRowHeader className="py-2 select-all">
+      <Table.Head size="sm">
+        <Table.Column key="name" isRowHeader>
           <Input aria-label="search file system entries" className="max-w-xs">
             <Input.Addon>
               <IconSearch size={16} />
@@ -54,10 +54,8 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
             <Input.Control placeholder="Search by name" type="text" />
           </Input>
         </Table.Column>
-        <Table.Column key="size" className="py-2 select-all">
-          <Typography.Text className="text-xs text-right" variant="subtitle">
-            {dayjs(data.scanned_at).fromNow()}
-          </Typography.Text>
+        <Table.Column key="size" className="text-right">
+          <Typography.Text variant="subtitle">{dayjs(data.scanned_at).fromNow()}</Typography.Text>
         </Table.Column>
       </Table.Head>
 
@@ -73,7 +71,7 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
             </Table.Cell>
 
             <Table.Cell>
-              <Typography.Text className="text-right">{filesize(item.size, { base: 2 })}</Typography.Text>
+              <Typography.Paragraph className="text-right">{filesize(item.size, { base: 2 })}</Typography.Paragraph>
             </Table.Cell>
           </Table.Row>
         )}

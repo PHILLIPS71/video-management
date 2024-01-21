@@ -165,7 +165,7 @@ export const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
           {(item) => (
             <Table.Row id={item.node.id}>
               <Table.Cell>
-                <Typography.Text>{item.node.file.path_info.name}</Typography.Text>
+                <Typography.Paragraph>{item.node.file.path_info.name}</Typography.Paragraph>
               </Table.Cell>
               <Table.Cell>
                 <div className="flex flex-row items-center justify-end gap-2">

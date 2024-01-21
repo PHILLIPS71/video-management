@@ -54,10 +54,10 @@ export const ResolutionDistribution: React.FC<ResolutionDistributionProps> = ({ 
         {data.file_resolution_distribution.map((item, index) => (
           <li key={item.resolution?.abbreviation} className="flex items-center gap-1">
             <IconPointFilled color={colours[index]} size={16} />
-            <Typography.Text as="span" className="font-bold text-xs">
+            <Typography.Text className="font-bold text-xs">
               {item.resolution?.abbreviation ?? 'unknown'}
             </Typography.Text>
-            <Typography.Text as="span" className="text-xs">
+            <Typography.Text className="text-xs">
               {(item.count / total).toLocaleString(undefined, { style: 'percent', maximumFractionDigits: 2 })}
             </Typography.Text>
           </li>

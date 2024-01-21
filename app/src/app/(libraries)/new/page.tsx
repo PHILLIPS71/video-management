@@ -3,7 +3,7 @@
 import type { page_LibraryCreate_LibraryCreateMutation } from '@/__generated__/page_LibraryCreate_LibraryCreateMutation.graphql'
 import type { SubmitHandler } from 'react-hook-form'
 
-import { Alert, Button, Card, Form, Input, Typography } from '@giantnodes/react'
+import { Alert, Button, Card, Form, Input, Switch, Typography } from '@giantnodes/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconAlertCircleFilled, IconAlertTriangleFilled } from '@tabler/icons-react'
 import { useRouter } from 'next/navigation'
@@ -44,7 +44,7 @@ const LibraryCreateSchema = z.object({
   name: z.string().trim().min(1, { message: 'not enough chars' }).max(128, { message: 'too many chars' }),
   slug: z.string().trim().min(1, { message: 'not enough chars' }).max(128, { message: 'too many chars' }),
   path: z.string().trim().min(1, { message: 'not enough chars' }),
-  is_watched: z.boolean().default(false),
+  is_watched: z.boolean().default(true),
 })
 
 type LibraryCreateInput = z.infer<typeof LibraryCreateSchema>
@@ -94,13 +94,11 @@ const LibraryCreatePage = () => {
     <section className="mx-auto max-w-2xl">
       <Card>
         <Card.Header>
-          <Typography.HeadingLevel>
-            <Typography.Heading>Create a new library</Typography.Heading>
-            <Typography.Text>
-              Your library will have its own dedicated metrics and control panel. A dashboard will be set up so you can
-              easily interact with your new library.
-            </Typography.Text>
-          </Typography.HeadingLevel>
+          <Typography.Heading level={1}>Create a new library</Typography.Heading>
+          <Typography.Paragraph>
+            Your library will have its own dedicated metrics and control panel. A dashboard will be set up so you can
+            easily interact with your new library.
+          </Typography.Paragraph>
         </Card.Header>
         <Card.Body>
           <Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -112,7 +110,7 @@ const LibraryCreatePage = () => {
                     <Alert.Heading>There were {errors.length} error with your submission</Alert.Heading>
                     <Alert.List>
                       {errors.map((error) => (
-                        <Alert.Item>{error}</Alert.Item>
+                        <Alert.Item key={error}>{error}</Alert.Item>
                       ))}
                     </Alert.List>
                   </Alert.Body>
@@ -125,7 +123,7 @@ const LibraryCreatePage = () => {
                   <Input>
                     <Input.Control id="name" type="text" {...form.register('name')} />
                   </Input>
-                  <Form.Feedback type="invalid">{form.formState.errors.name?.message}</Form.Feedback>
+                  <Form.Feedback type="error">{form.formState.errors.name?.message}!!!</Form.Feedback>
                 </Form.Group>
 
                 <Form.Group error={!!form.formState.errors.slug}>
@@ -133,7 +131,7 @@ const LibraryCreatePage = () => {
                   <Input>
                     <Input.Control id="slug" type="text" {...form.register('slug')} />
                   </Input>
-                  <Form.Feedback type="invalid">{form.formState.errors.slug?.message}</Form.Feedback>
+                  <Form.Feedback type="error">{form.formState.errors.slug?.message}</Form.Feedback>
                   {form.watch('slug') !== undefined &&
                     SlugTransform.parse(form.watch('slug')) !== form.watch('slug') && (
                       <Form.Caption className="text-yellow-600">
@@ -150,7 +148,31 @@ const LibraryCreatePage = () => {
                 <Input>
                   <Input.Control id="folder" type="text" {...form.register('path')} />
                 </Input>
-                <Form.Feedback type="invalid">{form.formState.errors.path?.message}</Form.Feedback>
+                <Form.Feedback type="error">{form.formState.errors.path?.message}</Form.Feedback>
+              </Form.Group>
+
+              <Form.Group error={!!form.formState.errors.is_watched}>
+                <span className="flex gap-2 items-center">
+                  <Form.Label className="m-0" htmlFor="is-watched">
+                    <Switch id="is-watched" {...form.register('is_watched')} />
+                  </Form.Label>
+
+                  <div className="flex flex-col">
+                    <Typography.Paragraph className="font-semibold">
+                      Monitor library folder
+                      <Typography.Text className="pl-1" variant="subtitle">
+                        (recommended)
+                      </Typography.Text>
+                    </Typography.Paragraph>
+
+                    <Typography.Paragraph variant="subtitle">
+                      Watches the library folder and sub-directories for file system changes and automatically updates
+                      the library.
+                    </Typography.Paragraph>
+                  </div>
+                </span>
+
+                <Form.Feedback type="error">{form.formState.errors.is_watched?.message}</Form.Feedback>
               </Form.Group>
 
               <Button className="self-end" color="brand" disabled={isLoading} size="xs" type="submit">
