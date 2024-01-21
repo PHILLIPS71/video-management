@@ -1,13 +1,16 @@
+using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
+using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Services;
 
-public class FileSystemWatcherHostedService : IHostedService
+public class FileSystemWatcherHostedService : BackgroundService
 {
     private readonly IServiceProvider _provider;
     private readonly IFileSystemWatcherService _watcher;
@@ -23,28 +26,34 @@ public class FileSystemWatcherHostedService : IHostedService
         _bus = bus;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         using (var scope = _provider.CreateScope())
         {
+            var service = scope.ServiceProvider.GetRequiredService<IUnitOfWorkService>();
             var repository = scope.ServiceProvider.GetRequiredService<ILibraryRepository>();
-            var libraries = await repository.ToListAsync(x => x.IsWatched, cancellationToken);
 
-            foreach (var library in libraries)
+            ICollection<Library>? libraries;
+            using (var uow = await service.BeginAsync(stoppingToken))
             {
-                _watcher.Watch(library);
+                libraries = await repository.ToListAsync(x => x.IsWatched, stoppingToken);
+
+                var tasks = libraries
+                    .Where(x => x.IsWatched)
+                    .Select(x => x.Watch(_watcher))
+                    .ToList();
+
+                await Task.WhenAll(tasks);
+                await uow.CommitAsync(stoppingToken);
             }
 
             var commands = libraries
-                .Select(x => new LibraryScan.Command { LibraryId = x.Id })
-                .ToList();
+                    .Where(x => x.Status != FileSystemStatus.Offline)
+                    .Select(x => new LibraryScan.Command { LibraryId = x.Id })
+                    .ToList();
 
-            await _bus.PublishBatch(commands, cancellationToken);
+            if (commands.Count > 0)
+                await _bus.PublishBatch(commands, stoppingToken);
         }
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
     }
 }

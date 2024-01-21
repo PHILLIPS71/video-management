@@ -45,6 +45,8 @@ public static class Setup
         services.TryAddTransient<IFileSystemDirectoryRepository, FileSystemDirectoryRepository>();
         services.TryAddTransient<IFileSystemFileRepository, FileSystemFileRepository>();
 
+        services.AddHostedService<FileSystemWatcherHostedService>();
+
         return services;
     }
 }

@@ -15,6 +15,15 @@ public class FileSystemService : IFileSystemService
     }
 
     /// <inheritdoc/>
+    public Task<bool> Exists(string path)
+    {
+        using (var source = new CancellationTokenSource(TimeSpan.FromSeconds(30)))
+        {
+            return Task.Run(() => _fs.Path.Exists(path), source.Token);
+        }
+    }
+
+    /// <inheritdoc/>
     public ReadOnlyCollection<IFileSystemInfo> GetFileSystemEntries(string path, SearchOption search = SearchOption.TopDirectoryOnly)
     {
         var directory = _fs.DirectoryInfo.New(path);

@@ -9,12 +9,13 @@ public interface IFileSystemWatcherService : IApplicationService, ISingletonDepe
     /// Starts watching the specified <paramref name="library" /> for file system changes.
     /// </summary>
     /// <param name="library">A <see cref="Library" /> to watch for file system changes.</param>
-    /// <seealso cref="FileSystemWatcher.EnableRaisingEvents" />
-    public void Watch(Library library);
+    /// <returns>A bool indicating the success of the operation.</returns>
+    public Task<bool> TryWatch(Library library);
 
     /// <summary>
     /// Stops watching the specified <paramref name="library" /> for file system changes.
     /// </summary>
     /// <param name="library">A <see cref="Library" /> to stop watching for file system changes.</param>
-    public void Unwatch(Library library);
+    /// <returns>A bool indicating the success of the operation.</returns>
+    public bool TryUnwatch(Library library);
 }

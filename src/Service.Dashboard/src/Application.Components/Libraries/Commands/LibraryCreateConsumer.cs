@@ -47,7 +47,8 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 
         try
         {
-            library.SetWatched(_watcher, context.Message.IsWatched);
+            if (context.Message.IsWatched)
+                library.SetWatched(_watcher, context.Message.IsWatched);
         }
         catch (PlatformNotSupportedException)
         {
