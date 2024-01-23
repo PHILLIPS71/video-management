@@ -1,26 +1,26 @@
+using System.IO.Abstractions;
 using Giantnodes.Infrastructure.Faults;
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Repositories;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Commands;
 
 public class LibraryScanConsumer : IConsumer<LibraryScan.Command>
 {
+    private readonly IFileSystem _fs;
     private readonly IUnitOfWorkService _uow;
     private readonly ILibraryRepository _repository;
-    private readonly IFileSystemService _fileSystemService;
 
     public LibraryScanConsumer(
+        IFileSystem fs,
         IUnitOfWorkService uow,
-        ILibraryRepository repository,
-        IFileSystemService fileSystemService)
+        ILibraryRepository repository)
     {
+        _fs = fs;
         _uow = uow;
         _repository = repository;
-        _fileSystemService = fileSystemService;
     }
 
     public async Task Consume(ConsumeContext<LibraryScan.Command> context)
@@ -34,7 +34,7 @@ public class LibraryScanConsumer : IConsumer<LibraryScan.Command>
                 return;
             }
 
-            library.Scan(_fileSystemService);
+            library.Scan(_fs);
             await uow.CommitAsync(context.CancellationToken);
 
             await context.RespondAsync(new LibraryCreate.Result { Id = library.Id });

@@ -1,5 +1,4 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services.Impl;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Tests.Shared.Fixtures;
 using Xunit;
@@ -13,11 +12,10 @@ public class LibraryTests : FileSystemFixture
     public void Construct(string path)
     {
         // arrange
-        var service = new FileSystemService(FileSystem);
         var directory = FileSystem.DirectoryInfo.New(path);
 
         // act
-        var library = new Library(service, directory, "Silicon Valley", "silicon-valley");
+        var library = new Library(directory, "Silicon Valley", "silicon-valley");
 
         // assert
         Assert.Equal("Silicon Valley", library.Name);
@@ -31,11 +29,10 @@ public class LibraryTests : FileSystemFixture
     public void Construct_Drive_Status_Online_Directory_Found(string path)
     {
         // arrange
-        var service = new FileSystemService(FileSystem);
         var directory = FileSystem.DirectoryInfo.New(path);
 
         // act
-        var library = new Library(service, directory, "Silicon Valley", "silicon-valley");
+        var library = new Library(directory, "Silicon Valley", "silicon-valley");
 
         // assert
         Assert.Equal(FileSystemStatus.Online, library.Status);
@@ -45,12 +42,11 @@ public class LibraryTests : FileSystemFixture
     public void Construct_Drive_Status_Offline_Directory_Not_Found()
     {
         // arrange
-        var service = new FileSystemService(FileSystem);
         var directory = FileSystem.DirectoryInfo.New(@"C:\tv-shows\Mr. Robot\Season 1");
 
         // act
-        var library = new Library(service, directory, "Mr. Robot", "mr-robot");
-        
+        var library = new Library(directory, "Mr. Robot", "mr-robot");
+
         // assert
         Assert.Equal(FileSystemStatus.Offline, library.Status);
     }

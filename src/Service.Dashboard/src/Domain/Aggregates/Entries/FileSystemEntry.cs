@@ -5,6 +5,7 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
+using Giantnodes.Service.Dashboard.Domain.Services;
 using Giantnodes.Service.Dashboard.Domain.Values;
 using MassTransit;
 
@@ -47,12 +48,11 @@ public abstract class FileSystemEntry : AggregateRoot<Guid>, ITimestampableEntit
     public static FileSystemEntry Build(
         Library library,
         FileSystemDirectory parent,
-        IFileSystemInfo info,
-        IFileSystemService service)
+        IFileSystemInfo info)
     {
         return info switch
         {
-            IDirectoryInfo directory => new FileSystemDirectory(library, parent, directory, service),
+            IDirectoryInfo directory => new FileSystemDirectory(library, parent, directory),
             IFileInfo file => new FileSystemFile(library, parent, file),
             _ => throw new ArgumentOutOfRangeException(nameof(info), info, null)
         };

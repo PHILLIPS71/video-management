@@ -5,7 +5,6 @@ using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Repositories;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 using MassTransit;
 using Npgsql;
 
@@ -13,42 +12,36 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Commands
 
 public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 {
+    private readonly IFileSystem _fs;
     private readonly IUnitOfWorkService _uow;
     private readonly ILibraryRepository _repository;
-    private readonly IFileSystem _fileSystem;
-    private readonly IFileSystemService _fileSystemService;
-    private readonly IFileSystemWatcherService _watcher;
 
     public LibraryCreateConsumer(
         IUnitOfWorkService uow,
-        ILibraryRepository repository,
-        IFileSystem fileSystem,
-        IFileSystemService fileSystemService,
-        IFileSystemWatcherService watcher)
+        IFileSystem fs,
+        ILibraryRepository repository)
     {
+        _fs = fs;
         _uow = uow;
         _repository = repository;
-        _fileSystem = fileSystem;
-        _fileSystemService = fileSystemService;
-        _watcher = watcher;
     }
 
     public async Task Consume(ConsumeContext<LibraryCreate.Command> context)
     {
-        var directory = _fileSystem.DirectoryInfo.New(context.Message.FullPath);
+        var directory = _fs.DirectoryInfo.New(context.Message.FullPath);
         if (!directory.Exists)
         {
             await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.FullPath));
             return;
         }
 
-        var library = new Library(_fileSystemService, directory, context.Message.Name, context.Message.Slug);
-        library.Scan(_fileSystemService);
+        var library = new Library(directory, context.Message.Name, context.Message.Slug);
+        library.Scan(_fs);
 
         try
         {
             if (context.Message.IsWatched)
-                library.SetWatched(_watcher, context.Message.IsWatched);
+                library.SetWatched(context.Message.IsWatched);
         }
         catch (PlatformNotSupportedException)
         {

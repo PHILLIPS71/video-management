@@ -6,7 +6,7 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Repositories;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Giantnodes.Service.Dashboard.Application.Components.Entries.Repositories;
+namespace Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Entries;
 
 public class FileSystemEntryRepository : IFileSystemEntryRepository
 {

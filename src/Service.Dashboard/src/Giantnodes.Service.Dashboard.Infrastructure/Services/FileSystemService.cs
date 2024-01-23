@@ -2,8 +2,9 @@ using System.Collections.ObjectModel;
 using System.IO.Abstractions;
 using Giantnodes.Infrastructure;
 using Giantnodes.Service.Dashboard.Domain.Enumerations;
+using Giantnodes.Service.Dashboard.Domain.Services;
 
-namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services.Impl;
+namespace Giantnodes.Service.Dashboard.Infrastructure.Services;
 
 public class FileSystemService : IFileSystemService
 {

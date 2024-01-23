@@ -1,6 +1,5 @@
 ﻿using System.IO.Abstractions;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
 
@@ -15,17 +14,16 @@ public class FileSystemDirectory : FileSystemEntry
     public FileSystemDirectory(
         Library library,
         FileSystemDirectory? parent,
-        IDirectoryInfo directory,
-        IFileSystemService service)
+        IDirectoryInfo directory)
         : base(library, parent, directory)
     {
-        SetSize(service);
+        SetSize(directory.FileSystem);
     }
 
-    public void SetSize(IFileSystemService service)
+    public void SetSize(IFileSystem fs)
     {
-        Size = service
-            .GetFileSystemEntries(PathInfo.FullName, SearchOption.AllDirectories)
+        Size = fs
+            .GetVideoFiles(PathInfo.FullName, SearchOption.AllDirectories)
             .OfType<IFileInfo>()
             .Sum(x => x.Length);
     }

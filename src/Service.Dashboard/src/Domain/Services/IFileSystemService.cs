@@ -1,10 +1,11 @@
 using System.Collections.ObjectModel;
 using System.IO.Abstractions;
+using Giantnodes.Infrastructure.DependencyInjection;
 using Giantnodes.Infrastructure.Domain.Services;
 
-namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
+namespace Giantnodes.Service.Dashboard.Domain.Services;
 
-public interface IFileSystemService : IDomainService
+public interface IFileSystemService : IApplicationService, ISingletonDependency
 {
     /// <summary>
     /// Checks if a path exists on the file system asynchronously.

@@ -1,4 +1,6 @@
 ﻿using Giantnodes.Service.Dashboard.Application.Components;
+using Giantnodes.Service.Dashboard.Domain;
+using Giantnodes.Service.Dashboard.Infrastructure;
 using Giantnodes.Service.Dashboard.Persistence;
 using HotChocolate.AspNetCore;
 
@@ -18,7 +20,9 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services
+            .SetupDomain()
             .SetupPersistence(_configuration)
+            .SetupInfrastructure()
             .SetupApplicationComponents()
             .AddHttpApiServices();
     }

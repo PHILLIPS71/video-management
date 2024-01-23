@@ -2,10 +2,10 @@
 using System.Security;
 using Giantnodes.Infrastructure.Domain.Entities;
 using Giantnodes.Infrastructure.Domain.Entities.Auditing;
+using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Events;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Domain.Values;
 using MassTransit;
@@ -40,7 +40,7 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
     {
     }
 
-    public Library(IFileSystemService service, IDirectoryInfo root, string name, string slug)
+    public Library(IDirectoryInfo root, string name, string slug)
     {
         Id = NewId.NextSequentialGuid();
         Name = name;
@@ -50,45 +50,32 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
         if (root.Exists)
             Status = FileSystemStatus.Online;
 
-        _entries.Add(new FileSystemDirectory(this, null, root, service));
+        _entries.Add(new FileSystemDirectory(this, null, root));
     }
 
-    /// <summary>
-    /// Sets the <seealso cref="IsWatched" /> property starting or stopping if the library path should be monitored.
-    /// </summary>
-    /// <param name="service">The service used to manage file system monitoring.</param>
-    /// <param name="watched">A boolean indicating to begin or stop watching for file system changes.</param>
-    public void SetWatched(IFileSystemWatcherService service, bool watched)
+    public void SetStatus(FileSystemStatus status)
     {
-        if (watched)
-            service.TryWatch(this);
-        else
-            service.TryUnwatch(this);
+        Status = status;
+    }
 
+    public void SetWatched(bool watched)
+    {
         IsWatched = watched;
-    }
 
-    public async Task Watch(IFileSystemWatcherService service)
-    {
-        var success = await service.TryWatch(this);
-
-        Status = success ? FileSystemStatus.Online : FileSystemStatus.Offline;
-    }
-
-    public void Unwatch(IFileSystemWatcherService service)
-    {
-        if (!IsWatched)
-            return;
-        
-        service.TryUnwatch(this);
+        DomainEvents.Add(new LibraryMonitoringChangedEvent
+        {
+            LibraryId = Id,
+            IsMonitoring = IsWatched,
+            RaisedAt = DateTime.UtcNow
+        });
     }
 
     /// <summary>
     /// Traverses the <see cref="Directory"/> and any sub-directories within it, creating or updating any
     /// existing <see cref="Entries"/> as well as removing those that no longer exist.
     /// </summary>
-    /// <param name="service">The <see cref="IFileSystemService"/> use to get file system entries.</param>
-    public void Scan(IFileSystemService service)
+    /// <param name="fs">A file system abstraction where the library exists.</param>
+    public void Scan(IFileSystem fs)
     {
         var parent = Directory;
         var paths = new List<string> { parent.PathInfo.FullName };
@@ -105,14 +92,14 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
 
             try
             {
-                var infos = service.GetFileSystemEntries(path);
+                var infos = fs.GetVideoFiles(path);
 
                 foreach (var info in infos)
                 {
                     var entry = _entries.SingleOrDefault(x => x.PathInfo.FullName == info.FullName);
                     if (entry == null)
                     {
-                        entry = FileSystemEntry.Build(this, parent, info, service);
+                        entry = FileSystemEntry.Build(this, parent, info);
                         _entries.Add(entry);
                     }
 
@@ -123,7 +110,7 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
                             break;
 
                         case IDirectoryInfo subdirectory:
-                            ((FileSystemDirectory)entry).SetSize(service);
+                            ((FileSystemDirectory)entry).SetSize(fs);
                             stack.Push(subdirectory.FullName);
                             break;
                     }
