@@ -118,6 +118,8 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
                     entry.SetScannedAt(DateTime.UtcNow);
                     paths.Add(info.FullName);
                 }
+
+                parent.SetScannedAt(DateTime.UtcNow);
             }
             catch (Exception ex)
             {

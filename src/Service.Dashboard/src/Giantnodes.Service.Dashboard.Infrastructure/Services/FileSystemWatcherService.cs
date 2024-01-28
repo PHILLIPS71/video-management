@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using System.Reactive.Linq;
 using Giantnodes.Service.Dashboard.Domain.Services;
 using MassTransit;
 using Serilog;
@@ -22,14 +23,15 @@ public class FileSystemWatcherService : IFileSystemWatcherService
     }
 
     /// <inheritdoc />
-    public async Task<bool> TryWatchAsync(string path)
+    public async Task<bool> TryWatchAsync<TEvent>(string path, Func<FileSystemEventArgs, TEvent> raise)
+        where TEvent : class
     {
         try
         {
             if (_watching.ContainsKey(path))
                 return true;
 
-            var watcher = await Create(path);
+            var watcher = await Create(path, raise);
             _watching.Add(path, watcher);
             return true;
         }
@@ -51,7 +53,8 @@ public class FileSystemWatcherService : IFileSystemWatcherService
         return true;
     }
 
-    private async Task<IFileSystemWatcher> Create(string path)
+    private async Task<IFileSystemWatcher> Create<TEvent>(string path, Func<FileSystemEventArgs, TEvent> raise)
+        where TEvent : class
     {
         var exists = await _fileSystemService.Exists(path);
         if (!exists)
@@ -65,14 +68,14 @@ public class FileSystemWatcherService : IFileSystemWatcherService
                                NotifyFilters.LastWrite |
                                NotifyFilters.Size;
 
-        // Observable
-        //     .Merge(
-        //         Observable.FromEventPattern<FileSystemEventArgs>(watcher, nameof(watcher.Created)),
-        //         Observable.FromEventPattern<FileSystemEventArgs>(watcher, nameof(watcher.Renamed)),
-        //         Observable.FromEventPattern<FileSystemEventArgs>(watcher, nameof(watcher.Deleted))
-        //     )
-        //     .Sample(_interval)
-        //     .Subscribe(_ => _bus.Publish(new LibraryScan.Command { LibraryId = library.Id }));
+        Observable
+            .Merge(
+                Observable.FromEventPattern<FileSystemEventArgs>(watcher, nameof(watcher.Created)),
+                Observable.FromEventPattern<FileSystemEventArgs>(watcher, nameof(watcher.Renamed)),
+                Observable.FromEventPattern<FileSystemEventArgs>(watcher, nameof(watcher.Deleted))
+            )
+            .Sample(_interval)
+            .Subscribe(@event => _bus.Publish(raise(@event.EventArgs)));
 
         return watcher;
     }

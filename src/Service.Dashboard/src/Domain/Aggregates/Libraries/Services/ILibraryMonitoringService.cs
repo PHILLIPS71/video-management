@@ -5,7 +5,7 @@ namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Services;
 
 public interface ILibraryMonitoringService : IDomainService, ISingletonDependency
 {
-    public Task TryMonitorAsync(Library library);
+    public Task<bool> TryMonitorAsync(Library library);
 
-    public void TryUnMonitor(Library library);
+    public bool TryUnMonitor(Library library);
 }

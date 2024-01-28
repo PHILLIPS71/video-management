@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Events;
 using Giantnodes.Service.Dashboard.Domain.Services;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 
@@ -15,22 +16,34 @@ public class LibraryMonitoringService : ILibraryMonitoringService
         _watcher = watcher;
     }
 
-    public async Task TryMonitorAsync(Library library)
+    public async Task<bool> TryMonitorAsync(Library library)
     {
-        var success = await _watcher.TryWatchAsync(library.PathInfo.FullName);
+        var success = await _watcher.TryWatchAsync(
+            library.PathInfo.FullName,
+            @event => new LibraryFileSystemChangedEvent
+            {
+                LibraryId = library.Id,
+                ChangeTypes = @event.ChangeType,
+                FullPath = @event.FullPath,
+                RaisedAt = DateTime.UtcNow
+            });
 
         var status = success ? FileSystemStatus.Online : FileSystemStatus.Offline;
         library.SetStatus(status);
 
         if (success)
             library.Scan(_fs);
+
+        return success;
     }
 
-    public void TryUnMonitor(Library library)
+    public bool TryUnMonitor(Library library)
     {
         var success = _watcher.TryUnwatch(library.PathInfo.FullName);
 
         var status = success ? FileSystemStatus.Online : FileSystemStatus.Offline;
         library.SetStatus(status);
+
+        return success;
     }
 }

@@ -5,7 +5,7 @@ namespace Giantnodes.Service.Dashboard.Domain.Services;
 
 public interface IFileSystemWatcherService : IApplicationService, ISingletonDependency
 {
-    public Task<bool> TryWatchAsync(string path);
+    public Task<bool> TryWatchAsync<TEvent>(string path, Func<FileSystemEventArgs, TEvent> raise) where TEvent : class;
 
     public bool TryUnwatch(string path);
 }
