@@ -1,5 +1,4 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries;
-using Giantnodes.Service.Dashboard.Domain.Values;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 

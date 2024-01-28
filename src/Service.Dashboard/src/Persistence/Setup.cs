@@ -16,6 +16,8 @@ public static class Setup
                 options
                     .UseNpgsql(configuration.GetConnectionString(name: "DatabaseConnection"), optionsBuilder =>
                     {
+                        optionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+
                         optionsBuilder.MigrationsHistoryTable("__migrations", ApplicationDbContext.Schema);
                         optionsBuilder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
                     })

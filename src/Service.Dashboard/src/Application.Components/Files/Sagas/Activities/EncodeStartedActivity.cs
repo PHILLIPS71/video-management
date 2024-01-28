@@ -1,4 +1,5 @@
 using Giantnodes.Infrastructure.Uow.Services;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
@@ -10,11 +11,11 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activi
 public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, EncodeStartedEvent>
 {
     private readonly IUnitOfWorkService _uow;
-    private readonly IFileSystemFileRepository _repository;
+    private readonly IEncodeRepository _repository;
 
     public EncodeStartedActivity(
         IUnitOfWorkService uow,
-        IFileSystemFileRepository repository)
+        IEncodeRepository repository)
     {
         _uow = uow;
         _repository = repository;
@@ -36,9 +37,7 @@ public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, Enco
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var file = await _repository.SingleAsync(x => x.Encodes.Any(y => y.Id == context.CorrelationId));
-
-            var encode = file.Encodes.First(x => x.Id == context.CorrelationId);
+            var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
             encode.SetStatus(EncodeStatus.Encoding);
 
             await uow.CommitAsync(context.CancellationToken);

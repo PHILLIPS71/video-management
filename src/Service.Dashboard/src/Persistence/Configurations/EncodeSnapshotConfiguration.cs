@@ -1,19 +1,15 @@
-﻿using Giantnodes.Infrastructure;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
+using Giantnodes.Infrastructure;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Entities;
 using Giantnodes.Service.Dashboard.Domain.Enumerations;
-using Giantnodes.Service.Dashboard.Domain.Values;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Giantnodes.Service.Dashboard.Persistence.Configurations;
 
-public class FileSystemFileConfiguration : IEntityTypeConfiguration<FileSystemFile>
+public class EncodeSnapshotConfiguration : IEntityTypeConfiguration<EncodeSnapshot>
 {
-    public void Configure(EntityTypeBuilder<FileSystemFile> builder)
+    public void Configure(EntityTypeBuilder<EncodeSnapshot> builder)
     {
-        builder
-            .OwnsOne<PathInfo>(p => p.PathInfo);
-
         builder
             .OwnsMany(p => p.VideoStreams, streamBuilder =>
             {

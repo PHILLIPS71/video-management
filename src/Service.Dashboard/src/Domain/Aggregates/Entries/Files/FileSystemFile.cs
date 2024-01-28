@@ -1,9 +1,9 @@
 ﻿using System.IO.Abstractions;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
-using FileStream = Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.FileStream;
+using Giantnodes.Service.Dashboard.Domain.Values;
+using FileStream = Giantnodes.Service.Dashboard.Domain.Values.FileStream;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
 
@@ -41,7 +41,7 @@ public class FileSystemFile : FileSystemEntry
         Size = file.Length;
     }
 
-    public void SetStreams(params FileStream[] streams)
+    public void SetStreams(DateTime timestamp, params FileStream[] streams)
     {
         VideoStreams = VideoStreams
             .Union(streams.OfType<VideoStream>())
@@ -58,7 +58,7 @@ public class FileSystemFile : FileSystemEntry
             .Intersect(streams.OfType<SubtitleStream>())
             .ToList();
 
-        ProbedAt = DateTime.UtcNow;
+        ProbedAt = timestamp.ToUniversalTime();
     }
 
     public Encode Encode()

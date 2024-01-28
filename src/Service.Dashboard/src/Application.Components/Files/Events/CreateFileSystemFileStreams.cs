@@ -1,9 +1,10 @@
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
+using Giantnodes.Service.Dashboard.Domain.Values;
 using Giantnodes.Service.Encoder.Application.Contracts.Probing.Events;
 using MassTransit;
-using FileStream = Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values.FileStream;
+using FileStream = Giantnodes.Service.Dashboard.Domain.Values.FileStream;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Files.Events;
 
@@ -44,7 +45,7 @@ public class CreateFileSystemFileStreams : IConsumer<FileProbedEvent>
                 streams.AddRange(audio);
                 streams.AddRange(subtitles);
 
-                file.SetStreams(streams.ToArray());
+                file.SetStreams(context.Message.Timestamp, streams.ToArray());
             }
 
             await uow.CommitAsync(context.CancellationToken);

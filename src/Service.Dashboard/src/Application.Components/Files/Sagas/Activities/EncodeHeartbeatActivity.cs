@@ -1,4 +1,6 @@
 using Giantnodes.Infrastructure.Uow.Services;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Values;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
@@ -10,11 +12,11 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activi
 public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, EncodeHeartbeatEvent>
 {
     private readonly IUnitOfWorkService _uow;
-    private readonly IFileSystemFileRepository _repository;
+    private readonly IEncodeRepository _repository;
 
     public EncodeHeartbeatActivity(
         IUnitOfWorkService uow,
-        IFileSystemFileRepository repository)
+        IEncodeRepository repository)
     {
         _uow = uow;
         _repository = repository;
@@ -36,15 +38,11 @@ public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, En
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var file = await _repository.SingleAsync(x => x.Encodes.Any(y => y.Id == context.CorrelationId));
-            var encode = file.Encodes.Single(x => x.Id == context.CorrelationId);
+            var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
 
-            var speed = new EncodeSpeed(
-                context.Message.Frames,
-                context.Message.Bitrate,
-                context.Message.Scale);
-
+            var speed = new EncodeSpeed(context.Message.Frames, context.Message.Bitrate, context.Message.Scale);
             encode.SetSpeed(speed);
+
             await uow.CommitAsync(context.CancellationToken);
         }
 

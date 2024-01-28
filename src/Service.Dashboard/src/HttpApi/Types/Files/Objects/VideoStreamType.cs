@@ -1,4 +1,5 @@
 ﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
+using Giantnodes.Service.Dashboard.Domain.Values;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Files.Objects;
 

@@ -3,12 +3,14 @@ using Giantnodes.Infrastructure.DependencyInjection.Extensions;
 using Giantnodes.Infrastructure.EntityFrameworkCore.Uow;
 using Giantnodes.Infrastructure.MassTransit.Uow;
 using Giantnodes.Infrastructure.Uow.DependencyInjection;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Services;
 using Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Directories;
+using Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Encodes;
 using Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Entries;
 using Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Files;
 using Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Libraries;
@@ -43,6 +45,7 @@ public static class Setup
         services.TryAddTransient<IFileSystemEntryRepository, FileSystemEntryRepository>();
         services.TryAddTransient<IFileSystemDirectoryRepository, FileSystemDirectoryRepository>();
         services.TryAddTransient<IFileSystemFileRepository, FileSystemFileRepository>();
+        services.TryAddTransient<IEncodeRepository, EncodeRepository>();
 
         // Services
         services.TryAddSingleton<IFileSystemService, FileSystemService>();

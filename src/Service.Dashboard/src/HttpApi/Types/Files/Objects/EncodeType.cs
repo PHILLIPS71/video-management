@@ -1,4 +1,4 @@
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Entities;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 

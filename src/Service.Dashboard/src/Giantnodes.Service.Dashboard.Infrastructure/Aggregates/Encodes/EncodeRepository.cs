@@ -1,16 +1,16 @@
 using System.Linq.Expressions;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Files;
+namespace Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Encodes;
 
-public class FileSystemFileRepository : IFileSystemFileRepository
+public class EncodeRepository : IEncodeRepository
 {
     private readonly ApplicationDbContext _database;
 
-    public FileSystemFileRepository(ApplicationDbContext database)
+    public EncodeRepository(ApplicationDbContext database)
     {
         _database = database;
     }
@@ -19,46 +19,44 @@ public class FileSystemFileRepository : IFileSystemFileRepository
     /// Builds the <see name="FileSystemFile"/> aggregates consistency boundary.
     /// </summary>
     /// <returns>A <see cref="IQueryable{TEntity}"/> of the objects that make up the consistency boundary.</returns>
-    private IQueryable<FileSystemFile> Build()
+    private IQueryable<Encode> Build()
     {
         return _database
-            .FileSystemFiles
-            .Include(x => x.VideoStreams)
-            .Include(x => x.AudioStreams)
-            .Include(x => x.SubtitleStreams)
+            .Encodes
+            .Include(x => x.Snapshots)
             .AsQueryable();
     }
 
     public Task<bool> ExistsAsync(
-        Expression<Func<FileSystemFile, bool>> predicate,
+        Expression<Func<Encode, bool>> predicate,
         CancellationToken cancellation = default)
     {
         return Build().AnyAsync(predicate, cancellation);
     }
 
-    public Task<FileSystemFile> SingleAsync(
-        Expression<Func<FileSystemFile, bool>> predicate,
+    public Task<Encode> SingleAsync(
+        Expression<Func<Encode, bool>> predicate,
         CancellationToken cancellation = default)
     {
         return Build().SingleAsync(predicate, cancellation);
     }
 
-    public Task<FileSystemFile?> SingleOrDefaultAsync(
-        Expression<Func<FileSystemFile, bool>> predicate,
+    public Task<Encode?> SingleOrDefaultAsync(
+        Expression<Func<Encode, bool>> predicate,
         CancellationToken cancellation = default)
     {
         return Build().SingleOrDefaultAsync(predicate, cancellation);
     }
 
-    public Task<List<FileSystemFile>> ToListAsync(
-        Expression<Func<FileSystemFile, bool>> predicate,
+    public Task<List<Encode>> ToListAsync(
+        Expression<Func<Encode, bool>> predicate,
         CancellationToken cancellation = default)
     {
         return Build().Where(predicate).ToListAsync(cancellation);
     }
 
-    public FileSystemFile Create(FileSystemFile entity)
+    public Encode Create(Encode entity)
     {
-        return _database.FileSystemFiles.Add(entity).Entity;
+        return _database.Encodes.Add(entity).Entity;
     }
 }

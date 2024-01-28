@@ -1,4 +1,5 @@
 using Giantnodes.Infrastructure.Uow.Services;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
@@ -9,11 +10,11 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activi
 public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, EncodeProgressedEvent>
 {
     private readonly IUnitOfWorkService _uow;
-    private readonly IFileSystemFileRepository _repository;
+    private readonly IEncodeRepository _repository;
 
     public EncodeProgressedActivity(
         IUnitOfWorkService uow,
-        IFileSystemFileRepository repository)
+        IEncodeRepository repository)
     {
         _uow = uow;
         _repository = repository;
@@ -35,10 +36,9 @@ public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, E
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var file = await _repository.SingleAsync(x => x.Encodes.Any(y => y.Id == context.CorrelationId));
-            var encode = file.Encodes.Single(x => x.Id == context.CorrelationId);
-
+            var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
             encode.SetProgress(context.Message.Percent);
+
             await uow.CommitAsync(context.CancellationToken);
         }
 
