@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Infrastructure\src\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj" />
-        <ProjectReference Include="..\Domain.Shared\Giantnodes.Service.Encoder.Domain.Shared.csproj" />
     </ItemGroup>
 
 </Project>
