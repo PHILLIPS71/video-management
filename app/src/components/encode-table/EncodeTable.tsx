@@ -54,8 +54,8 @@ const FRAGMENT = graphql`
 `
 
 const MUTATION = graphql`
-  mutation EncodeTable_EncodeCancelMutation($input: File_encode_cancelInput!) {
-    file_encode_cancel(input: $input) {
+  mutation EncodeTable_EncodeCancelMutation($input: Encode_cancelInput!) {
+    encode_cancel(input: $input) {
       encode {
         status
       }
@@ -142,7 +142,6 @@ export const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
       commit({
         variables: {
           input: {
-            file_id: entry.file.id,
             encode_id: entry.id,
           },
         },

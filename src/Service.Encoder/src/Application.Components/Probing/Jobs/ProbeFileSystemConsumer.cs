@@ -9,7 +9,7 @@ using Xabe.FFmpeg;
 
 namespace Giantnodes.Service.Encoder.Application.Components.Probing.Jobs;
 
-public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Command>
+public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
 {
     private readonly IFileSystem _fs;
 
@@ -18,7 +18,7 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Command>
         _fs = fs;
     }
 
-    public async Task Run(JobContext<ProbeFileSystem.Command> context)
+    public async Task Run(JobContext<ProbeFileSystem.Job> context)
     {
         var exists = _fs.Path.Exists(context.Job.FullPath);
         if (!exists)
@@ -31,7 +31,8 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Command>
         switch (_fs.File.GetAttributes(context.Job.FullPath))
         {
             case FileAttributes.Directory:
-                files = _fs.DirectoryInfo.New(context.Job.FullPath)
+                files = _fs.DirectoryInfo
+                    .New(context.Job.FullPath)
                     .GetFiles("*", SearchOption.AllDirectories)
                     .ToList();
                 break;
@@ -53,7 +54,7 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Command>
                     var media = await FFmpeg.GetMediaInfo(file.FullName, context.CancellationToken);
                     await context.Publish(new FileProbedEvent
                     {
-                        JobId = Guid.Empty,
+                        JobId = context.JobId,
                         FullPath = file.FullName,
                         Name = Path.GetFileName(file.FullName),
                         Size = file.Length,
@@ -72,19 +73,19 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Command>
                             .ToArray()
                     }, context.CancellationToken);
 
-                    Log.Information("successfully probed file {0} with job id {1} in {2:000ms}.", media.Path, context.JobId, interval.ElapsedMilliseconds);
+                    Log.Information("Successfully probed file {0} with job id {1} in {2:000ms}.", media.Path, context.JobId, interval.ElapsedMilliseconds);
                 }
                 catch (Exception ex)
                 {
                     await context.Publish(new FileProbeFaultedEvent
                     {
-                        JobId = Guid.Empty,
+                        JobId = context.JobId,
                         Path = file.FullName,
                         Exception = new FaultExceptionInfo(ex),
                         Timestamp = DateTime.UtcNow,
                     }, context.CancellationToken);
 
-                    Log.Error("failed to probe file {0} with job id {1}.", file.FullName, context.JobId);
+                    Log.Error("Failed to probe file {0} with job id {1}.", file.FullName, context.JobId);
                 }
             }))
             .ToList();

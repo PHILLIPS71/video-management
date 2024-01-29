@@ -330,6 +330,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     encode_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    size = table.Column<long>(type: "bigint", nullable: false),
                     probed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)

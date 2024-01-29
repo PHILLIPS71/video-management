@@ -7,8 +7,8 @@ import { graphql, useMutation } from 'react-relay'
 import { useExploreContext } from '@/components/explore/use-explore.hook'
 
 const MUTATION = graphql`
-  mutation EncodeButton_EncodeSubmitMutation($input: File_encode_submitInput!) {
-    file_encode_submit(input: $input) {
+  mutation EncodeButton_EncodeSubmitMutation($input: Encode_submitInput!) {
+    encode_submit(input: $input) {
       encode {
         id
       }
@@ -37,7 +37,7 @@ const EncodeButton: React.FC = () => {
     return []
   }, [directory, keys])
 
-  const onClick = () => {
+  const onPress = () => {
     commit({
       variables: {
         input: {
@@ -48,7 +48,7 @@ const EncodeButton: React.FC = () => {
   }
 
   return (
-    <Button color="brand" isDisabled={isDisabled || isLoading} size="xs" onPress={() => onClick()}>
+    <Button color="brand" isDisabled={isDisabled || isLoading} size="xs" onPress={() => onPress()}>
       Encode
     </Button>
   )

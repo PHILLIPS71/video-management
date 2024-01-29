@@ -31,6 +31,8 @@ public static class ConsoleServiceRegistration
                     .AddJobSagaStateMachines(configure => configure.FinalizeCompleted = true)
                     .EntityFrameworkRepository(configure =>
                     {
+                        configure.ConcurrencyMode = ConcurrencyMode.Optimistic;
+
                         configure.ExistingDbContext<ApplicationDbContext>();
                         configure.UsePostgres();
                     });

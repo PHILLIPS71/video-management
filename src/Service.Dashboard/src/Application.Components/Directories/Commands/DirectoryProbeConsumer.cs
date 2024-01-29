@@ -26,11 +26,7 @@ public class DirectoryProbeConsumer : IConsumer<DirectoryProbe.Command>
             return;
         }
 
-        await context.Publish(new ProbeFileSystem.Command
-        {
-            FullPath = directory.PathInfo.FullName
-        });
-
+        await context.Publish(new ProbeFileSystem.Job { FullPath = directory.PathInfo.FullName });
         await context.RespondAsync(new DirectoryProbe.Result { FullPath = directory.PathInfo.FullName });
     }
 }

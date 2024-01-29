@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240128053921_v0.0.1")]
+    [Migration("20240128062559_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -104,6 +104,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.Property<DateTime>("ProbedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("probed_at");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint")
+                        .HasColumnName("size");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")

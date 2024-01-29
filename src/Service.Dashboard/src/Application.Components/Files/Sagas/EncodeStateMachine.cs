@@ -91,6 +91,7 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
 
         During(Encoded,
             When(FileProbed)
+                .Activity(context => context.OfType<FileProbedActivity>())
                 .Finalize());
 
         DuringAny(

@@ -10,6 +10,8 @@ public class EncodeSnapshot : Entity<Guid>, ITimestampableEntity
 {
     public Encode Encode { get; private set; }
 
+    public long Size { get; private set; }
+
     public IReadOnlyCollection<VideoStream> VideoStreams { get; private set; } = new List<VideoStream>();
 
     public IReadOnlyCollection<AudioStream> AudioStreams { get; private set; } = new List<AudioStream>();
@@ -26,10 +28,11 @@ public class EncodeSnapshot : Entity<Guid>, ITimestampableEntity
     {
     }
 
-    public EncodeSnapshot(Encode encode, DateTime timestamp, params FileStream[] streams)
+    public EncodeSnapshot(Encode encode, long size, DateTime timestamp, params FileStream[] streams)
     {
         Id = NewId.NextSequentialGuid();
         Encode = encode;
+        Size = size;
         ProbedAt = timestamp.ToUniversalTime();
         VideoStreams = VideoStreams
             .Union(streams.OfType<VideoStream>())

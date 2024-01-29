@@ -6,7 +6,6 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Values;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using MassTransit;
-using FileStream = Giantnodes.Service.Dashboard.Domain.Values.FileStream;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
 
@@ -103,7 +102,6 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
 
         DomainEvents.Add(new EncodeSpeedChangedEvent
         {
-            FileId = File.Id,
             EncodeId = Id,
             Frames = Speed.Frames,
             Bitrate = Speed.Bitrate,

@@ -18,7 +18,7 @@ public class RaiseEncodeSpeedTopic : IConsumer<EncodeSpeedChangedEvent>
 
     public async Task Consume(ConsumeContext<EncodeSpeedChangedEvent> context)
     {
-        var encode = await _repository.SingleAsync(x => x.Id == context.Message.FileId);
+        var encode = await _repository.SingleAsync(x => x.Id == context.Message.EncodeId);
 
         await _sender.SendAsync(nameof(EncodeSpeedChangedEvent), encode, context.CancellationToken);
     }

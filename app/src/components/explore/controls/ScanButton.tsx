@@ -27,7 +27,7 @@ const ScanButton: React.FC = () => {
 
   const [commit, isLoading] = useMutation<ScanButton_DirectoryProbeMutation>(MUTATION)
 
-  const onClick = () => {
+  const onPress = () => {
     commit({
       variables: {
         input: {
@@ -38,7 +38,7 @@ const ScanButton: React.FC = () => {
   }
 
   return (
-    <Button color="brand" disabled={isLoading} size="xs" onClick={() => onClick()}>
+    <Button color="brand" disabled={isLoading} size="xs" onPress={() => onPress()}>
       <IconFolderSearch size={16} /> Scan
     </Button>
   )

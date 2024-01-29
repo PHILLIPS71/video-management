@@ -102,6 +102,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("probed_at");
 
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint")
+                        .HasColumnName("size");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");

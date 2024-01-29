@@ -57,7 +57,7 @@ public class FileProbedActivity : IStateMachineActivity<EncodeSagaState, FilePro
             streams.AddRange(audio);
             streams.AddRange(subtitles);
 
-            var snapshot = new EncodeSnapshot(encode, context.Message.Timestamp, streams.ToArray());
+            var snapshot = new EncodeSnapshot(encode, context.Message.Size, context.Message.Timestamp, streams.ToArray());
             encode.AddSnapshot(snapshot);
 
             await uow.CommitAsync(context.CancellationToken);
