@@ -9,9 +9,6 @@ const config = {
       artifactDirectory: 'src/__generated__',
     },
   },
-  experimental: {
-    typedRoutes: true,
-  },
 }
 
 module.exports = config

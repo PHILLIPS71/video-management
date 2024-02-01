@@ -6,11 +6,20 @@ import { Card } from '@giantnodes/react'
 import { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import { EncodeTable } from '@/components/encode-table'
+import { EncodedTable, EncodingTable } from '@/components/tables'
 
 const DASHBOARD_QUERY = graphql`
-  query page_DashboardPageQuery($where: EncodeFilterInput, $first: Int, $after: String, $order: [EncodeSortInput!]) {
-    ...EncodeTableFragment @arguments(where: $where, first: $first, after: $after, order: $order)
+  query page_DashboardPageQuery($first: Int, $after: String, $order: [EncodeSortInput!]) {
+    ...EncodingTableFragment
+      @arguments(
+        where: { status: { nin: [COMPLETED, FAILED, CANCELLED] } }
+        first: $first
+        after: $after
+        order: $order
+      )
+
+    ...EncodedTableFragment
+      @arguments(where: { status: { in: [COMPLETED, FAILED, CANCELLED] } }, first: $first, after: $after, order: $order)
   }
 `
 
@@ -21,13 +30,23 @@ const DashboardPage = () => {
   })
 
   return (
-    <Card className="max-w-6xl">
-      <Card.Header>Encoding</Card.Header>
+    <div className="flex flex-col gap-4">
+      <Card className="max-w-4xl">
+        <Card.Header>Processing</Card.Header>
 
-      <Suspense>
-        <EncodeTable $key={query} />
-      </Suspense>
-    </Card>
+        <Suspense>
+          <EncodingTable $key={query} />
+        </Suspense>
+      </Card>
+
+      <Card className="max-w-4xl">
+        <Card.Header>Completed</Card.Header>
+
+        <Suspense>
+          <EncodedTable $key={query} />
+        </Suspense>
+      </Card>
+    </div>
   )
 }
 

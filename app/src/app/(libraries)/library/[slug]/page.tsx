@@ -7,11 +7,11 @@ import { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.hook'
-import { EncodeTable } from '@/components/encode-table'
+import { EncodingTable } from '@/components/tables'
 
 const QUERY = graphql`
   query page_LibraryDashboardQuery($where: EncodeFilterInput, $first: Int, $after: String, $order: [EncodeSortInput!]) {
-    ...EncodeTableFragment @arguments(where: $where, first: $first, after: $after, order: $order)
+    ...EncodingTableFragment @arguments(where: $where, first: $first, after: $after, order: $order)
   }
 `
 
@@ -37,7 +37,7 @@ const LibraryDashboard = () => {
       <Card.Header>Tasks</Card.Header>
 
       <Suspense>
-        <EncodeTable $key={query} />
+        <EncodingTable $key={query} />
       </Suspense>
     </Card>
   )

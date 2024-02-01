@@ -1,45 +1,39 @@
+import type { EncodingTable_EncodeCancelMutation } from '@/__generated__/EncodingTable_EncodeCancelMutation.graphql'
 import type {
   EncodeStatus,
-  EncodeTable_EncodeCancelMutation,
-} from '@/__generated__/EncodeTable_EncodeCancelMutation.graphql'
-import type { EncodeTableFragment$data, EncodeTableFragment$key } from '@/__generated__/EncodeTableFragment.graphql'
-import type { EncodeTablePaginationQuery } from '@/__generated__/EncodeTablePaginationQuery.graphql'
+  EncodingTableFragment$data,
+  EncodingTableFragment$key,
+} from '@/__generated__/EncodingTableFragment.graphql'
+import type { EncodingTableRefetchQuery } from '@/__generated__/EncodingTableRefetchQuery.graphql'
 
 import { Button, Chip, Table, Typography } from '@giantnodes/react'
 import { IconProgressX } from '@tabler/icons-react'
-import dayjs from 'dayjs'
 import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useMutation, usePaginationFragment, useSubscription } from 'react-relay'
 
 const FRAGMENT = graphql`
-  fragment EncodeTableFragment on Query
-  @refetchable(queryName: "EncodeTablePaginationQuery")
+  fragment EncodingTableFragment on Query
+  @refetchable(queryName: "EncodingTableRefetchQuery")
   @argumentDefinitions(
     where: { type: "EncodeFilterInput" }
     first: { type: "Int" }
     after: { type: "String" }
     order: { type: "[EncodeSortInput!]" }
   ) {
-    encodes(where: $where, first: $first, after: $after, order: $order)
-      @connection(key: "EncodeTableFragment_encodes", filters: []) {
+    incomplete: encodes(where: $where, first: $first, after: $after, order: $order)
+      @connection(key: "EncodingTableFragment_incomplete", filters: []) {
       edges {
         node {
           id
           status
           percent
-          started_at
-          completed_at
           speed {
             frames
             bitrate
             scale
           }
           file {
-            id
-            library {
-              name
-            }
             path_info {
               name
             }
@@ -54,7 +48,7 @@ const FRAGMENT = graphql`
 `
 
 const MUTATION = graphql`
-  mutation EncodeTable_EncodeCancelMutation($input: Encode_cancelInput!) {
+  mutation EncodingTable_EncodeCancelMutation($input: Encode_cancelInput!) {
     encode_cancel(input: $input) {
       encode {
         status
@@ -72,7 +66,7 @@ const MUTATION = graphql`
 `
 
 const SUBSCRIPTION = graphql`
-  subscription EncodeTableSubscription {
+  subscription EncodingTableSubscription {
     encode_speed_change {
       percent
       speed {
@@ -84,19 +78,19 @@ const SUBSCRIPTION = graphql`
   }
 `
 
-type EncodeEntry = NonNullable<NonNullable<EncodeTableFragment$data['encodes']>['edges']>[0]['node']
+type EncodeEntry = NonNullable<NonNullable<EncodingTableFragment$data['incomplete']>['edges']>[0]['node']
 
-export type EncodeTableProps = {
-  $key: EncodeTableFragment$key
+type EncodingTableProps = {
+  $key: EncodingTableFragment$key
 }
 
-export const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
-  const { data, hasNext, loadNext } = usePaginationFragment<EncodeTablePaginationQuery, EncodeTableFragment$key>(
+const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
+  const { data, hasNext, loadNext } = usePaginationFragment<EncodingTableRefetchQuery, EncodingTableFragment$key>(
     FRAGMENT,
     $key
   )
 
-  const [commit] = useMutation<EncodeTable_EncodeCancelMutation>(MUTATION)
+  const [commit] = useMutation<EncodingTable_EncodeCancelMutation>(MUTATION)
 
   useSubscription({
     subscription: SUBSCRIPTION,
@@ -123,17 +117,8 @@ export const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
       case 'DEGRADED':
         return 'warning'
 
-      case 'FAILED':
-        return 'danger'
-
-      case 'CANCELLED':
-        return 'neutral'
-
-      case 'COMPLETED':
-        return 'success'
-
       default:
-        return 'danger'
+        return 'neutral'
     }
   }
 
@@ -160,7 +145,7 @@ export const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
           <Table.Column key="stats">statistics</Table.Column>
         </Table.Head>
 
-        <Table.Body items={data.encodes?.edges ?? []}>
+        <Table.Body items={data.incomplete?.edges ?? []}>
           {(item) => (
             <Table.Row id={item.node.id}>
               <Table.Cell>
@@ -168,37 +153,25 @@ export const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
               </Table.Cell>
               <Table.Cell>
                 <div className="flex flex-row items-center justify-end gap-2">
-                  {item.node.status !== 'COMPLETED' && item.node.status !== 'CANCELLED' && (
+                  {item.node.speed != null && (
                     <>
-                      {item.node.speed != null && (
-                        <>
-                          <Chip color="info">{item.node.speed.frames} fps</Chip>
-                          <Chip color="info">
-                            {filesize(item.node.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s
-                          </Chip>
-                          <Chip color="info">{item.node.speed.scale.toFixed(2)}x</Chip>
-                        </>
-                      )}
+                      <Chip color="info">{item.node.speed.frames} fps</Chip>
 
-                      {item.node.percent != null && <Chip color="info">{percent(item.node.percent)}</Chip>}
+                      <Chip color="info">
+                        {filesize(item.node.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s
+                      </Chip>
+
+                      <Chip color="info">{item.node.speed.scale.toFixed(2)}x</Chip>
                     </>
                   )}
 
+                  {item.node.percent != null && <Chip color="info">{percent(item.node.percent)}</Chip>}
+
                   <Chip color={getStatusColour(item.node.status)}>{item.node.status.toLowerCase()}</Chip>
 
-                  {item.node.status === 'COMPLETED' && (
-                    <Chip color="info">
-                      {dayjs
-                        .duration(dayjs(item.node.completed_at).diff(item.node.started_at))
-                        .format('H[h] m[m] s[s]')}
-                    </Chip>
-                  )}
-
-                  {item.node.status !== 'COMPLETED' && item.node.status !== 'CANCELLED' && (
-                    <Button color="neutral" size="xs" variant="blank" onClick={() => cancel(item.node)}>
-                      <IconProgressX size={16} />
-                    </Button>
-                  )}
+                  <Button color="neutral" size="xs" variant="blank" onClick={() => cancel(item.node)}>
+                    <IconProgressX size={16} />
+                  </Button>
                 </div>
               </Table.Cell>
             </Table.Row>
@@ -216,3 +189,5 @@ export const EncodeTable: React.FC<EncodeTableProps> = ({ $key }) => {
     </>
   )
 }
+
+export default EncodingTable

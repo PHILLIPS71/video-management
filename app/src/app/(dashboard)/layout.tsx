@@ -1,6 +1,6 @@
 import React from 'react'
 
-import DefaultLayout from '@/layouts/default/DefaultLayout'
+import DefaultLayout from '@/components/layouts/dashboard/DashboardLayout'
 
 type DashboardLayoutProps = React.PropsWithChildren
 

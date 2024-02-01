@@ -1,4 +1,4 @@
-import type { ResolutionDistributionQuery } from '@/__generated__/ResolutionDistributionQuery.graphql'
+import type { ResolutionWidgetQuery } from '@/__generated__/ResolutionWidgetQuery.graphql'
 
 import { Progress, Typography } from '@giantnodes/react'
 import { IconPointFilled } from '@tabler/icons-react'
@@ -6,7 +6,7 @@ import React from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 const FRAGMENT = graphql`
-  query ResolutionDistributionQuery($directory_id: ID!, $order: [FileResolutionDistributionSortInput!]) {
+  query ResolutionWidgetQuery($directory_id: ID!, $order: [FileResolutionDistributionSortInput!]) {
     file_resolution_distribution(directory_id: $directory_id, order: $order) {
       resolution {
         abbreviation
@@ -16,14 +16,14 @@ const FRAGMENT = graphql`
   }
 `
 
-export type ResolutionDistributionProps = {
+type ResolutionWidgetProps = {
   directory: string
 }
 
-export const ResolutionDistribution: React.FC<ResolutionDistributionProps> = ({ directory }) => {
+const ResolutionWidget: React.FC<ResolutionWidgetProps> = ({ directory }) => {
   const colours = ['#178600', '#3178c6']
 
-  const data = useLazyLoadQuery<ResolutionDistributionQuery>(FRAGMENT, {
+  const data = useLazyLoadQuery<ResolutionWidgetQuery>(FRAGMENT, {
     directory_id: directory,
     order: [{ count: 'DESC' }],
   })
@@ -66,3 +66,5 @@ export const ResolutionDistribution: React.FC<ResolutionDistributionProps> = ({ 
     </div>
   )
 }
+
+export default ResolutionWidget

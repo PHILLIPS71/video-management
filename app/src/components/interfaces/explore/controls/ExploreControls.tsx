@@ -7,8 +7,8 @@ import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
-import EncodeButton from '@/components/explore/controls/EncodeButton'
-import ScanButton from '@/components/explore/controls/ScanButton'
+import EncodeButton from '@/components/interfaces/explore/controls/EncodeButton'
+import ScanButton from '@/components/interfaces/explore/controls/ScanButton'
 
 const FRAGMENT = graphql`
   fragment ExploreControlsFragment on FileSystemDirectory {

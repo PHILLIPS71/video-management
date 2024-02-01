@@ -4,7 +4,7 @@ import { Button } from '@giantnodes/react'
 import { IconFolderSearch } from '@tabler/icons-react'
 import { graphql, useMutation } from 'react-relay'
 
-import { useExploreContext } from '@/components/explore/use-explore.hook'
+import { useExploreContext } from '@/components/interfaces/explore/use-explore.hook'
 
 const MUTATION = graphql`
   mutation ScanButton_DirectoryProbeMutation($input: Directory_probeInput!) {

@@ -7,9 +7,9 @@ import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
-import ExploreTableDirectory from '@/components/explore/table/ExploreTableDirectory'
-import ExploreTableFile from '@/components/explore/table/ExploreTableFile'
-import { useExploreContext } from '@/components/explore/use-explore.hook'
+import ExploreTableDirectory from '@/components/interfaces/explore/table/ExploreTableDirectory'
+import ExploreTableFile from '@/components/interfaces/explore/table/ExploreTableFile'
+import { useExploreContext } from '@/components/interfaces/explore/use-explore.hook'
 
 const FRAGMENT = graphql`
   fragment ExploreTableFragment on FileSystemDirectory

@@ -4,7 +4,7 @@ import { Button } from '@giantnodes/react'
 import React from 'react'
 import { graphql, useMutation } from 'react-relay'
 
-import { useExploreContext } from '@/components/explore/use-explore.hook'
+import { useExploreContext } from '@/components/interfaces/explore/use-explore.hook'
 
 const MUTATION = graphql`
   mutation EncodeButton_EncodeSubmitMutation($input: Encode_submitInput!) {

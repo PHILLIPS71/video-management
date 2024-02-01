@@ -1,23 +1,23 @@
 'use client'
 
-import type { DefaultLayoutQuery } from '@/__generated__/DefaultLayoutQuery.graphql'
+import type { DashboardLayoutQuery } from '@/__generated__/DashboardLayoutQuery.graphql'
 
 import React from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import Navbar from '@/layouts/default/components/navbar/Navbar'
-import Sidebar from '@/layouts/default/components/sidebar/Sidebar'
+import Navbar from '@/components/layouts/dashboard/navbar/Navbar'
+import Sidebar from '@/components/layouts/dashboard/sidebar/Sidebar'
 
 const QUERY = graphql`
-  query DefaultLayoutQuery($first: Int, $after: String, $order: [LibrarySortInput!]) {
+  query DashboardLayoutQuery($first: Int, $after: String, $order: [LibrarySortInput!]) {
     ...SidebarQuery @arguments(first: $first, after: $after, order: $order)
   }
 `
 
-type DefaultLayoutProps = React.PropsWithChildren
+type DashboardLayoutProps = React.PropsWithChildren
 
-const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
-  const query = useLazyLoadQuery<DefaultLayoutQuery>(QUERY, {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+  const query = useLazyLoadQuery<DashboardLayoutQuery>(QUERY, {
     first: 8,
     order: [{ name: 'ASC' }],
   })
@@ -35,4 +35,4 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
   )
 }
 
-export default DefaultLayout
+export default DashboardLayout

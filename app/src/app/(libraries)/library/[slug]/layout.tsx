@@ -7,7 +7,7 @@ import React from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { LibraryContext, useLibrary } from '@/app/(libraries)/library/[slug]/use-library.hook'
-import LibraryLayout from '@/layouts/library/LibraryLayout'
+import LibraryLayout from '@/components/layouts/library/LibraryLayout'
 
 const QUERY = graphql`
   query layout_LibrarySlugPageLayoutQuery($where: LibraryFilterInput) {

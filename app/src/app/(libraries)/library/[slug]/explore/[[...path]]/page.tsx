@@ -8,8 +8,14 @@ import React, { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.hook'
-import { ExploreBreadcrumbs, ExploreContext, ExploreControls, ExploreTable, useExplore } from '@/components/explore'
-import { ResolutionDistribution } from '@/components/resolution-distribution'
+import {
+  ExploreBreadcrumbs,
+  ExploreContext,
+  ExploreControls,
+  ExploreTable,
+  useExplore,
+} from '@/components/interfaces/explore'
+import { ResolutionWidget } from '@/components/widgets'
 
 const QUERY = graphql`
   query page_LibrarySlugExploreQuery($where: FileSystemDirectoryFilterInput, $order: [FileSystemEntrySortInput!]) {
@@ -111,7 +117,7 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
 
           <Card.Body>
             <Suspense fallback="LOADING...">
-              <ResolutionDistribution directory={query.file_system_directory.id} />
+              <ResolutionWidget directory={query.file_system_directory.id} />
             </Suspense>
           </Card.Body>
         </Card>

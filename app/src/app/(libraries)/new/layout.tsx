@@ -1,9 +1,9 @@
 import React from 'react'
 
-import DefaultLayout from '@/layouts/default/DefaultLayout'
+import DashboardLayout from '@/components/layouts/dashboard/DashboardLayout'
 
 type LibraryLayoutProps = React.PropsWithChildren
 
-const LibraryLayout: React.FC<LibraryLayoutProps> = ({ children }) => <DefaultLayout>{children}</DefaultLayout>
+const LibraryLayout: React.FC<LibraryLayoutProps> = ({ children }) => <DashboardLayout>{children}</DashboardLayout>
 
 export default LibraryLayout

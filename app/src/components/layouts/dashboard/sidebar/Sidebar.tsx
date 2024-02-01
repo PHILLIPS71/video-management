@@ -3,19 +3,24 @@
 import type { SidebarQuery$key } from '@/__generated__/SidebarQuery.graphql'
 import type { NavigationProps } from '@giantnodes/react'
 
-import { Navigation } from '@giantnodes/react'
-import { IconGauge, IconSettings } from '@tabler/icons-react'
+import { Button, Navigation } from '@giantnodes/react'
+import { IconAlbum, IconGauge, IconSettings } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { graphql, useFragment } from 'react-relay'
 
-import SidebarLibrarySegment from '@/layouts/default/components/sidebar/SidebarLibrarySegment'
+import SidebarLibrarySegment from '@/components/layouts/dashboard/sidebar/SidebarLibrarySegment'
 
 const FRAGMENT = graphql`
   fragment SidebarQuery on Query
-  @argumentDefinitions(first: { type: "Int" }, after: { type: "String" }, order: { type: "[LibrarySortInput!]" }) {
-    ...SidebarLibrarySegmentFragment @arguments(first: $first, after: $after, order: $order)
+  @argumentDefinitions(
+    first: { type: "Int" }
+    after: { type: "String" }
+    where: { type: "LibraryFilterInput" }
+    order: { type: "[LibrarySortInput!]" }
+  ) {
+    ...SidebarLibrarySegmentFragment @arguments(first: $first, after: $after, where: $where, order: $order)
   }
 `
 
@@ -42,9 +47,20 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
         </Navigation.Item>
       </Navigation.Segment>
 
-      <Suspense fallback="LOADING...">
-        <SidebarLibrarySegment $key={fragment} />
-      </Suspense>
+      <Navigation.Segment>
+        <Navigation.Title className="flex justify-between items-center">
+          Your Libraries
+          <Link passHref href="/new">
+            <Button color="brand" size="xs">
+              <IconAlbum size={16} /> New
+            </Button>
+          </Link>
+        </Navigation.Title>
+
+        <Suspense fallback="LOADING...">
+          <SidebarLibrarySegment $key={fragment} />
+        </Suspense>
+      </Navigation.Segment>
 
       <Navigation.Segment className="mt-auto">
         <Navigation.Item>
