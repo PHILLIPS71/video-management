@@ -1,16 +1,16 @@
 import type { EncodingTable_EncodeCancelMutation } from '@/__generated__/EncodingTable_EncodeCancelMutation.graphql'
 import type {
-  EncodeStatus,
   EncodingTableFragment$data,
   EncodingTableFragment$key,
 } from '@/__generated__/EncodingTableFragment.graphql'
 import type { EncodingTableRefetchQuery } from '@/__generated__/EncodingTableRefetchQuery.graphql'
 
-import { Button, Chip, Table, Typography } from '@giantnodes/react'
+import { Button, Table, Typography } from '@giantnodes/react'
 import { IconProgressX } from '@tabler/icons-react'
-import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useMutation, usePaginationFragment, useSubscription } from 'react-relay'
+
+import { EncodeBadges } from '@/components/ui'
 
 const FRAGMENT = graphql`
   fragment EncodingTableFragment on Query
@@ -26,18 +26,12 @@ const FRAGMENT = graphql`
       edges {
         node {
           id
-          status
-          percent
-          speed {
-            frames
-            bitrate
-            scale
-          }
           file {
             path_info {
               name
             }
           }
+          ...EncodeBadgesFragment
         }
       }
       pageInfo {
@@ -97,31 +91,6 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
     variables: {},
   })
 
-  const percent = (value: number): string =>
-    Intl.NumberFormat('en-US', {
-      style: 'percent',
-      maximumFractionDigits: 2,
-    }).format(value)
-
-  const getStatusColour = (status: EncodeStatus) => {
-    switch (status) {
-      case 'SUBMITTED':
-        return 'info'
-
-      case 'QUEUED':
-        return 'info'
-
-      case 'ENCODING':
-        return 'success'
-
-      case 'DEGRADED':
-        return 'warning'
-
-      default:
-        return 'neutral'
-    }
-  }
-
   const cancel = React.useCallback(
     (entry: EncodeEntry) => {
       commit({
@@ -152,27 +121,11 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
                 <Typography.Paragraph>{item.node.file.path_info.name}</Typography.Paragraph>
               </Table.Cell>
               <Table.Cell>
-                <div className="flex flex-row items-center justify-end gap-2">
-                  {item.node.speed != null && (
-                    <>
-                      <Chip color="info">{item.node.speed.frames} fps</Chip>
+                <EncodeBadges $key={item.node} />
 
-                      <Chip color="info">
-                        {filesize(item.node.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s
-                      </Chip>
-
-                      <Chip color="info">{item.node.speed.scale.toFixed(2)}x</Chip>
-                    </>
-                  )}
-
-                  {item.node.percent != null && <Chip color="info">{percent(item.node.percent)}</Chip>}
-
-                  <Chip color={getStatusColour(item.node.status)}>{item.node.status.toLowerCase()}</Chip>
-
-                  <Button color="neutral" size="xs" variant="blank" onClick={() => cancel(item.node)}>
-                    <IconProgressX size={16} />
-                  </Button>
-                </div>
+                <Button color="neutral" size="xs" variant="blank" onClick={() => cancel(item.node)}>
+                  <IconProgressX size={16} />
+                </Button>
               </Table.Cell>
             </Table.Row>
           )}

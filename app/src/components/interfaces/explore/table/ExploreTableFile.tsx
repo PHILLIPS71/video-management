@@ -27,9 +27,6 @@ const FRAGMENT = graphql`
         }
       }
     }
-    encodes {
-      id
-    }
   }
 `
 
@@ -58,12 +55,6 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
           </Chip>
         </React.Fragment>
       ))}
-
-      {data.encodes && data.encodes.length > 0 && (
-        <Chip color="info" size="sm">
-          encoding
-        </Chip>
-      )}
     </>
   )
 }

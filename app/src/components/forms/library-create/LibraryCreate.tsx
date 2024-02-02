@@ -1,9 +1,9 @@
 'use client'
 
 import type {
-  page_LibraryCreate_LibraryCreateMutation,
-  page_LibraryCreate_LibraryCreateMutation$data,
-} from '@/__generated__/page_LibraryCreate_LibraryCreateMutation.graphql'
+  LibraryCreate_LibraryCreateMutation,
+  LibraryCreate_LibraryCreateMutation$data,
+} from '@/__generated__/LibraryCreate_LibraryCreateMutation.graphql'
 import type { SubmitHandler } from 'react-hook-form'
 
 import { Alert, Button, Form, Input, Switch, Typography } from '@giantnodes/react'
@@ -21,12 +21,10 @@ type LibraryCreateProps = {
   onComplete?: (payload: LibraryCreatePayload) => void
 }
 
-export type LibraryCreatePayload = NonNullable<
-  page_LibraryCreate_LibraryCreateMutation$data['library_create']['library']
->
+export type LibraryCreatePayload = NonNullable<LibraryCreate_LibraryCreateMutation$data['library_create']['library']>
 
 const MUTATION = graphql`
-  mutation page_LibraryCreate_LibraryCreateMutation($connections: [ID!]!, $input: Library_createInput!) {
+  mutation LibraryCreate_LibraryCreateMutation($connections: [ID!]!, $input: Library_createInput!) {
     library_create(input: $input) {
       library @appendNode(connections: $connections, edgeTypeName: "LibrariesEdge") {
         slug
@@ -61,7 +59,7 @@ const LibraryCreate: React.FC<LibraryCreateProps> = ({ onComplete }) => {
   const form = useForm<LibraryCreateInput>({ resolver: zodResolver(LibraryCreateSchema) })
   const [errors, setErrors] = React.useState<string[]>([])
 
-  const [commit, isLoading] = useMutation<page_LibraryCreate_LibraryCreateMutation>(MUTATION)
+  const [commit, isLoading] = useMutation<LibraryCreate_LibraryCreateMutation>(MUTATION)
 
   const onSubmit: SubmitHandler<LibraryCreateInput> = (data) => {
     const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'SidebarLibrarySegmentFragment_libraries', [])

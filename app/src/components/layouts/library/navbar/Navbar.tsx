@@ -13,7 +13,7 @@ const Navbar: React.FC<NavigationProps> = (props) => (
           <Input.Addon>
             <IconSearch size={20} />
           </Input.Addon>
-          <Input.Control placeholder="Search..." type="text" />
+          <Input.Control aria-label="search library" placeholder="Search..." type="text" />
         </Input>
       </Navigation.Item>
     </Navigation.Segment>

@@ -52,7 +52,7 @@ const ResolutionWidget: React.FC<ResolutionWidgetProps> = ({ directory }) => {
 
       <ul className="flex flex-wrap gap-4">
         {data.file_resolution_distribution.map((item, index) => (
-          <li key={item.resolution?.abbreviation} className="flex items-center gap-1">
+          <li key={item.resolution?.abbreviation ?? 'unknown'} className="flex items-center gap-1">
             <IconPointFilled color={colours[index]} size={16} />
             <Typography.Text className="font-bold text-xs">
               {item.resolution?.abbreviation ?? 'unknown'}

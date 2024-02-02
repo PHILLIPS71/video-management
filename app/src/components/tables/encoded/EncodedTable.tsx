@@ -1,15 +1,11 @@
-import type {
-  EncodeStatus,
-  EncodedTableFragment$data,
-  EncodedTableFragment$key,
-} from '@/__generated__/EncodedTableFragment.graphql'
+import type { EncodedTableFragment$key } from '@/__generated__/EncodedTableFragment.graphql'
 import type { EncodedTableRefetchQuery } from '@/__generated__/EncodedTableRefetchQuery.graphql'
 
-import { Button, Chip, Table, Typography } from '@giantnodes/react'
-import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react'
-import dayjs from 'dayjs'
+import { Button, Table, Typography } from '@giantnodes/react'
 import React from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
+
+import { EncodeBadges } from '@/components/ui'
 
 const FRAGMENT = graphql`
   fragment EncodedTableFragment on Query
@@ -25,18 +21,12 @@ const FRAGMENT = graphql`
       edges {
         node {
           id
-          status
-          started_at
-          completed_at
           file {
             path_info {
               name
             }
           }
-          snapshots {
-            size
-            probed_at
-          }
+          ...EncodeBadgesFragment
         }
       }
       pageInfo {
@@ -45,8 +35,6 @@ const FRAGMENT = graphql`
     }
   }
 `
-
-type EncodeEntry = NonNullable<NonNullable<EncodedTableFragment$data['complete']>['edges']>[0]['node']
 
 type EncodedTableProps = {
   $key: EncodedTableFragment$key
@@ -57,41 +45,6 @@ const EncodedTable: React.FC<EncodedTableProps> = ({ $key }) => {
     FRAGMENT,
     $key
   )
-
-  const getStatusColour = (status: EncodeStatus) => {
-    switch (status) {
-      case 'COMPLETED':
-        return 'success'
-
-      case 'CANCELLED':
-        return 'neutral'
-
-      case 'FAILED':
-        return 'danger'
-
-      default:
-        return 'neutral'
-    }
-  }
-
-  const percent = (value: number): string =>
-    Intl.NumberFormat('en-US', {
-      style: 'percent',
-      maximumFractionDigits: 2,
-    }).format(value)
-
-  const SizeChip = React.useCallback((item: EncodeEntry) => {
-    const difference = item.snapshots[item.snapshots.length - 1].size - item.snapshots[0].size
-    const increase = difference / item.snapshots[0].size
-
-    return (
-      <Chip color={increase > 0 ? 'danger' : 'success'}>
-        {increase > 0 ? <IconTrendingUp size={14} /> : <IconTrendingDown size={14} />}
-
-        {percent(Math.abs(increase))}
-      </Chip>
-    )
-  }, [])
 
   return (
     <>
@@ -110,15 +63,7 @@ const EncodedTable: React.FC<EncodedTableProps> = ({ $key }) => {
                 <Typography.Paragraph>{item.node.file.path_info.name}</Typography.Paragraph>
               </Table.Cell>
               <Table.Cell>
-                <div className="flex flex-row items-center justify-end gap-2">
-                  <Chip color={getStatusColour(item.node.status)}>{item.node.status.toLowerCase()}</Chip>
-
-                  <Chip color="info">
-                    {dayjs.duration(dayjs(item.node.completed_at).diff(item.node.started_at)).format('H[h] m[m] s[s]')}
-                  </Chip>
-
-                  {SizeChip(item.node)}
-                </div>
+                <EncodeBadges $key={item.node} />
               </Table.Cell>
             </Table.Row>
           )}
