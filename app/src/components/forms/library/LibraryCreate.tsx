@@ -26,6 +26,7 @@ type LibraryCreateInput = z.infer<typeof LibraryCreateSchema>
 
 type LibraryCreateProps = {
   onComplete?: (payload: LibraryCreatePayload) => void
+  onLoadingChange?: (isLoading: boolean) => void
 }
 
 const MUTATION = graphql`
@@ -61,10 +62,10 @@ const LibraryCreateSchema = z.object({
 })
 
 const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((props, ref) => {
-  const { onComplete } = props
+  const { onComplete, onLoadingChange } = props
 
   const [errors, setErrors] = React.useState<string[]>([])
-  const [commit] = useMutation<LibraryCreate_LibraryCreateMutation>(MUTATION)
+  const [commit, isLoading] = useMutation<LibraryCreate_LibraryCreateMutation>(MUTATION)
 
   const form = useForm<LibraryCreateInput>({ resolver: zodResolver(LibraryCreateSchema) })
 
@@ -93,7 +94,7 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
             return
           }
 
-          if (onComplete && payload.library_create.library) onComplete(payload.library_create.library)
+          if (payload.library_create.library) onComplete?.(payload.library_create.library)
         },
         onError: (error) => {
           setErrors([error.message])
@@ -115,6 +116,10 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
     }),
     [form, onSubmit]
   )
+
+  React.useEffect(() => {
+    onLoadingChange?.(isLoading)
+  }, [isLoading, onLoadingChange])
 
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -195,6 +200,7 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
 
 LibraryCreate.defaultProps = {
   onComplete: undefined,
+  onLoadingChange: undefined,
 }
 
 export default LibraryCreate

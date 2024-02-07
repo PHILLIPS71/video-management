@@ -34,6 +34,7 @@ type LibraryUpdateProps = {
     }
   }
   onComplete?: (payload: LibraryUpdatePayload) => void
+  onLoadingChange?: (isLoading: boolean) => void
 }
 
 const MUTATION = graphql`
@@ -68,10 +69,10 @@ const LibraryUpdateSchema = z.object({
 })
 
 const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((props, ref) => {
-  const { library, onComplete } = props
+  const { library, onComplete, onLoadingChange } = props
 
   const [errors, setErrors] = React.useState<string[]>([])
-  const [commit] = useMutation<LibraryUpdate_LibraryUpdateMutation>(MUTATION)
+  const [commit, isLoading] = useMutation<LibraryUpdate_LibraryUpdateMutation>(MUTATION)
 
   const form = useForm<LibraryUpdateInput>({
     resolver: zodResolver(LibraryUpdateSchema),
@@ -104,7 +105,7 @@ const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((pr
             return
           }
 
-          if (onComplete && payload.library_update.library) onComplete(payload.library_update.library)
+          if (payload.library_update.library) onComplete?.(payload.library_update.library)
         },
         onError: (error) => {
           setErrors([error.message])
@@ -126,6 +127,10 @@ const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((pr
     }),
     [form, onSubmit]
   )
+
+  React.useEffect(() => {
+    onLoadingChange?.(isLoading)
+  }, [isLoading, onLoadingChange])
 
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -205,6 +210,7 @@ const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((pr
 
 LibraryUpdate.defaultProps = {
   onComplete: undefined,
+  onLoadingChange: undefined,
 }
 
 export default LibraryUpdate

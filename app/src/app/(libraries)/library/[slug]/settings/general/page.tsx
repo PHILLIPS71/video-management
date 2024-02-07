@@ -9,8 +9,10 @@ import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.
 import { LibraryUpdate } from '@/components/forms/library'
 
 const LibrarySettingsGeneralPage = () => {
-  const ref = React.useRef<LibraryUpdateRef>(null)
   const { library } = useLibraryContext()
+
+  const ref = React.useRef<LibraryUpdateRef>(null)
+  const [isLoading, setLoading] = React.useState<boolean>(false)
 
   return (
     <section className="max-w-5xl">
@@ -20,7 +22,7 @@ const LibrarySettingsGeneralPage = () => {
         </Card.Header>
 
         <Card.Body>
-          <LibraryUpdate ref={ref} library={library} />
+          <LibraryUpdate ref={ref} library={library} onLoadingChange={setLoading} />
         </Card.Body>
 
         <Card.Footer className="flex items-center justify-end gap-2">
@@ -28,7 +30,7 @@ const LibrarySettingsGeneralPage = () => {
             <Button color="neutral" size="xs" onPress={() => ref.current?.reset()}>
               Cancel
             </Button>
-            <Button size="xs" onPress={() => ref.current?.submit()}>
+            <Button isDisabled={isLoading} size="xs" onPress={() => ref.current?.submit()}>
               Save
             </Button>
           </div>

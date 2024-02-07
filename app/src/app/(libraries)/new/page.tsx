@@ -11,7 +11,9 @@ import { LibraryCreate } from '@/components/forms/library'
 
 const LibraryCreatePage = () => {
   const router = useRouter()
+
   const ref = React.useRef<LibraryCreateRef>(null)
+  const [isLoading, setLoading] = React.useState<boolean>(false)
 
   const onComplete = (payload: LibraryCreatePayload) => {
     router.push(`/library/${payload.slug}/explore`)
@@ -29,7 +31,7 @@ const LibraryCreatePage = () => {
         </Card.Header>
 
         <Card.Body>
-          <LibraryCreate ref={ref} onComplete={onComplete} />
+          <LibraryCreate ref={ref} onComplete={onComplete} onLoadingChange={setLoading} />
         </Card.Body>
 
         <Card.Footer className="flex items-center justify-end gap-2">
@@ -37,7 +39,7 @@ const LibraryCreatePage = () => {
             <Button color="neutral" size="xs" onPress={() => ref.current?.reset()}>
               Cancel
             </Button>
-            <Button size="xs" onPress={() => ref.current?.submit()}>
+            <Button isDisabled={isLoading} size="xs" onPress={() => ref.current?.submit()}>
               Save
             </Button>
           </div>
