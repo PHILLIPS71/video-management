@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO.Abstractions;
+using Giantnodes.Infrastructure.Faults;
 using Giantnodes.Service.Encoder.Application.Contracts.Probing.Events;
 using Giantnodes.Service.Encoder.Application.Contracts.Probing.Jobs;
 using MassTransit;
@@ -23,7 +24,7 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
         var exists = _fs.Path.Exists(context.Job.FullPath);
         if (!exists)
         {
-            await context.RejectAsync(ProbeFileSystem.Fault.PathNotFound, nameof(context.Job.FullPath));
+            await context.RejectAsync(FaultKind.NotFound, nameof(context.Job.FullPath));
             return;
         }
 

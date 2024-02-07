@@ -2,7 +2,7 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Giantnodes.Service.Dashboard.HttpApi.Types.Files.Objects;
+namespace Giantnodes.Service.Dashboard.HttpApi.Types.Encodes.Objects;
 
 public class EncodeType : ObjectType<Encode>
 {
@@ -37,5 +37,12 @@ public class EncodeType : ObjectType<Encode>
 
         descriptor
             .Field(p => p.UpdatedAt);
+        
+        descriptor
+            .Field(p => p.Snapshots)
+            // .UsePaging()
+            // .UseProjection()
+            .UseFiltering()
+            .UseSorting();
     }
 }

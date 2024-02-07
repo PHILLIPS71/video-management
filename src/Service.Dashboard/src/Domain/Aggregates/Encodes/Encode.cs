@@ -35,10 +35,11 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
 
     public DateTime? UpdatedAt { get; private set; }
 
-    public IReadOnlyCollection<EncodeSnapshot> Snapshots => _snapshots.AsReadOnly();
+    public IReadOnlyCollection<EncodeSnapshot> Snapshots { get; private set; }
 
     private Encode()
     {
+        Snapshots = _snapshots.AsReadOnly();
     }
 
     public Encode(FileSystemFile file)
@@ -46,6 +47,7 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         Id = NewId.NextSequentialGuid();
         File = file;
         Status = EncodeStatus.Submitted;
+        Snapshots = _snapshots.AsReadOnly();
     }
 
     public void SetStatus(EncodeStatus status)
@@ -87,8 +89,7 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
             throw new InvalidOperationException($"the encode is not in a {EncodeStatus.Encoding} status.");
 
         if (progress is < 0 or > 1)
-            throw new ArgumentOutOfRangeException(nameof(progress), progress,
-                "the progress percent value needs to be between 0 and 1.");
+            throw new ArgumentOutOfRangeException(nameof(progress), progress, "the progress percent value needs to be between 0 and 1.");
 
         Percent = progress;
     }

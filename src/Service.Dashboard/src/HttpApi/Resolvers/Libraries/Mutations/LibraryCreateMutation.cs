@@ -22,7 +22,7 @@ public class LibraryCreateMutation
         string name,
         string slug,
         string path,
-        // bool isWatched,
+        bool is_watched,
         CancellationToken cancellation = default)
     {
         var command = new LibraryCreate.Command
