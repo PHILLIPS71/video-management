@@ -7,9 +7,9 @@ import { IconBell, IconSearch } from '@tabler/icons-react'
 
 const Navbar: React.FC<NavigationProps> = (props) => (
   <Navigation orientation="horizontal" {...props}>
-    <Navigation.Segment>
+    <Navigation.Segment className="flex-grow">
       <Navigation.Item>
-        <Input variant="none">
+        <Input>
           <Input.Addon>
             <IconSearch size={20} />
           </Input.Addon>
@@ -18,7 +18,7 @@ const Navbar: React.FC<NavigationProps> = (props) => (
       </Navigation.Item>
     </Navigation.Segment>
 
-    <Navigation.Segment className="ml-auto">
+    <Navigation.Segment>
       <Navigation.Item>
         <Navigation.Trigger>
           <IconBell strokeWidth={1.5} />

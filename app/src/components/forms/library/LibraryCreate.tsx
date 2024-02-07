@@ -6,7 +6,7 @@ import type {
 } from '@/__generated__/LibraryCreate_LibraryCreateMutation.graphql'
 import type { SubmitHandler } from 'react-hook-form'
 
-import { Alert, Button, Form, Input, Switch, Typography } from '@giantnodes/react'
+import { Alert, Form, Input, Switch, Typography } from '@giantnodes/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconAlertCircleFilled, IconAlertTriangleFilled } from '@tabler/icons-react'
 import React from 'react'
@@ -15,13 +15,21 @@ import { ConnectionHandler, graphql, useMutation } from 'react-relay'
 import { ROOT_ID } from 'relay-runtime'
 import * as z from 'zod'
 
+import { SlugTransform } from '@/components/forms/library/LibraryForms.constants'
+
+export type LibraryCreateRef = {
+  submit: () => void
+  reset: () => void
+}
+
+export type LibraryCreatePayload = NonNullable<LibraryCreate_LibraryCreateMutation$data['library_create']['library']>
+
 type LibraryCreateInput = z.infer<typeof LibraryCreateSchema>
 
 type LibraryCreateProps = {
   onComplete?: (payload: LibraryCreatePayload) => void
+  onLoadingChange?: (isLoading: boolean) => void
 }
-
-export type LibraryCreatePayload = NonNullable<LibraryCreate_LibraryCreateMutation$data['library_create']['library']>
 
 const MUTATION = graphql`
   mutation LibraryCreate_LibraryCreateMutation($connections: [ID!]!, $input: Library_createInput!) {
@@ -41,13 +49,6 @@ const MUTATION = graphql`
   }
 `
 
-const SlugTransform = z.string().transform((val) =>
-  val
-    ?.toLowerCase()
-    .replaceAll(' ', '-')
-    .replace(/[^a-z0-9-]+/g, '')
-)
-
 const LibraryCreateSchema = z.object({
   name: z.string().trim().min(1, { message: 'not enough chars' }).max(128, { message: 'too many chars' }),
   slug: z.string().trim().min(1, { message: 'not enough chars' }).max(128, { message: 'too many chars' }),
@@ -55,43 +56,67 @@ const LibraryCreateSchema = z.object({
   is_watched: z.boolean().default(true),
 })
 
-const LibraryCreate: React.FC<LibraryCreateProps> = ({ onComplete }) => {
-  const form = useForm<LibraryCreateInput>({ resolver: zodResolver(LibraryCreateSchema) })
-  const [errors, setErrors] = React.useState<string[]>([])
+const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((props, ref) => {
+  const { onComplete, onLoadingChange } = props
 
+  const [errors, setErrors] = React.useState<string[]>([])
   const [commit, isLoading] = useMutation<LibraryCreate_LibraryCreateMutation>(MUTATION)
 
-  const onSubmit: SubmitHandler<LibraryCreateInput> = (data) => {
-    const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'SidebarLibrarySegmentFragment_libraries', [])
+  const form = useForm<LibraryCreateInput>({ resolver: zodResolver(LibraryCreateSchema) })
 
-    commit({
-      variables: {
-        connections: [connection],
-        input: {
-          name: data.name,
-          slug: SlugTransform.parse(data.slug),
-          path: data.path,
-          // is_watched: data.is_watched,
+  const onSubmit: SubmitHandler<LibraryCreateInput> = React.useCallback(
+    (data) => {
+      const connection = ConnectionHandler.getConnectionID(ROOT_ID, 'SidebarLibrarySegmentFragment_libraries', [])
+
+      commit({
+        variables: {
+          connections: [connection],
+          input: {
+            name: data.name,
+            slug: SlugTransform.parse(data.slug),
+            path: data.path,
+            is_watched: data.is_watched,
+          },
         },
-      },
-      onCompleted: (payload) => {
-        if (payload.library_create.errors != null) {
-          const faults = payload.library_create.errors
-            .filter((error) => error.message !== undefined)
-            .map((error) => error.message!)
+        onCompleted: (payload) => {
+          if (payload.library_create.errors != null) {
+            const faults = payload.library_create.errors
+              .filter((error) => error.message !== undefined)
+              .map((error) => error.message!)
 
-          setErrors(faults)
+            setErrors(faults)
 
-          return
-        }
+            return
+          }
 
-        if (onComplete && payload.library_create.library) onComplete(payload.library_create.library)
+          if (payload.library_create.library) onComplete?.(payload.library_create.library)
+
+          setErrors([])
+        },
+        onError: (error) => {
+          setErrors([error.message])
+        },
+      })
+    },
+    [commit, onComplete]
+  )
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      submit: () => {
+        form.handleSubmit(onSubmit)()
       },
-      onError: (error) => {
-        setErrors([error.message])
+      reset: () => {
+        form.reset()
       },
-    })
-  }
+    }),
+    [form, onSubmit]
+  )
+
+  React.useEffect(() => {
+    onLoadingChange?.(isLoading)
+  }, [isLoading, onLoadingChange])
 
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -111,18 +136,18 @@ const LibraryCreate: React.FC<LibraryCreateProps> = ({ onComplete }) => {
         )}
 
         <div className="flex flex-row gap-4 flex-wrap md:flex-nowrap">
-          <Form.Group error={!!form.formState.errors.name}>
-            <Form.Label htmlFor="name">Name</Form.Label>
+          <Form.Group {...form.register('name')} error={!!form.formState.errors.name}>
+            <Form.Label>Name</Form.Label>
             <Input>
-              <Input.Control id="name" type="text" {...form.register('name')} />
+              <Input.Control type="text" />
             </Input>
             <Form.Feedback type="error">{form.formState.errors.name?.message}!!!</Form.Feedback>
           </Form.Group>
 
-          <Form.Group error={!!form.formState.errors.slug}>
-            <Form.Label htmlFor="slug">Slug</Form.Label>
+          <Form.Group {...form.register('slug')} error={!!form.formState.errors.slug}>
+            <Form.Label>Slug</Form.Label>
             <Input>
-              <Input.Control id="slug" type="text" {...form.register('slug')} />
+              <Input.Control type="text" />
             </Input>
             <Form.Feedback type="error">{form.formState.errors.slug?.message}</Form.Feedback>
             {form.watch('slug') !== undefined && SlugTransform.parse(form.watch('slug')) !== form.watch('slug') && (
@@ -134,18 +159,18 @@ const LibraryCreate: React.FC<LibraryCreateProps> = ({ onComplete }) => {
           </Form.Group>
         </div>
 
-        <Form.Group error={!!form.formState.errors.path}>
-          <Form.Label htmlFor="folder">Folder</Form.Label>
+        <Form.Group {...form.register('path')} error={!!form.formState.errors.path}>
+          <Form.Label>Folder</Form.Label>
           <Input>
-            <Input.Control id="folder" type="text" {...form.register('path')} />
+            <Input.Control type="text" />
           </Input>
           <Form.Feedback type="error">{form.formState.errors.path?.message}</Form.Feedback>
         </Form.Group>
 
         <Form.Group error={!!form.formState.errors.is_watched}>
           <span className="flex gap-2 items-center">
-            <Form.Label className="m-0" htmlFor="is-watched">
-              <Switch id="is-watched" {...form.register('is_watched')} />
+            <Form.Label className="m-0">
+              <Switch {...form.register('is_watched')} />
             </Form.Label>
 
             <div className="flex flex-col">
@@ -165,17 +190,14 @@ const LibraryCreate: React.FC<LibraryCreateProps> = ({ onComplete }) => {
 
           <Form.Feedback type="error">{form.formState.errors.is_watched?.message}</Form.Feedback>
         </Form.Group>
-
-        <Button className="self-end" color="brand" disabled={isLoading} size="xs" type="submit">
-          Create library
-        </Button>
       </div>
     </Form>
   )
-}
+})
 
 LibraryCreate.defaultProps = {
   onComplete: undefined,
+  onLoadingChange: undefined,
 }
 
 export default LibraryCreate

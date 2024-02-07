@@ -7,7 +7,7 @@ const Navbar: React.FC<NavigationProps> = (props) => (
   <Navigation orientation="horizontal" {...props}>
     <Navigation.Segment className="grow">
       <Navigation.Item>
-        <Input variant="none">
+        <Input>
           <Input.Addon>
             <IconSearch size={20} />
           </Input.Addon>

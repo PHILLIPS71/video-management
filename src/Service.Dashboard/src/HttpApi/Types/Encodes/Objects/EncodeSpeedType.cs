@@ -1,7 +1,6 @@
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Values;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
 
-namespace Giantnodes.Service.Dashboard.HttpApi.Types.Files.Objects;
+namespace Giantnodes.Service.Dashboard.HttpApi.Types.Encodes.Objects;
 
 public class EncodeSpeedType : ObjectType<EncodeSpeed>
 {

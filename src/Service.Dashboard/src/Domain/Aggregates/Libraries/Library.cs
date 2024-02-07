@@ -53,6 +53,21 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
         _entries.Add(new FileSystemDirectory(this, null, root));
     }
 
+    public void SetName(string name)
+    {
+        Name = name.Trim();
+    }
+
+    public void SetSlug(string slug)
+    {
+        slug = slug.Trim();
+
+        if (!slug.IsSlug())
+            throw new FormatException($"The format of slug '{slug}' is invalid.");
+
+        Slug = slug;
+    }
+
     public void SetStatus(FileSystemStatus status)
     {
         Status = status;

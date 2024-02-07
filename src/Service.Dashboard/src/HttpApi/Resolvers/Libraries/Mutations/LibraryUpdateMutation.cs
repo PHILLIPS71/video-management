@@ -10,33 +10,33 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Libraries.Mutations;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class LibraryCreateMutation
+public class LibraryUpdateMutation
 {
     [Error<DomainException>]
     [Error<ValidationException>]
     [UseFirstOrDefault]
     [UseProjection]
-    public async Task<IQueryable<Library>> LibraryCreate(
+    public async Task<IQueryable<Library>> LibraryUpdate(
         [Service] ApplicationDbContext database,
-        [Service] IRequestClient<LibraryCreate.Command> request,
+        [Service] IRequestClient<LibraryUpdate.Command> request,
+        [ID] Guid id,
         string name,
         string slug,
-        string path,
         bool is_watched,
         CancellationToken cancellation = default)
     {
-        var command = new LibraryCreate.Command
+        var command = new LibraryUpdate.Command
         {
+            Id = id,
             Name = name,
             Slug = slug,
-            FullPath = path,
-            IsWatched = false
+            IsWatched = is_watched
         };
 
-        Response response = await request.GetResponse<LibraryCreate.Result, DomainFault, ValidationFault>(command, cancellation);
+        Response response = await request.GetResponse<LibraryUpdate.Result, DomainFault, ValidationFault>(command, cancellation);
         return response switch
         {
-            (_, LibraryCreate.Result result) => database.Libraries.AsNoTracking().Where(x => x.Id == result.Id),
+            (_, LibraryUpdate.Result result) => database.Libraries.AsNoTracking().Where(x => x.Id == result.Id),
             (_, DomainFault fault) => throw new DomainException(fault),
             (_, ValidationFault fault) => throw new ValidationException(fault),
             _ => throw new InvalidOperationException()

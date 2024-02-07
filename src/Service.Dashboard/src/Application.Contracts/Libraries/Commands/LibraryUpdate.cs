@@ -2,15 +2,15 @@
 
 namespace Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
 
-public sealed class LibraryCreate
+public sealed class LibraryUpdate
 {
     public sealed record Command
     {
+        public required Guid Id { get; init; }
+
         public required string Name { get; init; }
 
         public required string Slug { get; init; }
-
-        public required string FullPath { get; init; }
 
         public bool IsWatched { get; init; }
     }
@@ -19,14 +19,14 @@ public sealed class LibraryCreate
     {
         public Validator()
         {
+            RuleFor(p => p.Id)
+                .NotEmpty();
+
             RuleFor(p => p.Name)
                 .NotEmpty();
 
             RuleFor(p => p.Slug)
                 .Must(p => p.IsSlug()).WithMessage(p => $"The format of slug '{p.Slug}' is invalid.")
-                .NotEmpty();
-
-            RuleFor(p => p.FullPath)
                 .NotEmpty();
         }
     }
