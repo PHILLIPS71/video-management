@@ -14,6 +14,8 @@ import { useForm } from 'react-hook-form'
 import { graphql, useMutation } from 'react-relay'
 import * as z from 'zod'
 
+import { SlugTransform } from '@/components/forms/library/LibraryForms.constants'
+
 export type LibraryUpdateRef = {
   submit: () => void
   reset: () => void
@@ -54,13 +56,6 @@ const MUTATION = graphql`
     }
   }
 `
-
-const SlugTransform = z.string().transform((val) =>
-  val
-    ?.toLowerCase()
-    .replaceAll(' ', '-')
-    .replace(/[^a-z0-9-]+/g, '')
-)
 
 const LibraryUpdateSchema = z.object({
   name: z.string().trim().min(1, { message: 'not enough chars' }).max(128, { message: 'too many chars' }),
@@ -106,6 +101,8 @@ const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((pr
           }
 
           if (payload.library_update.library) onComplete?.(payload.library_update.library)
+
+          setErrors([])
         },
         onError: (error) => {
           setErrors([error.message])

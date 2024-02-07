@@ -15,6 +15,8 @@ import { ConnectionHandler, graphql, useMutation } from 'react-relay'
 import { ROOT_ID } from 'relay-runtime'
 import * as z from 'zod'
 
+import { SlugTransform } from '@/components/forms/library/LibraryForms.constants'
+
 export type LibraryCreateRef = {
   submit: () => void
   reset: () => void
@@ -46,13 +48,6 @@ const MUTATION = graphql`
     }
   }
 `
-
-const SlugTransform = z.string().transform((val) =>
-  val
-    ?.toLowerCase()
-    .replaceAll(' ', '-')
-    .replace(/[^a-z0-9-]+/g, '')
-)
 
 const LibraryCreateSchema = z.object({
   name: z.string().trim().min(1, { message: 'not enough chars' }).max(128, { message: 'too many chars' }),
@@ -95,6 +90,8 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
           }
 
           if (payload.library_create.library) onComplete?.(payload.library_create.library)
+
+          setErrors([])
         },
         onError: (error) => {
           setErrors([error.message])

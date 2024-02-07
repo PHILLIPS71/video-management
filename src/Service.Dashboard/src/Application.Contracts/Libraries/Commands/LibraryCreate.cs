@@ -23,6 +23,7 @@ public sealed class LibraryCreate
                 .NotEmpty();
 
             RuleFor(p => p.Slug)
+                .Must(p => p.IsSlug()).WithMessage(p => $"The format of slug '{p.Slug}' is invalid.")
                 .NotEmpty();
 
             RuleFor(p => p.FullPath)

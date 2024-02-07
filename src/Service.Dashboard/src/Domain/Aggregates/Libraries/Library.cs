@@ -60,7 +60,12 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
 
     public void SetSlug(string slug)
     {
-        Slug = slug.Trim();
+        slug = slug.Trim();
+
+        if (!slug.IsSlug())
+            throw new FormatException($"The format of slug '{slug}' is invalid.");
+
+        Slug = slug;
     }
 
     public void SetStatus(FileSystemStatus status)
