@@ -8,8 +8,9 @@ import { createContext } from '@/utilities/context'
 const FRAGMENT = graphql`
   fragment useLibraryFragment on Library {
     id
-    slug
     name
+    slug
+    is_watched
     path_info {
       full_name
       directory_separator_char
