@@ -1,17 +1,14 @@
 'use client'
 
 import { Navigation } from '@giantnodes/react'
-import { IconHomeCog } from '@tabler/icons-react'
+import { IconHomeCog, IconServerCog } from '@tabler/icons-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.hook'
-
 const SettingSidebar: React.FC = () => {
   const router = usePathname()
-  const { library } = useLibraryContext()
 
-  const route = router.split('/')[4]
+  const route = router.split('/')[2]
 
   return (
     <Navigation orientation="vertical" size="md">
@@ -21,10 +18,18 @@ const SettingSidebar: React.FC = () => {
 
       <Navigation.Segment>
         <Navigation.Item>
-          <Link legacyBehavior passHref href={`/library/${library.slug}/settings/general`}>
+          <Link legacyBehavior passHref href="/settings/general">
             <Navigation.Link isSelected={route === 'general'}>
-              <IconHomeCog size={20} />
-              General
+              <IconHomeCog size={20} /> General
+            </Navigation.Link>
+          </Link>
+        </Navigation.Item>
+
+        <Navigation.Item>
+          <Link legacyBehavior passHref href="/settings/encoder">
+            <Navigation.Link isSelected={route === 'encoder'}>
+              <IconServerCog size={20} />
+              Encoder
             </Navigation.Link>
           </Link>
         </Navigation.Item>
