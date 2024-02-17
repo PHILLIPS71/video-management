@@ -60,7 +60,7 @@ public static class ConsoleServiceRegistration
                     });
 
                 options
-                    .UsingRabbitMq((context, config) =>
+                    .UsingPostgres((context, config) =>
                     {
                         config.UseDelayedMessageScheduler();
 

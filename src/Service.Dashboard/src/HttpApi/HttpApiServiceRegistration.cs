@@ -16,31 +16,8 @@ public static class HttpApiServiceRegistration
     public static void AddHttpApiServices(this IServiceCollection services)
     {
         services.AddCors().ConfigureOptions<CorsConfigureOptions>();
-        services.AddGraphQLServices();
         services.AddMassTransitServices();
-    }
-
-    private static void AddGraphQLServices(this IServiceCollection services)
-    {
-        services
-            .AddGraphQLServer()
-            .ModifyOptions(opt => opt.DefaultFieldBindingFlags = FieldBindingFlags.Default)
-            .SetPagingOptions(new PagingOptions { IncludeTotalCount = true })
-            .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled)
-            .AddInMemorySubscriptions()
-            .AddType<CharType>()
-            .AddConvention<IFilterConvention, CharFilterConvention>()
-            .AddConvention<INamingConventions, SnakeCaseNamingConvention>()
-            .AddGlobalObjectIdentification()
-            .AddMutationConventions()
-            .AddQueryFieldToMutationPayloads()
-            .AddHttpApiTypes()
-            .AddQueryType()
-            .AddMutationType()
-            .AddSubscriptionType()
-            .AddProjections()
-            .AddFiltering()
-            .AddSorting();
+        services.AddGraphQLServices();
     }
 
     private static void AddMassTransitServices(this IServiceCollection services)
@@ -77,7 +54,7 @@ public static class HttpApiServiceRegistration
                     });
 
                 options
-                    .UsingRabbitMq((context, config) =>
+                    .UsingPostgres((context, config) =>
                     {
                         config.UseDelayedMessageScheduler();
 
@@ -86,5 +63,28 @@ public static class HttpApiServiceRegistration
                         config.ConfigureEndpoints(context);
                     });
             });
+    }
+
+    private static void AddGraphQLServices(this IServiceCollection services)
+    {
+        services
+            .AddGraphQLServer()
+            .ModifyOptions(opt => opt.DefaultFieldBindingFlags = FieldBindingFlags.Default)
+            .SetPagingOptions(new PagingOptions { IncludeTotalCount = true })
+            .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled)
+            .AddInMemorySubscriptions()
+            .AddType<CharType>()
+            .AddConvention<IFilterConvention, CharFilterConvention>()
+            .AddConvention<INamingConventions, SnakeCaseNamingConvention>()
+            .AddGlobalObjectIdentification()
+            .AddMutationConventions()
+            .AddQueryFieldToMutationPayloads()
+            .AddHttpApiTypes()
+            .AddQueryType()
+            .AddMutationType()
+            .AddSubscriptionType()
+            .AddProjections()
+            .AddFiltering()
+            .AddSorting();
     }
 }
