@@ -7,6 +7,7 @@ import { Button, Navigation } from '@giantnodes/react'
 import { IconAlbum, IconGauge, IconSettings } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Suspense } from 'react'
 import { graphql, useFragment } from 'react-relay'
 
@@ -29,7 +30,10 @@ type SidebarProps = NavigationProps & {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
+  const router = usePathname()
   const fragment = useFragment<SidebarQuery$key>(FRAGMENT, $key)
+
+  const route = router.split('/')[1]
 
   return (
     <Navigation orientation="vertical" size="lg" {...rest}>
@@ -40,8 +44,8 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
       <Navigation.Segment>
         <Navigation.Item>
           <Link legacyBehavior passHref href="/">
-            <Navigation.Link>
-              <IconGauge strokeWidth={1.5} /> Dashboard
+            <Navigation.Link isSelected={route === ''}>
+              <IconGauge size={20} /> Dashboard
             </Navigation.Link>
           </Link>
         </Navigation.Item>
@@ -64,9 +68,9 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
 
       <Navigation.Segment className="mt-auto">
         <Navigation.Item>
-          <Link legacyBehavior passHref href="/">
-            <Navigation.Link>
-              <IconSettings strokeWidth={1.5} /> Settings
+          <Link legacyBehavior passHref href="/settings/general">
+            <Navigation.Link isSelected={route === 'settings'}>
+              <IconSettings size={20} /> Settings
             </Navigation.Link>
           </Link>
         </Navigation.Item>

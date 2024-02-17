@@ -167,25 +167,25 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
           <Form.Feedback type="error">{form.formState.errors.path?.message}</Form.Feedback>
         </Form.Group>
 
-        <Form.Group error={!!form.formState.errors.is_watched}>
+        <Form.Group {...form.register('is_watched')} error={!!form.formState.errors.is_watched}>
           <span className="flex gap-2 items-center">
-            <Form.Label className="m-0">
-              <Switch {...form.register('is_watched')} />
+            <Switch />
+
+            <Form.Label>
+              <div className="flex flex-col">
+                <Typography.Paragraph className="font-semibold">
+                  Monitor library folder
+                  <Typography.Text className="pl-1" variant="subtitle">
+                    (recommended)
+                  </Typography.Text>
+                </Typography.Paragraph>
+
+                <Typography.Paragraph variant="subtitle">
+                  Watches the library folder and sub-directories for file system changes and automatically updates the
+                  library.
+                </Typography.Paragraph>
+              </div>
             </Form.Label>
-
-            <div className="flex flex-col">
-              <Typography.Paragraph className="font-semibold">
-                Monitor library folder
-                <Typography.Text className="pl-1" variant="subtitle">
-                  (recommended)
-                </Typography.Text>
-              </Typography.Paragraph>
-
-              <Typography.Paragraph variant="subtitle">
-                Watches the library folder and sub-directories for file system changes and automatically updates the
-                library.
-              </Typography.Paragraph>
-            </div>
           </span>
 
           <Form.Feedback type="error">{form.formState.errors.is_watched?.message}</Form.Feedback>
