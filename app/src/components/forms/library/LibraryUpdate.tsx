@@ -170,31 +170,31 @@ const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((pr
           </Form.Group>
         </div>
 
-        <Form.Group>
+        <Form.Group name="folder">
           <Form.Label>Folder</Form.Label>
           <Input>
             <Input.Control disabled type="text" value={library.path_info.full_name} />
           </Input>
         </Form.Group>
 
-        <Form.Group error={!!form.formState.errors.is_watched}>
+        <Form.Group {...form.register('is_watched')} error={!!form.formState.errors.is_watched}>
           <span className="flex gap-2 items-center">
-            <Form.Label className="m-0">
-              <Switch {...form.register('is_watched')} />
-            </Form.Label>
+            <Switch />
 
             <div className="flex flex-col">
-              <Typography.Paragraph className="font-semibold">
-                Monitor library folder
-                <Typography.Text className="pl-1" variant="subtitle">
-                  (recommended)
-                </Typography.Text>
-              </Typography.Paragraph>
+              <Form.Label>
+                <Typography.Paragraph className="font-semibold">
+                  Monitor library folder
+                  <Typography.Text className="pl-1" variant="subtitle">
+                    (recommended)
+                  </Typography.Text>
+                </Typography.Paragraph>
 
-              <Typography.Paragraph variant="subtitle">
-                Watches the library folder and sub-directories for file system changes and automatically updates the
-                library.
-              </Typography.Paragraph>
+                <Typography.Paragraph variant="subtitle">
+                  Watches the library folder and sub-directories for file system changes and automatically updates the
+                  library.
+                </Typography.Paragraph>
+              </Form.Label>
             </div>
           </span>
 
