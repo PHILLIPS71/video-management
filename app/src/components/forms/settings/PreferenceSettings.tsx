@@ -2,7 +2,7 @@
 
 import type { SubmitHandler } from 'react-hook-form'
 
-import { Form } from '@giantnodes/react'
+import { Form, Select } from '@giantnodes/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTheme } from 'next-themes'
 import React from 'react'
@@ -61,14 +61,14 @@ const PreferenceSettings = React.forwardRef<PreferenceSettingsRef, PreferenceSet
 
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
-      <Form.Group error={!!form.formState.errors.theme}>
+      <Form.Group {...form.register('theme')} error={!!form.formState.errors.theme}>
         <Form.Label>Interface Theme</Form.Label>
 
-        <select {...form.register('theme')}>
-          <option value="dark">dark</option>
-          <option value="light">light</option>
-          <option value="system">system</option>
-        </select>
+        <Select>
+          <Select.Option id="dark">Dark</Select.Option>
+          <Select.Option id="light">Light</Select.Option>
+          <Select.Option id="system">System</Select.Option>
+        </Select>
 
         <Form.Feedback type="error">{form.formState.errors.theme?.message}</Form.Feedback>
       </Form.Group>
