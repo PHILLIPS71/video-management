@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Giantnodes.Infrastructure.GraphQL;
 using Giantnodes.Infrastructure.GraphQL.Scalars;
-using Giantnodes.Infrastructure.Masstransit.Validation;
+using Giantnodes.Infrastructure.MassTransit.Filters;
 using Giantnodes.Service.Dashboard.HttpApi.Cors;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using HotChocolate.Data.Filters;
@@ -80,6 +80,7 @@ public static class HttpApiServiceRegistration
                     .UsingRabbitMq((context, config) =>
                     {
                         config.UseDelayedMessageScheduler();
+
                         config.UseConsumeFilter(typeof(FluentValidationFilter<>), context);
 
                         config.ConfigureEndpoints(context);

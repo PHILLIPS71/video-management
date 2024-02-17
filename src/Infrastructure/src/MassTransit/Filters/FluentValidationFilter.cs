@@ -4,7 +4,7 @@ using Giantnodes.Infrastructure.Faults.Types;
 using Giantnodes.Infrastructure.Validation.Contracts;
 using MassTransit;
 
-namespace Giantnodes.Infrastructure.Masstransit.Validation;
+namespace Giantnodes.Infrastructure.MassTransit.Filters;
 
 public class FluentValidationFilter<TMessage> : IFilter<ConsumeContext<TMessage>>
     where TMessage : class

@@ -1,5 +1,5 @@
 using System.Reflection;
-using Giantnodes.Infrastructure.Masstransit.Validation;
+using Giantnodes.Infrastructure.MassTransit.Filters;
 using Giantnodes.Service.Encoder.Persistence.DbContexts;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,6 +63,7 @@ public static class ConsoleServiceRegistration
                     .UsingRabbitMq((context, config) =>
                     {
                         config.UseDelayedMessageScheduler();
+
                         config.UseConsumeFilter(typeof(FluentValidationFilter<>), context);
 
                         config.ConfigureEndpoints(context);

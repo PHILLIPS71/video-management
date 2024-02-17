@@ -14,11 +14,11 @@ public class PublishUnitOfWorkInterceptor : IUnitOfWorkInterceptor, IScopedDepen
         _bus = bus;
     }
 
-    public async Task OnAfterCommitAsync(UnitOfWork uow, CancellationToken cancellation = default)
+    public Task OnAfterCommitAsync(UnitOfWork uow, CancellationToken cancellation = default)
     {
         if (uow.Events.Count == 0)
-            return;
+            return Task.CompletedTask;
 
-        await _bus.PublishBatch(uow.Events, cancellation);
+        return _bus.PublishBatch(uow.Events, cancellation);
     }
 }
