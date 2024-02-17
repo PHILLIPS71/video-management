@@ -29,7 +29,7 @@ public class LibraryCreateMutation
         {
             Name = name,
             Slug = slug,
-            FullPath = path,
+            DirectoryPath = path,
             IsWatched = false
         };
 

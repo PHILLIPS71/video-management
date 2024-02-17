@@ -25,11 +25,11 @@ public class EncodeJobStateMachine : MassTransitStateMachine<EncodeJobSaga>
             When(Submitted)
                 .Then(context =>
                 {
-                    context.Saga.InputPath = context.Message.InputPath;
+                    context.Saga.FilePath = context.Message.FilePath;
                     context.Saga.IsDeletingInput = context.Message.IsDeletingInput;
                     context.Saga.OutputDirectoryPath = context.Message.OutputDirectoryPath;
                 })
-                .Request(Encode, context => new Encode.Job { FullPath = context.Saga.InputPath })
+                .Request(Encode, context => new Encode.Job { FilePath = context.Saga.FilePath })
                 .RespondAsync(context => context.Init<EncodeSubmit.Result>(new { context.Saga.CorrelationId }))
                 .TransitionTo(Encode?.Pending));
 
@@ -45,7 +45,7 @@ public class EncodeJobStateMachine : MassTransitStateMachine<EncodeJobSaga>
 
         During(Encode?.Pending, Queued,
             When(Started)
-                .Then(context => context.Saga.OutputTempPath = context.Message.OutputPath)
+                .Then(context => context.Saga.OutputTempFilePath = context.Message.OutputFilePath)
                 .TransitionTo(Encoding));
 
         During(Encoding,

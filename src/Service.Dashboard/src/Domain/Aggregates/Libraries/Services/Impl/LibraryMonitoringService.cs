@@ -24,7 +24,7 @@ public class LibraryMonitoringService : ILibraryMonitoringService
             {
                 LibraryId = library.Id,
                 ChangeTypes = @event.ChangeType,
-                FullPath = @event.FullPath,
+                FilePath = @event.FullPath,
                 RaisedAt = DateTime.UtcNow
             });
 

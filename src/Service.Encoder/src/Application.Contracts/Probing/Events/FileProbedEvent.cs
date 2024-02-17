@@ -6,7 +6,7 @@ public sealed record FileProbedEvent
 {
     public required Guid JobId { get; init; }
 
-    public required string FullPath { get; init; }
+    public required string FilePath { get; init; }
 
     public required string Name { get; init; }
 

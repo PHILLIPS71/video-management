@@ -6,7 +6,7 @@ public sealed record FileProbeFaultedEvent
 {
     public required Guid JobId { get; init; }
 
-    public required string Path { get; init; }
+    public required string FilePath { get; init; }
 
     public required ExceptionInfo Exception { get; init; }
 

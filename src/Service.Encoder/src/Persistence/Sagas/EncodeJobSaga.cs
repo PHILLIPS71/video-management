@@ -10,11 +10,11 @@ public class EncodeJobSaga : SagaStateMachineInstance
 
     public Guid? JobId { get; set; }
 
-    public string InputPath { get; set; } = null!;
+    public string FilePath { get; set; } = null!;
 
     public bool IsDeletingInput { get; set; }
 
-    public string? OutputTempPath { get; set; }
+    public string? OutputTempFilePath { get; set; }
 
     public string? OutputDirectoryPath { get; set; }
 

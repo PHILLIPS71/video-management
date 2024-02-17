@@ -26,7 +26,7 @@ public class DirectoryProbeMutation
         Response response = await request.GetResponse<DirectoryProbe.Result, DomainFault, ValidationFault>(command, cancellation);
         return response switch
         {
-            (_, DirectoryProbe.Result result) => result.FullPath,
+            (_, DirectoryProbe.Result result) => result.FilePath,
             (_, DomainFault fault) => throw new DomainException(fault),
             (_, ValidationFault fault) => throw new ValidationException(fault),
             _ => throw new InvalidOperationException()

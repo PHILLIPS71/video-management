@@ -8,9 +8,9 @@ public class EncodeSagaState : SagaStateMachineInstance
 
     public string CurrentState { get; set; } = null!;
 
-    public string InputFullPath { get; set; } = null!;
+    public string InputFilePath { get; set; } = null!;
 
-    public string? OutputFullPath { get; set; }
+    public string? OutputFilePath { get; set; }
 
     public DateTime SubmittedAt { get; set; }
 

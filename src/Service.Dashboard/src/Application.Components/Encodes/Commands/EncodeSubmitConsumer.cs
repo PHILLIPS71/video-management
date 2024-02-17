@@ -55,7 +55,7 @@ public class EncodeSubmitConsumer : IConsumer<EncodeSubmit.Command>
                 {
                     FileId = encode.File.Id,
                     EncodeId = encode.Id,
-                    FullPath = encode.File.PathInfo.FullName
+                    FilePath = encode.File.PathInfo.FullName
                 })
                 .ToList();
 

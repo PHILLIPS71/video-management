@@ -8,7 +8,7 @@ public sealed class EncodeSubmit
     {
         public required Guid CorrelationId { get; init; }
 
-        public required string InputPath { get; init; }
+        public required string FilePath { get; init; }
 
         public required bool IsDeletingInput { get; init; }
 

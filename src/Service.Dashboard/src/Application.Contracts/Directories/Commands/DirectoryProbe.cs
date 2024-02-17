@@ -20,6 +20,6 @@ public sealed class DirectoryProbe
 
     public sealed record Result
     {
-        public required string FullPath { get; init; }
+        public required string FilePath { get; init; }
     }
 }

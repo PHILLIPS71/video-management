@@ -32,7 +32,7 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
             When(Submitted)
                 .Then(context =>
                 {
-                    context.Saga.InputFullPath = context.Message.FullPath;
+                    context.Saga.InputFilePath = context.Message.FilePath;
                     context.Saga.SubmittedAt = DateTime.UtcNow;
                 })
                 .PublishAsync(context => context.Init<SubmitJob<ProbeFileSystem.Job>>(new
@@ -40,7 +40,7 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
                     JobId = context.Saga.CorrelationId,
                     Job = new ProbeFileSystem.Job
                     {
-                        FullPath = context.Message.FullPath
+                        FilePath = context.Message.FilePath
                     }
                 }))
                 .TransitionTo(Probing));
@@ -51,8 +51,8 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
                 .Request(EncodeRequest, context => new EncodeSubmit.Command
                 {
                     CorrelationId = context.Saga.CorrelationId,
-                    InputPath = context.Saga.InputFullPath,
-                    OutputDirectoryPath = context.Message.FullPath,
+                    FilePath = context.Saga.InputFilePath,
+                    OutputDirectoryPath = context.Message.FilePath,
                     IsDeletingInput = false
                 })
                 .TransitionTo(EncodeRequest?.Pending));
@@ -77,14 +77,14 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
             When(Progressed)
                 .Activity(context => context.OfType<EncodeProgressedActivity>()),
             When(EncodeCompleted)
-                .Then(context => context.Saga.OutputFullPath = context.Message.OutputPath)
+                .Then(context => context.Saga.OutputFilePath = context.Message.OutputFilePath)
                 .Activity(context => context.OfType<EncodeCompletedActivity>())
                 .PublishAsync(context => context.Init<SubmitJob<ProbeFileSystem.Job>>(new
                 {
                     JobId = context.Saga.CorrelationId,
                     Job = new ProbeFileSystem.Job
                     {
-                        FullPath = context.Message.OutputPath
+                        FilePath = context.Message.OutputFilePath
                     }
                 }))
                 .TransitionTo(Encoded));

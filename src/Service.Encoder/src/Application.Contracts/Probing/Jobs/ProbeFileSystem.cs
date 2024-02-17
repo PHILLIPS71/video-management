@@ -6,14 +6,14 @@ public sealed class ProbeFileSystem
 {
     public sealed record Job
     {
-        public required string FullPath { get; init; }
+        public required string FilePath { get; init; }
     }
 
     public sealed class Validator : AbstractValidator<Job>
     {
         public Validator()
         {
-            RuleFor(p => p.FullPath)
+            RuleFor(p => p.FilePath)
                 .NotEmpty();
         }
     }

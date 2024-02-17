@@ -24,7 +24,7 @@ public class CreateFileSystemFileStreams : IConsumer<FileProbedEvent>
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             var files = await _repository
-                .ToListAsync(x => x.PathInfo.FullName == context.Message.FullPath, context.CancellationToken);
+                .ToListAsync(x => x.PathInfo.FullName == context.Message.FilePath, context.CancellationToken);
 
             foreach (var file in files)
             {

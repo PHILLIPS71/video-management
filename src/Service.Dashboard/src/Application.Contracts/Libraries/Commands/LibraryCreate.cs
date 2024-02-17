@@ -10,7 +10,7 @@ public sealed class LibraryCreate
 
         public required string Slug { get; init; }
 
-        public required string FullPath { get; init; }
+        public required string DirectoryPath { get; init; }
 
         public bool IsWatched { get; init; }
     }
@@ -26,7 +26,7 @@ public sealed class LibraryCreate
                 .Must(p => p.IsSlug()).WithMessage(p => $"The format of slug '{p.Slug}' is invalid.")
                 .NotEmpty();
 
-            RuleFor(p => p.FullPath)
+            RuleFor(p => p.DirectoryPath)
                 .NotEmpty();
         }
     }

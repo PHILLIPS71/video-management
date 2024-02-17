@@ -21,25 +21,25 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
 
     public async Task Run(JobContext<ProbeFileSystem.Job> context)
     {
-        var exists = _fs.Path.Exists(context.Job.FullPath);
+        var exists = _fs.Path.Exists(context.Job.FilePath);
         if (!exists)
         {
-            await context.RejectAsync(FaultKind.NotFound, nameof(context.Job.FullPath));
+            await context.RejectAsync(FaultKind.NotFound, nameof(context.Job.FilePath));
             return;
         }
 
         var files = new List<IFileInfo>();
-        switch (_fs.File.GetAttributes(context.Job.FullPath))
+        switch (_fs.File.GetAttributes(context.Job.FilePath))
         {
             case FileAttributes.Directory:
                 files = _fs.DirectoryInfo
-                    .New(context.Job.FullPath)
+                    .New(context.Job.FilePath)
                     .GetFiles("*", SearchOption.AllDirectories)
                     .ToList();
                 break;
 
             default:
-                files.Add(_fs.FileInfo.New(context.Job.FullPath));
+                files.Add(_fs.FileInfo.New(context.Job.FilePath));
                 break;
         }
 
@@ -56,7 +56,7 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
                     await context.Publish(new FileProbedEvent
                     {
                         JobId = context.JobId,
-                        FullPath = file.FullName,
+                        FilePath = file.FullName,
                         Name = Path.GetFileName(file.FullName),
                         Size = file.Length,
                         Timestamp = DateTime.UtcNow,
@@ -81,7 +81,7 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
                     await context.Publish(new FileProbeFaultedEvent
                     {
                         JobId = context.JobId,
-                        Path = file.FullName,
+                        FilePath = file.FullName,
                         Exception = new FaultExceptionInfo(ex),
                         Timestamp = DateTime.UtcNow,
                     }, context.CancellationToken);

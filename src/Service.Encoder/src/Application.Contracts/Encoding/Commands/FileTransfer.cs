@@ -2,17 +2,17 @@
 
 public sealed class FileTransfer
 {
-    public sealed record Command
+    public sealed record Job
     {
-        public required string InputPath { get; init; }
+        public required string InputFilePath { get; init; }
 
-        public required bool IsDeletingInput { get; set; }
+        public required string OutputDirectoryPath { get; set; }
 
-        public required string? OutputDirectoryPath { get; set; }
+        public string? FileName { get; init; }
     }
 
     public sealed record Result
     {
-        public required string FullPath { get; init; }
+        public required string FilePath { get; init; }
     }
 }

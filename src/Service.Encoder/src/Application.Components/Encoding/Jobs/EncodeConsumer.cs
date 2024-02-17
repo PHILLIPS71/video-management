@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO.Abstractions;
 using System.Text.RegularExpressions;
+using Giantnodes.Infrastructure.Faults;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Jobs;
 using MassTransit;
@@ -24,23 +25,19 @@ public class EncodeConsumer : IJobConsumer<Encode.Job>
 
     public async Task Run(JobContext<Encode.Job> context)
     {
-        var file = _fs.FileInfo.New(context.Job.FullPath);
+        var file = _fs.FileInfo.New(context.Job.FilePath);
         if (!file.Exists)
         {
-            await context.RejectAsync(Encode.Fault.PathNotFound, nameof(context.Job.FullPath));
+            await context.RejectAsync(FaultKind.NotFound, nameof(context.Job.FilePath));
             return;
         }
-
-        var name = Path.ChangeExtension(context.JobId.ToString(), file.Extension);
-        if (!string.IsNullOrWhiteSpace(context.Job.Container))
-            name = Path.ChangeExtension(name, context.Job.Container);
 
         var media = await FFmpeg.GetMediaInfo(file.FullName, context.CancellationToken);
 
         var video = media
             .VideoStreams.First().SetCodec(VideoCodec.h264);
 
-        var output = Path.Join(_fs.Path.GetTempPath(), name);
+        var output = _fs.Path.GetTempFileName();
         var conversion = FFmpeg.Conversions
             .New()
             .AddStream(video)
@@ -92,8 +89,8 @@ public class EncodeConsumer : IJobConsumer<Encode.Job>
             await context.Publish(new EncodeStartedEvent
             {
                 CorrelationId = context.CorrelationId ?? context.JobId,
-                InputPath = context.Job.FullPath,
-                OutputPath = output
+                InputFilePath = context.Job.FilePath,
+                OutputFilePath = output
             });
 
             await conversion.Start(context.CancellationToken);
@@ -101,8 +98,8 @@ public class EncodeConsumer : IJobConsumer<Encode.Job>
             await context.Publish(new EncodeCompletedEvent
             {
                 CorrelationId = context.CorrelationId ?? context.JobId,
-                InputPath = context.Job.FullPath,
-                OutputPath = output
+                InputFilePath = context.Job.FilePath,
+                OutputFilePath = output
             });
         }
         catch (OperationCanceledException)

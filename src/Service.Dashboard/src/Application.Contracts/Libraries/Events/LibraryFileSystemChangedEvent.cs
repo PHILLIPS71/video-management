@@ -8,7 +8,7 @@ public record LibraryFileSystemChangedEvent : IIntegrationEvent
 
     public required WatcherChangeTypes ChangeTypes { get; init; }
 
-    public required string FullPath { get; init; }
+    public required string FilePath { get; init; }
 
     public required DateTime RaisedAt { get; init; }
 }
