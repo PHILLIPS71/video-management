@@ -1,4 +1,4 @@
-using Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activities;
+using Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 using Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Events;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Commands;
@@ -9,7 +9,7 @@ using MassTransit;
 using MassTransit.Contracts.JobService;
 using EncodeCancelledEvent = Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Events.EncodeCancelledEvent;
 
-namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas;
+namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas;
 
 public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
 {

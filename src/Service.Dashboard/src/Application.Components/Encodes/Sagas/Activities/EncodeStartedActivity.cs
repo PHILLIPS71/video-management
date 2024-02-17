@@ -1,12 +1,11 @@
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using MassTransit;
 
-namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activities;
+namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
 public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, EncodeStartedEvent>
 {

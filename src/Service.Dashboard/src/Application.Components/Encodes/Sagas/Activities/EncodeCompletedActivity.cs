@@ -1,20 +1,18 @@
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Values;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
+using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using MassTransit;
 
-namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activities;
+namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
-public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, EncodeHeartbeatEvent>
+public class EncodeCompletedActivity : IStateMachineActivity<EncodeSagaState, EncodeCompletedEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
 
-    public EncodeHeartbeatActivity(
+    public EncodeCompletedActivity(
         IUnitOfWorkService uow,
         IEncodeRepository repository)
     {
@@ -24,7 +22,7 @@ public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, En
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeHeartbeatActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeCompletedActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)
@@ -33,15 +31,13 @@ public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, En
     }
 
     public async Task Execute(
-        BehaviorContext<EncodeSagaState, EncodeHeartbeatEvent> context,
-        IBehavior<EncodeSagaState, EncodeHeartbeatEvent> next)
+        BehaviorContext<EncodeSagaState, EncodeCompletedEvent> context,
+        IBehavior<EncodeSagaState, EncodeCompletedEvent> next)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
-
-            var speed = new EncodeSpeed(context.Message.Frames, context.Message.Bitrate, context.Message.Scale);
-            encode.SetSpeed(speed);
+            encode.SetStatus(EncodeStatus.Completed);
 
             await uow.CommitAsync(context.CancellationToken);
         }
@@ -50,9 +46,8 @@ public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, En
     }
 
     public Task Faulted<TException>(
-        BehaviorExceptionContext<EncodeSagaState, EncodeHeartbeatEvent, TException> context,
-        IBehavior<EncodeSagaState, EncodeHeartbeatEvent> next)
-        where TException : Exception
+        BehaviorExceptionContext<EncodeSagaState, EncodeCompletedEvent, TException> context,
+        IBehavior<EncodeSagaState, EncodeCompletedEvent> next) where TException : Exception
     {
         return next.Faulted(context);
     }
