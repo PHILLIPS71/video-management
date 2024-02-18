@@ -1,13 +1,12 @@
-﻿using MassTransit;
+﻿using Giantnodes.Infrastructure.Messages;
+using MassTransit;
 
 namespace Giantnodes.Service.Encoder.Application.Contracts.Encoding.Commands;
 
 public sealed class EncodeSubmit
 {
-    public sealed record Command : CorrelatedBy<Guid>
+    public sealed record Command : Message
     {
-        public required Guid CorrelationId { get; init; }
-
         public required string FilePath { get; init; }
 
         public required bool IsDeletingInput { get; init; }

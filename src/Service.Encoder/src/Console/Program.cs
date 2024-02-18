@@ -33,7 +33,7 @@ public static class Program
 
                 services
                     .SetupPersistence(configuration)
-                    .SetupApplicationComponents(configuration)
+                    .SetupApplicationComponents()
                     .AddConsoleServices();
             })
             .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));

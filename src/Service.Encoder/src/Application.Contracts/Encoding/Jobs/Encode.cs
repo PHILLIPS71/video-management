@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using Giantnodes.Infrastructure.Faults;
+using Giantnodes.Infrastructure.Messages;
 
 namespace Giantnodes.Service.Encoder.Application.Contracts.Encoding.Jobs;
 
 public sealed class Encode
 {
-    public sealed record Job
+    public sealed record Job : Message
     {
         public required string FilePath { get; init; }
     }

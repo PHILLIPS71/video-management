@@ -59,7 +59,6 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
                         FilePath = file.FullName,
                         Name = Path.GetFileName(file.FullName),
                         Size = file.Length,
-                        Timestamp = DateTime.UtcNow,
                         VideoStreams = media
                             .VideoStreams
                             .Select(stream => new Mapper().Map(stream))
@@ -83,7 +82,6 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
                         JobId = context.JobId,
                         FilePath = file.FullName,
                         Exception = new FaultExceptionInfo(ex),
-                        Timestamp = DateTime.UtcNow,
                     }, context.CancellationToken);
 
                     Log.Error("Failed to probe file {0} with job id {1}.", file.FullName, context.JobId);

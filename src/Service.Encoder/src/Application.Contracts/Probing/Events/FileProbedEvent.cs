@@ -1,8 +1,9 @@
-﻿using Giantnodes.Service.Encoder.Application.Contracts.Common;
+﻿using Giantnodes.Infrastructure.Domain.Events;
+using Giantnodes.Service.Encoder.Application.Contracts.Common;
 
 namespace Giantnodes.Service.Encoder.Application.Contracts.Probing.Events;
 
-public sealed record FileProbedEvent
+public sealed record FileProbedEvent : IntegrationEvent
 {
     public required Guid JobId { get; init; }
 
@@ -11,8 +12,6 @@ public sealed record FileProbedEvent
     public required string Name { get; init; }
 
     public required long Size { get; init; }
-
-    public required DateTime Timestamp { get; init; }
 
     public required FileVideoStream[] VideoStreams { get; init; } = Array.Empty<FileVideoStream>();
 

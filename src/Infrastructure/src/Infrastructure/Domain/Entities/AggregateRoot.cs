@@ -7,7 +7,7 @@ namespace Giantnodes.Infrastructure.Domain.Entities;
 /// <inheritdoc cref="IAggregateRoot" />
 public abstract class AggregateRoot : Entity, IAggregateRoot, IHasConcurrencyToken
 {
-    public readonly ICollection<IEvent> DomainEvents = new List<IEvent>();
+    public readonly ICollection<DomainEvent> DomainEvents = new List<DomainEvent>();
 
     public byte[]? ConcurrencyToken { get; private set; }
 }

@@ -1,10 +1,11 @@
 using FluentValidation;
+using Giantnodes.Infrastructure.Messages;
 
 namespace Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Commands;
 
 public sealed class EncodeCancel
 {
-    public sealed record Command
+    public sealed record Command : Message
     {
         public required Guid EncodeId { get; init; }
     }

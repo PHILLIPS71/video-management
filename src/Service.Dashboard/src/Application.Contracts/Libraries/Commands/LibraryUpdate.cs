@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
+using Giantnodes.Infrastructure.Messages;
 
 namespace Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
 
 public sealed class LibraryUpdate
 {
-    public sealed record Command
+    public sealed record Command : Message
     {
         public required Guid Id { get; init; }
 

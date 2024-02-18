@@ -1,10 +1,11 @@
 using FluentValidation;
+using Giantnodes.Infrastructure.Messages;
 
 namespace Giantnodes.Service.Dashboard.Application.Contracts.Directories.Commands;
 
 public sealed class DirectoryProbe
 {
-    public sealed record Command
+    public sealed record Command : Message
     {
         public required Guid DirectoryId { get; init; }
     }

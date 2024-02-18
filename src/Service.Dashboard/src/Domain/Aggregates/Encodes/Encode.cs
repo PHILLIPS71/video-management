@@ -48,6 +48,13 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         File = file;
         Status = EncodeStatus.Submitted;
         Snapshots = _snapshots.AsReadOnly();
+
+        DomainEvents.Add(new EncodeCreatedEvent
+        {
+            FileId = File.Id,
+            EncodeId = Id,
+            FilePath = File.PathInfo.FullName
+        });
     }
 
     public void SetStatus(EncodeStatus status)
@@ -107,7 +114,6 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
             Frames = Speed.Frames,
             Bitrate = Speed.Bitrate,
             Scale = Speed.Scale,
-            RaisedAt = DateTime.UtcNow
         });
     }
 

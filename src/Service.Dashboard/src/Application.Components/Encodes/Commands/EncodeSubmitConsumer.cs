@@ -50,16 +50,6 @@ public class EncodeSubmitConsumer : IConsumer<EncodeSubmit.Command>
                 .Select(file => file.Encode())
                 .ToList();
 
-            var events = encodes
-                .Select(encode => new EncodeCreatedEvent
-                {
-                    FileId = encode.File.Id,
-                    EncodeId = encode.Id,
-                    FilePath = encode.File.PathInfo.FullName
-                })
-                .ToList();
-
-            await context.PublishBatch(events);
             await uow.CommitAsync(context.CancellationToken);
 
             var ids = encodes.Select(x => x.Id).ToArray();

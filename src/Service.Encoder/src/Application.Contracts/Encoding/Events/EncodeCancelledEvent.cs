@@ -1,8 +1,7 @@
-﻿using MassTransit;
+﻿using Giantnodes.Infrastructure.Domain.Events;
 
 namespace Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 
-public sealed record EncodeCancelledEvent : CorrelatedBy<Guid>
+public sealed record EncodeCancelledEvent : IntegrationEvent
 {
-    public required Guid CorrelationId { get; init; }
 }

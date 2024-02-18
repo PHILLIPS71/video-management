@@ -2,7 +2,7 @@ using Giantnodes.Infrastructure.Domain.Events;
 
 namespace Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Events;
 
-public sealed record EncodeSpeedChangedEvent : IDomainEvent
+public sealed record EncodeSpeedChangedEvent : DomainEvent
 {
     public required Guid EncodeId { get; init; }
 
@@ -11,6 +11,4 @@ public sealed record EncodeSpeedChangedEvent : IDomainEvent
     public required long Bitrate { get; set; }
 
     public required float Scale { get; set; }
-
-    public required DateTime RaisedAt { get; init; }
 }

@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
+using Giantnodes.Infrastructure.Messages;
 
 namespace Giantnodes.Service.Encoder.Application.Contracts.Probing.Jobs;
 
 public sealed class ProbeFileSystem
 {
-    public sealed record Job
+    public sealed record Job : Message
     {
         public required string FilePath { get; init; }
     }
