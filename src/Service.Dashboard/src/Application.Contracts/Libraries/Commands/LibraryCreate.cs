@@ -1,16 +1,17 @@
 ﻿using FluentValidation;
+using Giantnodes.Infrastructure.Messages;
 
 namespace Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
 
 public sealed class LibraryCreate
 {
-    public sealed record Command
+    public sealed record Command : Message
     {
         public required string Name { get; init; }
 
         public required string Slug { get; init; }
 
-        public required string FullPath { get; init; }
+        public required string DirectoryPath { get; init; }
 
         public bool IsWatched { get; init; }
     }
@@ -26,7 +27,7 @@ public sealed class LibraryCreate
                 .Must(p => p.IsSlug()).WithMessage(p => $"The format of slug '{p.Slug}' is invalid.")
                 .NotEmpty();
 
-            RuleFor(p => p.FullPath)
+            RuleFor(p => p.DirectoryPath)
                 .NotEmpty();
         }
     }

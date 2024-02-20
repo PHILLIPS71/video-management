@@ -16,11 +16,6 @@ public class FluentValidationFilter<TMessage> : IFilter<ConsumeContext<TMessage>
         _validator = validator?.FirstOrDefault();
     }
 
-    public void Probe(ProbeContext context)
-    {
-        context.CreateScope("fluent-validation-filter");
-    }
-
     public async Task Send(ConsumeContext<TMessage> context, IPipe<ConsumeContext<TMessage>> next)
     {
         if (_validator == null)
@@ -61,5 +56,9 @@ public class FluentValidationFilter<TMessage> : IFilter<ConsumeContext<TMessage>
             Message = fault.Message,
             Properties = properties
         });
+    }
+
+    public void Probe(ProbeContext context)
+    {
     }
 }

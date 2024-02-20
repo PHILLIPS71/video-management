@@ -35,7 +35,7 @@ public class ApplicationDbContext : GiantnodesDbContext<ApplicationDbContext>
             yield return new JobTypeSagaMap(true);
             yield return new JobSagaMap(true);
             yield return new JobAttemptSagaMap(true);
-            yield return new EncodeJobSagaMap();
+            yield return new EncodeOperationSagaStateConfiguration();
         }
     }
 }

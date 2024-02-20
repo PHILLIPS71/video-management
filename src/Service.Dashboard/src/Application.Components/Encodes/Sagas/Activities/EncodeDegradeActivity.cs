@@ -1,11 +1,10 @@
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using MassTransit;
 
-namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activities;
+namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
 public class EncodeDegradeActivity : IStateMachineActivity<EncodeSagaState>
 {
@@ -59,11 +58,11 @@ public class EncodeDegradeActivity : IStateMachineActivity<EncodeSagaState>
         return next.Faulted(context);
     }
 
-    private async Task Degrade(ConsumeContext context)
+    private async Task Degrade(SagaConsumeContext<EncodeSagaState> context)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
+            var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
 
             encode.SetStatus(EncodeStatus.Degraded);
             await uow.CommitAsync(context.CancellationToken);

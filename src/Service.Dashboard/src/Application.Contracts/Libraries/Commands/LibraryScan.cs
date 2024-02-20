@@ -1,10 +1,11 @@
 using FluentValidation;
+using Giantnodes.Infrastructure.Messages;
 
 namespace Giantnodes.Service.Dashboard.Application.Contracts.Libraries.Commands;
 
 public sealed class LibraryScan
 {
-    public sealed record Command
+    public sealed record Command : Message
     {
         public required Guid LibraryId { get; init; }
     }

@@ -30,6 +30,12 @@ public class EncodeType : ObjectType<Encode>
             .Field(p => p.StartedAt);
 
         descriptor
+            .Field(p => p.FailedAt);
+
+        descriptor
+            .Field(p => p.CancelledAt);
+
+        descriptor
             .Field(p => p.CompletedAt);
 
         descriptor
@@ -37,7 +43,7 @@ public class EncodeType : ObjectType<Encode>
 
         descriptor
             .Field(p => p.UpdatedAt);
-        
+
         descriptor
             .Field(p => p.Snapshots)
             // .UsePaging()

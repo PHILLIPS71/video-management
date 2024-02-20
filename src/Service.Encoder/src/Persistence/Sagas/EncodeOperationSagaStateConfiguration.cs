@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Giantnodes.Service.Encoder.Persistence.Sagas;
 
-public class EncodeJobSagaMap : SagaClassMap<EncodeJobSaga>
+public class EncodeOperationSagaStateConfiguration : SagaClassMap<EncodeOperationSagaState>
 {
-    protected override void Configure(EntityTypeBuilder<EncodeJobSaga> builder, ModelBuilder model)
+    protected override void Configure(EntityTypeBuilder<EncodeOperationSagaState> builder, ModelBuilder model)
     {
         builder
             .Property(x => x.RowVersion)
@@ -14,10 +14,6 @@ public class EncodeJobSagaMap : SagaClassMap<EncodeJobSaga>
         
         builder
             .HasIndex(p => p.JobId)
-            .IsUnique();
-
-        builder
-            .HasIndex(p => p.OutputDirectoryPath)
             .IsUnique();
     }
 }

@@ -1,8 +1,10 @@
+using Giantnodes.Infrastructure.Messages;
+
 namespace Giantnodes.Service.Dashboard.Application.Contracts.Directories.Queries;
 
 public sealed class GetFileResolutionDistribution
 {
-    public sealed record Query
+    public sealed record Query : Message
     {
         public required Guid DirectoryId { get; init; }
     }

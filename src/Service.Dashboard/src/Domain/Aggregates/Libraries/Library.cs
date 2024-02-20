@@ -81,7 +81,6 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
         {
             LibraryId = Id,
             IsMonitoring = IsWatched,
-            RaisedAt = DateTime.UtcNow
         });
     }
 

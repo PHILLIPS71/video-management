@@ -1,4 +1,4 @@
-﻿using Giantnodes.Infrastructure.Domain.Events;
+﻿using Giantnodes.Infrastructure.Messages;
 using Giantnodes.Infrastructure.Uow.Execution;
 
 namespace Giantnodes.Infrastructure.Uow;
@@ -11,7 +11,7 @@ public abstract class UnitOfWork : IUnitOfWork
     private bool _committed;
     private Exception? _exception;
 
-    protected List<IEvent> DomainEvents { get; }
+    protected List<Event> DomainEvents { get; }
 
     public Guid CorrelationId { get; }
 
@@ -36,7 +36,7 @@ public abstract class UnitOfWork : IUnitOfWork
         _executor = executor;
 
         CorrelationId = Guid.NewGuid();
-        DomainEvents = new List<IEvent>();
+        DomainEvents = new List<Event>();
     }
 
     public async Task<IUnitOfWork> BeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default)

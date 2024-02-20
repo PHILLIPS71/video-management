@@ -46,7 +46,7 @@ public class LibraryCreateConsumerTests : FileSystemFixture
         {
             Name = "Silicon Valley",
             Slug = "silicon-valley",
-            FullPath = MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley")
+            DirectoryPath = MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley")
         };
 
         var harness = _provider.GetRequiredService<ITestHarness>();
@@ -70,7 +70,7 @@ public class LibraryCreateConsumerTests : FileSystemFixture
         {
             Name = "Silicon Valley",
             Slug = "silicon-valley",
-            FullPath = MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley")
+            DirectoryPath = MockUnixSupport.Path(@"C:\tv-shows\Silicon Valley")
         };
 
         var harness = _provider.GetRequiredService<ITestHarness>();

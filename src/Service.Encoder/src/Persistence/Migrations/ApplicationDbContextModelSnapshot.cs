@@ -18,12 +18,12 @@ namespace Giantnodes.Service.Encoder.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("encoder")
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Giantnodes.Service.Encoder.Persistence.Sagas.EncodeJobSaga", b =>
+            modelBuilder.Entity("Giantnodes.Service.Encoder.Persistence.Sagas.EncodeOperationSagaState", b =>
                 {
                     b.Property<Guid>("CorrelationId")
                         .HasColumnType("uuid")
@@ -34,26 +34,14 @@ namespace Giantnodes.Service.Encoder.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("current_state");
 
-                    b.Property<string>("InputPath")
+                    b.Property<string>("FilePath")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("input_path");
-
-                    b.Property<bool>("IsDeletingInput")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deleting_input");
+                        .HasColumnName("file_path");
 
                     b.Property<Guid?>("JobId")
                         .HasColumnType("uuid")
                         .HasColumnName("job_id");
-
-                    b.Property<string>("OutputDirectoryPath")
-                        .HasColumnType("text")
-                        .HasColumnName("output_directory_path");
-
-                    b.Property<string>("OutputTempPath")
-                        .HasColumnType("text")
-                        .HasColumnName("output_temp_path");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -62,17 +50,13 @@ namespace Giantnodes.Service.Encoder.Persistence.Migrations
                         .HasColumnName("row_version");
 
                     b.HasKey("CorrelationId")
-                        .HasName("pk_encode_job_saga");
+                        .HasName("pk_encode_operation_saga_state");
 
                     b.HasIndex("JobId")
                         .IsUnique()
-                        .HasDatabaseName("ix_encode_job_saga_job_id");
+                        .HasDatabaseName("ix_encode_operation_saga_state_job_id");
 
-                    b.HasIndex("OutputDirectoryPath")
-                        .IsUnique()
-                        .HasDatabaseName("ix_encode_job_saga_output_directory_path");
-
-                    b.ToTable("encode_job_saga", "encoder");
+                    b.ToTable("encode_operation_saga_state", "encoder");
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>

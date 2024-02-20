@@ -1,19 +1,18 @@
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using MassTransit;
 
-namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas.Activities;
+namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
-public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, EncodeStartedEvent>
+public class EncodeCompletedActivity : IStateMachineActivity<EncodeSagaState, EncodeOperationCompletedEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
 
-    public EncodeStartedActivity(
+    public EncodeCompletedActivity(
         IUnitOfWorkService uow,
         IEncodeRepository repository)
     {
@@ -23,7 +22,7 @@ public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, Enco
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeStartedActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeCompletedActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)
@@ -32,13 +31,13 @@ public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, Enco
     }
 
     public async Task Execute(
-        BehaviorContext<EncodeSagaState, EncodeStartedEvent> context,
-        IBehavior<EncodeSagaState, EncodeStartedEvent> next)
+        BehaviorContext<EncodeSagaState, EncodeOperationCompletedEvent> context,
+        IBehavior<EncodeSagaState, EncodeOperationCompletedEvent> next)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
-            encode.SetStatus(EncodeStatus.Encoding);
+            var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
+            encode.SetStatus(EncodeStatus.Completed);
 
             await uow.CommitAsync(context.CancellationToken);
         }
@@ -47,9 +46,8 @@ public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, Enco
     }
 
     public Task Faulted<TException>(
-        BehaviorExceptionContext<EncodeSagaState, EncodeStartedEvent, TException> context,
-        IBehavior<EncodeSagaState, EncodeStartedEvent> next)
-        where TException : Exception
+        BehaviorExceptionContext<EncodeSagaState, EncodeOperationCompletedEvent, TException> context,
+        IBehavior<EncodeSagaState, EncodeOperationCompletedEvent> next) where TException : Exception
     {
         return next.Faulted(context);
     }

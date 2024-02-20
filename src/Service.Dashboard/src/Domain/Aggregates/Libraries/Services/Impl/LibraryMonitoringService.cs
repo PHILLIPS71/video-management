@@ -24,8 +24,7 @@ public class LibraryMonitoringService : ILibraryMonitoringService
             {
                 LibraryId = library.Id,
                 ChangeTypes = @event.ChangeType,
-                FullPath = @event.FullPath,
-                RaisedAt = DateTime.UtcNow
+                FilePath = @event.FullPath,
             });
 
         var status = success ? FileSystemStatus.Online : FileSystemStatus.Offline;

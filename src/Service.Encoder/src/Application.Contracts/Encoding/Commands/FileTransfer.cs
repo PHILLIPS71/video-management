@@ -1,18 +1,20 @@
-﻿namespace Giantnodes.Service.Encoder.Application.Contracts.Encoding.Commands;
+﻿using Giantnodes.Infrastructure.Messages;
+
+namespace Giantnodes.Service.Encoder.Application.Contracts.Encoding.Commands;
 
 public sealed class FileTransfer
 {
-    public sealed record Command
+    public sealed record Job : Message
     {
-        public required string InputPath { get; init; }
+        public required string InputFilePath { get; init; }
 
-        public required bool IsDeletingInput { get; set; }
+        public required string OutputDirectoryPath { get; set; }
 
-        public required string? OutputDirectoryPath { get; set; }
+        public string? FileName { get; init; }
     }
 
     public sealed record Result
     {
-        public required string FullPath { get; init; }
+        public required string FilePath { get; init; }
     }
 }

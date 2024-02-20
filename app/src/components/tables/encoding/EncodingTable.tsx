@@ -121,11 +121,13 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
                 <Typography.Paragraph>{item.node.file.path_info.name}</Typography.Paragraph>
               </Table.Cell>
               <Table.Cell>
-                <EncodeBadges $key={item.node} />
+                <div className="flex flex-row justify-end gap-2">
+                  <EncodeBadges $key={item.node} />
 
-                <Button color="neutral" size="xs" variant="blank" onClick={() => cancel(item.node)}>
-                  <IconProgressX size={16} />
-                </Button>
+                  <Button color="neutral" size="xs" variant="blank" onClick={() => cancel(item.node)}>
+                    <IconProgressX size={16} />
+                  </Button>
+                </div>
               </Table.Cell>
             </Table.Row>
           )}

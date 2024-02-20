@@ -28,10 +28,10 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 
     public async Task Consume(ConsumeContext<LibraryCreate.Command> context)
     {
-        var directory = _fs.DirectoryInfo.New(context.Message.FullPath);
+        var directory = _fs.DirectoryInfo.New(context.Message.DirectoryPath);
         if (!directory.Exists)
         {
-            await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.FullPath));
+            await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.DirectoryPath));
             return;
         }
 

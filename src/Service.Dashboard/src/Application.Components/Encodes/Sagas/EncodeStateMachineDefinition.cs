@@ -2,7 +2,7 @@ using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using MassTransit;
 
-namespace Giantnodes.Service.Dashboard.Application.Components.Files.Sagas;
+namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas;
 
 public class EncodeStateMachineDefinition : SagaDefinition<EncodeSagaState>
 {
