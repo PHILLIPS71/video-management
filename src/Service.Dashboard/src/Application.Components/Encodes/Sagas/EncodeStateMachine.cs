@@ -7,7 +7,6 @@ using Giantnodes.Service.Encoder.Application.Contracts.Probing.Events;
 using Giantnodes.Service.Encoder.Application.Contracts.Probing.Jobs;
 using MassTransit;
 using MassTransit.Contracts.JobService;
-using EncodeCancelledEvent = Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Events.EncodeCancelledEvent;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas;
 
@@ -17,29 +16,29 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
     {
         InstanceState(x => x.CurrentState);
 
-        Event(() => Submitted, e => e.CorrelateById(context => context.Message.EncodeId));
-        Event(() => Cancelled, e => e.CorrelateById(context => context.Message.EncodeId));
-        Event(() => FileProbed, e => e.CorrelateById(context => context.Message.JobId));
-        Event(() => EncodeStarted);
-        Event(() => EncodeCompleted);
+        Event(() => Submitted);
+        Event(() => Cancelled);
+        Event(() => Started);
         Event(() => Heartbeat);
         Event(() => Progressed);
+        Event(() => Completed);
         Event(() => Failed);
-
-        Request(() => EncodeRequest);
+        Event(() => FileProbed, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
 
         Initially(
             When(Submitted)
                 .Then(context =>
                 {
+                    context.Saga.JobId = NewId.NextSequentialGuid();
+                    context.Saga.EncodeId = context.Message.EncodeId;
                     context.Saga.InputFilePath = context.Message.FilePath;
-                    context.Saga.SubmittedAt = DateTime.UtcNow;
                 })
                 .PublishAsync(context => context.Init<SubmitJob<ProbeFileSystem.Job>>(new
                 {
-                    JobId = context.Saga.CorrelationId,
+                    JobId = context.Saga.JobId,
                     Job = new ProbeFileSystem.Job
                     {
+                        CorrelationId = context.Saga.CorrelationId,
                         FilePath = context.Message.FilePath
                     }
                 }))
@@ -47,27 +46,17 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
 
         During(Probing,
             When(FileProbed)
+                .Then(context => context.Saga.JobId = null)
                 .Activity(context => context.OfType<FileProbedActivity>())
-                .Request(EncodeRequest, context => new EncodeSubmit.Command
+                .PublishAsync(context => context.Init<EncodeOperationSubmit.Command>(new EncodeOperationSubmit.Command
                 {
                     CorrelationId = context.Saga.CorrelationId,
-                    FilePath = context.Saga.InputFilePath,
-                    OutputDirectoryPath = context.Message.FilePath,
-                    IsDeletingInput = false
-                })
-                .TransitionTo(EncodeRequest?.Pending));
+                    FilePath = context.Saga.InputFilePath
+                }))
+                .TransitionTo(Queued));
 
-        During(EncodeRequest?.Pending,
-            When(EncodeRequest?.Completed)
-                .TransitionTo(Queued),
-            When(EncodeRequest?.TimeoutExpired)
-                .Activity(context => context.OfInstanceType<EncodeDegradeActivity>()),
-            When(EncodeRequest?.Faulted)
-                .Activity(context => context.OfInstanceType<EncodeDegradeActivity>())
-                .Finalize());
-
-        During(EncodeRequest?.Pending, Queued,
-            When(EncodeStarted)
+        During(Queued,
+            When(Started)
                 .Activity(context => context.OfType<EncodeStartedActivity>())
                 .TransitionTo(Processing));
 
@@ -76,14 +65,19 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
                 .Activity(context => context.OfType<EncodeHeartbeatActivity>()),
             When(Progressed)
                 .Activity(context => context.OfType<EncodeProgressedActivity>()),
-            When(EncodeCompleted)
-                .Then(context => context.Saga.OutputFilePath = context.Message.OutputFilePath)
+            When(Completed)
                 .Activity(context => context.OfType<EncodeCompletedActivity>())
+                .Then(context =>
+                {
+                    context.Saga.JobId = NewId.NextSequentialGuid();
+                    context.Saga.OutputFilePath = context.Message.OutputFilePath;
+                })
                 .PublishAsync(context => context.Init<SubmitJob<ProbeFileSystem.Job>>(new
                 {
-                    JobId = context.Saga.CorrelationId,
+                    JobId = context.Saga.JobId,
                     Job = new ProbeFileSystem.Job
                     {
+                        CorrelationId = context.Saga.CorrelationId,
                         FilePath = context.Message.OutputFilePath
                     }
                 }))
@@ -91,6 +85,7 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
 
         During(Encoded,
             When(FileProbed)
+                .Then(context => context.Saga.JobId = null)
                 .Activity(context => context.OfType<FileProbedActivity>())
                 .Finalize());
 
@@ -99,7 +94,10 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
                 .Activity(context => context.OfType<EncodeFailedActivity>())
                 .Finalize(),
             When(Cancelled)
-                .PublishAsync(context => context.Init<EncodeCancel.Command>(new { context.Saga.CorrelationId }))
+                .PublishAsync(context => context.Init<EncodeOperationCancel.Command>(new EncodeOperationCancel.Command
+                {
+                    CorrelationId = context.Saga.CorrelationId
+                }))
                 .Finalize());
 
         SetCompletedWhenFinalized();
@@ -108,17 +106,14 @@ public class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState>
     public required State Queued { get; set; }
     public required State Probing { get; set; }
     public required State Processing { get; set; }
-
     public required State Encoded { get; set; }
 
     public required Event<EncodeCreatedEvent> Submitted { get; set; }
     public required Event<FileProbedEvent> FileProbed { get; set; }
-    public required Event<EncodeStartedEvent> EncodeStarted { get; set; }
-    public required Event<EncodeCompletedEvent> EncodeCompleted { get; set; }
-    public required Event<EncodeHeartbeatEvent> Heartbeat { get; set; }
-    public required Event<EncodeProgressedEvent> Progressed { get; set; }
+    public required Event<EncodeOperationStartedEvent> Started { get; set; }
+    public required Event<EncodeOperationCompletedEvent> Completed { get; set; }
+    public required Event<EncodeOperationEncodeHeartbeatEvent> Heartbeat { get; set; }
+    public required Event<EncodeOperationEncodeProgressedEvent> Progressed { get; set; }
     public required Event<EncodeCancelledEvent> Cancelled { get; set; }
-    public required Event<EncodeFailedEvent> Failed { get; set; }
-
-    public required Request<EncodeSagaState, EncodeSubmit.Command, EncodeSubmit.Result> EncodeRequest { get; set; }
+    public required Event<EncodeOperationFailedEvent> Failed { get; set; }
 }

@@ -56,6 +56,7 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
                     await context.Publish(new FileProbedEvent
                     {
                         JobId = context.JobId,
+                        CorrelationId = context.Job.CorrelationId,
                         FilePath = file.FullName,
                         Name = Path.GetFileName(file.FullName),
                         Size = file.Length,
@@ -80,6 +81,7 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
                     await context.Publish(new FileProbeFaultedEvent
                     {
                         JobId = context.JobId,
+                        CorrelationId = context.Job.CorrelationId,
                         FilePath = file.FullName,
                         Exception = new FaultExceptionInfo(ex),
                     }, context.CancellationToken);

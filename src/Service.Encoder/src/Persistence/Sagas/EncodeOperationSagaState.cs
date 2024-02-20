@@ -2,7 +2,7 @@
 
 namespace Giantnodes.Service.Encoder.Persistence.Sagas;
 
-public class EncodeJobSaga : SagaStateMachineInstance
+public class EncodeOperationSagaState : SagaStateMachineInstance
 {
     public Guid CorrelationId { get; set; }
 
@@ -11,12 +11,6 @@ public class EncodeJobSaga : SagaStateMachineInstance
     public Guid? JobId { get; set; }
 
     public string FilePath { get; set; } = null!;
-
-    public bool IsDeletingInput { get; set; }
-
-    public string? OutputTempFilePath { get; set; }
-
-    public string? OutputDirectoryPath { get; set; }
 
     public byte[]? RowVersion { get; set; }
 }

@@ -16,22 +16,19 @@ namespace Giantnodes.Service.Encoder.Persistence.Migrations
                 name: "encoder");
 
             migrationBuilder.CreateTable(
-                name: "encode_job_saga",
+                name: "encode_operation_saga_state",
                 schema: "encoder",
                 columns: table => new
                 {
                     correlation_id = table.Column<Guid>(type: "uuid", nullable: false),
                     current_state = table.Column<string>(type: "text", nullable: false),
                     job_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    input_path = table.Column<string>(type: "text", nullable: false),
-                    is_deleting_input = table.Column<bool>(type: "boolean", nullable: false),
-                    output_temp_path = table.Column<string>(type: "text", nullable: true),
-                    output_directory_path = table.Column<string>(type: "text", nullable: true),
+                    file_path = table.Column<string>(type: "text", nullable: false),
                     row_version = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_encode_job_saga", x => x.correlation_id);
+                    table.PrimaryKey("pk_encode_operation_saga_state", x => x.correlation_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,17 +176,10 @@ namespace Giantnodes.Service.Encoder.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_encode_job_saga_job_id",
+                name: "ix_encode_operation_saga_state_job_id",
                 schema: "encoder",
-                table: "encode_job_saga",
+                table: "encode_operation_saga_state",
                 column: "job_id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "ix_encode_job_saga_output_directory_path",
-                schema: "encoder",
-                table: "encode_job_saga",
-                column: "output_directory_path",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -242,7 +232,7 @@ namespace Giantnodes.Service.Encoder.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "encode_job_saga",
+                name: "encode_operation_saga_state",
                 schema: "encoder");
 
             migrationBuilder.DropTable(

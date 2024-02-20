@@ -39,7 +39,7 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
 
     private Encode()
     {
-        Snapshots = _snapshots.AsReadOnly();
+        Snapshots = _snapshots;
     }
 
     public Encode(FileSystemFile file)
@@ -47,7 +47,7 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         Id = NewId.NextSequentialGuid();
         File = file;
         Status = EncodeStatus.Submitted;
-        Snapshots = _snapshots.AsReadOnly();
+        Snapshots = _snapshots;
 
         DomainEvents.Add(new EncodeCreatedEvent
         {

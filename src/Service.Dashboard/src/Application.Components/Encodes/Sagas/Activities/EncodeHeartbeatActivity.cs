@@ -7,7 +7,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
-public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, EncodeHeartbeatEvent>
+public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, EncodeOperationEncodeHeartbeatEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
@@ -31,12 +31,12 @@ public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, En
     }
 
     public async Task Execute(
-        BehaviorContext<EncodeSagaState, EncodeHeartbeatEvent> context,
-        IBehavior<EncodeSagaState, EncodeHeartbeatEvent> next)
+        BehaviorContext<EncodeSagaState, EncodeOperationEncodeHeartbeatEvent> context,
+        IBehavior<EncodeSagaState, EncodeOperationEncodeHeartbeatEvent> next)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
+            var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
 
             var speed = new EncodeSpeed(context.Message.Frames, context.Message.Bitrate, context.Message.Scale);
             encode.SetSpeed(speed);
@@ -48,8 +48,8 @@ public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, En
     }
 
     public Task Faulted<TException>(
-        BehaviorExceptionContext<EncodeSagaState, EncodeHeartbeatEvent, TException> context,
-        IBehavior<EncodeSagaState, EncodeHeartbeatEvent> next)
+        BehaviorExceptionContext<EncodeSagaState, EncodeOperationEncodeHeartbeatEvent, TException> context,
+        IBehavior<EncodeSagaState, EncodeOperationEncodeHeartbeatEvent> next)
         where TException : Exception
     {
         return next.Faulted(context);

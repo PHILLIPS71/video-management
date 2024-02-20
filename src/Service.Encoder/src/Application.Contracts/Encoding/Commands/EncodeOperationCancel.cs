@@ -3,15 +3,10 @@ using MassTransit;
 
 namespace Giantnodes.Service.Encoder.Application.Contracts.Encoding.Commands;
 
-public sealed class EncodeSubmit
+public sealed class EncodeOperationCancel
 {
     public sealed record Command : Message
     {
-        public required string FilePath { get; init; }
-
-        public required bool IsDeletingInput { get; init; }
-
-        public required string? OutputDirectoryPath { get; init; }
     }
 
     public sealed record Result : CorrelatedBy<Guid>

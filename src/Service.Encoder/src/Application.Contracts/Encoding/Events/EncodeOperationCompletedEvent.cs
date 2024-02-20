@@ -2,7 +2,7 @@
 
 namespace Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 
-public sealed record EncodeCompletedEvent : IntegrationEvent
+public sealed record EncodeOperationCompletedEvent : IntegrationEvent
 {
     public required string InputFilePath { get; init; }
 

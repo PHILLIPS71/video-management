@@ -2,6 +2,6 @@
 
 namespace Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 
-public sealed record EncodeCancelledEvent : IntegrationEvent
+public sealed record EncodeOperationStartedEvent : IntegrationEvent
 {
 }

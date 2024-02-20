@@ -11,19 +11,19 @@ using Xabe.FFmpeg.Events;
 
 namespace Giantnodes.Service.Encoder.Application.Components.Encoding.Jobs;
 
-public class EncodeConsumer : IJobConsumer<Encode.Job>
+public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
 {
     private const double PublishDelaySeconds = 1;
     private const string RegexNumberGroup = "([+-]?[0-9]*[.]?[0-9]*)";
 
     private readonly IFileSystem _fs;
 
-    public EncodeConsumer(IFileSystem fs)
+    public EncodeFileConsumer(IFileSystem fs)
     {
         _fs = fs;
     }
 
-    public async Task Run(JobContext<Encode.Job> context)
+    public async Task Run(JobContext<EncodeFile.Job> context)
     {
         var file = _fs.FileInfo.New(context.Job.FilePath);
         if (!file.Exists)
@@ -37,7 +37,11 @@ public class EncodeConsumer : IJobConsumer<Encode.Job>
         var video = media
             .VideoStreams.First().SetCodec(VideoCodec.h264);
 
-        var output = _fs.Path.GetTempFileName();
+        var name = Path.ChangeExtension(context.JobId.ToString(), file.Extension);
+        if (!string.IsNullOrWhiteSpace(context.Job.FileContainer))
+            name = Path.ChangeExtension(name, context.Job.FileContainer);
+
+        var output = Path.Join(_fs.Path.GetTempPath(), name);
         var conversion = FFmpeg.Conversions
             .New()
             .AddStream(video)
@@ -74,11 +78,14 @@ public class EncodeConsumer : IJobConsumer<Encode.Job>
             if (progress?.Percent == args.Percent)
                 return;
 
-            await context.Publish(new EncodeProgressedEvent
+            var @event = new EncodeOperationEncodeProgressedEvent
             {
-                CorrelationId = context.CorrelationId ?? context.JobId,
+                JobId = context.JobId,
+                CorrelationId = context.Job.CorrelationId,
                 Percent = args.Percent / 100.0f
-            }, context.CancellationToken);
+            };
+
+            await context.Publish(@event, ctx => ctx.Durable = false, context.CancellationToken);
 
             progress = args;
             Log.Information("encode progress on file {0} with job id {1} is {2:P}.", output, context.JobId, args.Percent / 100.0f);
@@ -86,21 +93,7 @@ public class EncodeConsumer : IJobConsumer<Encode.Job>
 
         try
         {
-            await context.Publish(new EncodeStartedEvent
-            {
-                CorrelationId = context.CorrelationId ?? context.JobId,
-                InputFilePath = context.Job.FilePath,
-                OutputFilePath = output
-            });
-
             await conversion.Start(context.CancellationToken);
-
-            await context.Publish(new EncodeCompletedEvent
-            {
-                CorrelationId = context.CorrelationId ?? context.JobId,
-                InputFilePath = context.Job.FilePath,
-                OutputFilePath = output
-            });
         }
         catch (OperationCanceledException)
         {
@@ -110,13 +103,11 @@ public class EncodeConsumer : IJobConsumer<Encode.Job>
 
             info.Delete();
             Log.Information("encode with job id {0} was cancelled and file {1} was deleted.", context.JobId, info.FullName);
-
-            await context.Publish(new EncodeCancelledEvent { CorrelationId = context.CorrelationId ?? context.JobId });
             throw;
         }
     }
 
-    private static bool TryCreateEvent(JobContext context, string stout, out EncodeHeartbeatEvent? @event)
+    private static bool TryCreateEvent(JobContext<EncodeFile.Job> context, string stout, out EncodeOperationEncodeHeartbeatEvent? @event)
     {
         @event = null;
 
@@ -132,9 +123,10 @@ public class EncodeConsumer : IJobConsumer<Encode.Job>
         if (!speed.Success)
             return false;
 
-        @event = new EncodeHeartbeatEvent
+        @event = new EncodeOperationEncodeHeartbeatEvent
         {
-            CorrelationId = context.CorrelationId ?? context.JobId,
+            JobId = context.JobId,
+            CorrelationId = context.Job.CorrelationId,
             Frames = float.Parse(fps.Groups[1].Value),
             Bitrate = (long)float.Parse(bitrate.Groups[1].Value) * 1000L,
             Scale = float.Parse(speed.Groups[1].Value)

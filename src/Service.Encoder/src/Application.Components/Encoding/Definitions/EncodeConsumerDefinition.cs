@@ -4,15 +4,15 @@ using MassTransit;
 
 namespace Giantnodes.Service.Encoder.Application.Components.Encoding.Definitions;
 
-public class EncodeConsumerDefinition : ConsumerDefinition<EncodeConsumer>
+public class EncodeConsumerDefinition : ConsumerDefinition<EncodeFileConsumer>
 {
     protected override void ConfigureConsumer(
         IReceiveEndpointConfigurator endpointConfigurator,
-        IConsumerConfigurator<EncodeConsumer> consumerConfigurator,
+        IConsumerConfigurator<EncodeFileConsumer> consumerConfigurator,
         IRegistrationContext context)
     {
         consumerConfigurator
-            .Options<JobOptions<Encode.Job>>(options =>
+            .Options<JobOptions<EncodeFile.Job>>(options =>
                 options
                     .SetRetry(r => r.Interval(3, TimeSpan.FromSeconds(30)))
                     .SetJobTimeout(TimeSpan.FromDays(7))

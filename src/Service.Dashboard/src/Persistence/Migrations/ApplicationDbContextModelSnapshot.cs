@@ -18,7 +18,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("dashboard")
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -222,14 +222,22 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("current_state");
 
-                    b.Property<string>("InputFullPath")
+                    b.Property<Guid>("EncodeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("encode_id");
+
+                    b.Property<string>("InputFilePath")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("input_full_path");
+                        .HasColumnName("input_file_path");
 
-                    b.Property<string>("OutputFullPath")
+                    b.Property<Guid?>("JobId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("job_id");
+
+                    b.Property<string>("OutputFilePath")
                         .HasColumnType("text")
-                        .HasColumnName("output_full_path");
+                        .HasColumnName("output_file_path");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -244,9 +252,9 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     b.HasKey("CorrelationId")
                         .HasName("pk_encode_saga_state");
 
-                    b.HasIndex("OutputFullPath")
+                    b.HasIndex("OutputFilePath")
                         .IsUnique()
-                        .HasDatabaseName("ix_encode_saga_state_output_full_path");
+                        .HasDatabaseName("ix_encode_saga_state_output_file_path");
 
                     b.ToTable("encode_saga_state", "dashboard");
                 });

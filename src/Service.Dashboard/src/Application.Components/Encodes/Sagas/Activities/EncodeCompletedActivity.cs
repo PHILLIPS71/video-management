@@ -7,7 +7,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
-public class EncodeCompletedActivity : IStateMachineActivity<EncodeSagaState, EncodeCompletedEvent>
+public class EncodeCompletedActivity : IStateMachineActivity<EncodeSagaState, EncodeOperationCompletedEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
@@ -31,12 +31,12 @@ public class EncodeCompletedActivity : IStateMachineActivity<EncodeSagaState, En
     }
 
     public async Task Execute(
-        BehaviorContext<EncodeSagaState, EncodeCompletedEvent> context,
-        IBehavior<EncodeSagaState, EncodeCompletedEvent> next)
+        BehaviorContext<EncodeSagaState, EncodeOperationCompletedEvent> context,
+        IBehavior<EncodeSagaState, EncodeOperationCompletedEvent> next)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
+            var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
             encode.SetStatus(EncodeStatus.Completed);
 
             await uow.CommitAsync(context.CancellationToken);
@@ -46,8 +46,8 @@ public class EncodeCompletedActivity : IStateMachineActivity<EncodeSagaState, En
     }
 
     public Task Faulted<TException>(
-        BehaviorExceptionContext<EncodeSagaState, EncodeCompletedEvent, TException> context,
-        IBehavior<EncodeSagaState, EncodeCompletedEvent> next) where TException : Exception
+        BehaviorExceptionContext<EncodeSagaState, EncodeOperationCompletedEvent, TException> context,
+        IBehavior<EncodeSagaState, EncodeOperationCompletedEvent> next) where TException : Exception
     {
         return next.Faulted(context);
     }

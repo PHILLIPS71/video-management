@@ -6,7 +6,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
-public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, EncodeProgressedEvent>
+public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, EncodeOperationEncodeProgressedEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
@@ -30,12 +30,12 @@ public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, E
     }
 
     public async Task Execute(
-        BehaviorContext<EncodeSagaState, EncodeProgressedEvent> context,
-        IBehavior<EncodeSagaState, EncodeProgressedEvent> next)
+        BehaviorContext<EncodeSagaState, EncodeOperationEncodeProgressedEvent> context,
+        IBehavior<EncodeSagaState, EncodeOperationEncodeProgressedEvent> next)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
+            var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
             encode.SetProgress(context.Message.Percent);
 
             await uow.CommitAsync(context.CancellationToken);
@@ -45,8 +45,8 @@ public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, E
     }
 
     public Task Faulted<TException>(
-        BehaviorExceptionContext<EncodeSagaState, EncodeProgressedEvent, TException> context,
-        IBehavior<EncodeSagaState, EncodeProgressedEvent> next)
+        BehaviorExceptionContext<EncodeSagaState, EncodeOperationEncodeProgressedEvent, TException> context,
+        IBehavior<EncodeSagaState, EncodeOperationEncodeProgressedEvent> next)
         where TException : Exception
     {
         return next.Faulted(context);

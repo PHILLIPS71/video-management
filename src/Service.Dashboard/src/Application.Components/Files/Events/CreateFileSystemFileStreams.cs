@@ -45,7 +45,7 @@ public class CreateFileSystemFileStreams : IConsumer<FileProbedEvent>
                 streams.AddRange(audio);
                 streams.AddRange(subtitles);
 
-                file.SetStreams(context.Message.Timestamp, streams.ToArray());
+                file.SetStreams(context.Message.RaisedAt, streams.ToArray());
             }
 
             await uow.CommitAsync(context.CancellationToken);

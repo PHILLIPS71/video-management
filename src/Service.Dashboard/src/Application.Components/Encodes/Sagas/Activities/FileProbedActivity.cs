@@ -38,7 +38,7 @@ public class FileProbedActivity : IStateMachineActivity<EncodeSagaState, FilePro
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
+            var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
 
             var videos = context.Message.VideoStreams
                 .Select(x => new VideoStream(x.Index, x.Codec, x.Duration, new VideoQuality(x.Width, x.Height, x.AspectRatio), x.Framerate, x.Bitrate, x.PixelFormat))
@@ -57,7 +57,7 @@ public class FileProbedActivity : IStateMachineActivity<EncodeSagaState, FilePro
             streams.AddRange(audio);
             streams.AddRange(subtitles);
 
-            var snapshot = new EncodeSnapshot(encode, context.Message.Size, context.Message.Timestamp, streams.ToArray());
+            var snapshot = new EncodeSnapshot(encode, context.Message.Size, context.Message.RaisedAt, streams.ToArray());
             encode.AddSnapshot(snapshot);
 
             await uow.CommitAsync(context.CancellationToken);

@@ -22,8 +22,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 {
                     correlation_id = table.Column<Guid>(type: "uuid", nullable: false),
                     current_state = table.Column<string>(type: "text", nullable: false),
-                    input_full_path = table.Column<string>(type: "text", nullable: false),
-                    output_full_path = table.Column<string>(type: "text", nullable: true),
+                    encode_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    job_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    input_file_path = table.Column<string>(type: "text", nullable: false),
+                    output_file_path = table.Column<string>(type: "text", nullable: true),
                     submitted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     row_version = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
@@ -433,10 +435,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_encode_saga_state_output_full_path",
+                name: "ix_encode_saga_state_output_file_path",
                 schema: "dashboard",
                 table: "encode_saga_state",
-                column: "output_full_path",
+                column: "output_file_path",
                 unique: true);
 
             migrationBuilder.CreateIndex(

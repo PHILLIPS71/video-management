@@ -58,11 +58,11 @@ public class EncodeDegradeActivity : IStateMachineActivity<EncodeSagaState>
         return next.Faulted(context);
     }
 
-    private async Task Degrade(ConsumeContext context)
+    private async Task Degrade(SagaConsumeContext<EncodeSagaState> context)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var encode = await _repository.SingleAsync(x => x.Id == context.CorrelationId);
+            var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
 
             encode.SetStatus(EncodeStatus.Degraded);
             await uow.CommitAsync(context.CancellationToken);

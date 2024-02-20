@@ -8,11 +8,15 @@ public class EncodeSagaState : SagaStateMachineInstance
 
     public string CurrentState { get; set; } = null!;
 
+    public Guid EncodeId { get; set; }
+
+    public Guid? JobId { get; set; }
+
     public string InputFilePath { get; set; } = null!;
 
     public string? OutputFilePath { get; set; }
 
-    public DateTime SubmittedAt { get; set; }
+    public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
 
     public byte[]? RowVersion { get; set; }
 }

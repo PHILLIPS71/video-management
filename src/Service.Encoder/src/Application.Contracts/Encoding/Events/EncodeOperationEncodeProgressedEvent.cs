@@ -2,7 +2,9 @@
 
 namespace Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 
-public sealed record EncodeProgressedEvent : IntegrationEvent
+public sealed record EncodeOperationEncodeProgressedEvent : IntegrationEvent
 {
+    public required Guid JobId { get; init; }
+
     public required float Percent { get; init; }
 }
