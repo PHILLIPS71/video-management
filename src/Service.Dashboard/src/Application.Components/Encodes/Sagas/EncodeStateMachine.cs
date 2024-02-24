@@ -57,6 +57,8 @@ public sealed class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState
         During(Encoded,
             When(FileProbed)
                 .Then(context => context.Saga.JobId = null)
+                .If(context => !context.Saga.IsKeepingSourceFile,
+                    context => context.Activity(ctx => ctx.OfInstanceType<FileCleanUpActivity>()))
                 .Activity(context => context.OfType<FileProbedActivity>())
                 .Finalize());
 

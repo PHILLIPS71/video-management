@@ -18,6 +18,8 @@ public class EncodeSagaState : SagaStateMachineInstance
 
     public string? OutputFilePath { get; set; }
 
+    public bool IsKeepingSourceFile { get; set; }
+
     public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
 
     public byte[]? RowVersion { get; set; }

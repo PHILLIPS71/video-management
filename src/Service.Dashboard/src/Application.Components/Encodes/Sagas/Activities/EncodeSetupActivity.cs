@@ -16,7 +16,7 @@ public class EncodeSetupActivity : IStateMachineActivity<EncodeSagaState, Encode
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeOperationCompletedActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeSetupActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)

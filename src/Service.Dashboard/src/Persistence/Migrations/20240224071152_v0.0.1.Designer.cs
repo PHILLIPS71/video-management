@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240224053547_v0.0.1")]
+    [Migration("20240224071152_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -233,6 +233,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("input_file_path");
+
+                    b.Property<bool>("IsKeepingSourceFile")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_keeping_source_file");
 
                     b.Property<Guid?>("JobId")
                         .HasColumnType("uuid")
