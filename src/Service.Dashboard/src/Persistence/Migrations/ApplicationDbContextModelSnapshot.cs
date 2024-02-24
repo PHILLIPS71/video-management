@@ -231,6 +231,10 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("input_file_path");
 
+                    b.Property<bool>("IsKeepingSourceFile")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_keeping_source_file");
+
                     b.Property<Guid?>("JobId")
                         .HasColumnType("uuid")
                         .HasColumnName("job_id");

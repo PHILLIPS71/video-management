@@ -147,7 +147,7 @@ internal static class EncodeOperationStateBehaviorExtensions
                 {
                     CorrelationId = context.Saga.CorrelationId,
                     InputFilePath = context.Saga.InputFilePath,
-                    OutputFilePath = context.Saga.TempFilePath
+                    OutputFilePath = context.Saga.OutputFilePath
                 }));
     }
 }
