@@ -25,6 +25,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     encode_id = table.Column<Guid>(type: "uuid", nullable: false),
                     job_id = table.Column<Guid>(type: "uuid", nullable: true),
                     input_file_path = table.Column<string>(type: "text", nullable: false),
+                    output_directory_path = table.Column<string>(type: "text", nullable: false),
                     output_file_path = table.Column<string>(type: "text", nullable: true),
                     submitted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     row_version = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)

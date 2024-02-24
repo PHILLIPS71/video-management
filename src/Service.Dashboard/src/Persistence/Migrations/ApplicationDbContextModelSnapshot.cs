@@ -235,6 +235,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("job_id");
 
+                    b.Property<string>("OutputDirectoryPath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("output_directory_path");
+
                     b.Property<string>("OutputFilePath")
                         .HasColumnType("text")
                         .HasColumnName("output_file_path");

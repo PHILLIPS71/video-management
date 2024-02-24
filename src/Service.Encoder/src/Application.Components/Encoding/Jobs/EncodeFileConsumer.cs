@@ -25,27 +25,21 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
 
     public async Task Run(JobContext<EncodeFile.Job> context)
     {
-        var file = _fs.FileInfo.New(context.Job.FilePath);
+        var file = _fs.FileInfo.New(context.Job.InputFilePath);
         if (!file.Exists)
         {
-            await context.RejectAsync(FaultKind.NotFound, nameof(context.Job.FilePath));
+            await context.RejectAsync(FaultKind.NotFound, nameof(context.Job.InputFilePath));
             return;
         }
 
         var media = await FFmpeg.GetMediaInfo(file.FullName, context.CancellationToken);
-
         var video = media
             .VideoStreams.First().SetCodec(VideoCodec.h264);
 
-        var name = Path.ChangeExtension(context.JobId.ToString(), file.Extension);
-        if (!string.IsNullOrWhiteSpace(context.Job.FileContainer))
-            name = Path.ChangeExtension(name, context.Job.FileContainer);
-
-        var output = Path.Join(_fs.Path.GetTempPath(), name);
         var conversion = FFmpeg.Conversions
             .New()
             .AddStream(video)
-            .SetOutput(output)
+            .SetOutput(context.Job.OutputFilePath)
             .SetOverwriteOutput(true)
             .UseMultiThread(true);
 
@@ -68,7 +62,7 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
             }
             catch (FormatException ex)
             {
-                Log.Error(ex, "encode data {0} with job id {1} was unable to be parsed.", args.Data, context.JobId);
+                Log.Error(ex, "Encode data {0} with job id {1} was unable to be parsed.", args.Data, context.JobId);
             }
         };
 
@@ -88,7 +82,7 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
             await context.Publish(@event, ctx => ctx.Durable = false, context.CancellationToken);
 
             progress = args;
-            Log.Information("encode progress on file {0} with job id {1} is {2:P}.", output, context.JobId, args.Percent / 100.0f);
+            Log.Information("Encode progress on file {0} with job id {1} is {2:P}.", context.Job.OutputFilePath, context.JobId, args.Percent / 100.0f);
         };
 
         try
@@ -97,12 +91,12 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
         }
         catch (OperationCanceledException)
         {
-            var info = _fs.FileInfo.New(output);
+            var info = _fs.FileInfo.New(context.Job.OutputFilePath);
             if (!info.Exists)
                 throw;
 
             info.Delete();
-            Log.Information("encode with job id {0} was cancelled and file {1} was deleted.", context.JobId, info.FullName);
+            Log.Information("Encode with job id {0} was cancelled and file {1} was deleted.", context.JobId, info.FullName);
             throw;
         }
     }
