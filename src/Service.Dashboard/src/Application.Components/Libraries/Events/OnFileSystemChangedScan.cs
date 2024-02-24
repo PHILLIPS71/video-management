@@ -6,7 +6,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Libraries.Events;
 
-public class OnFileSystemChangedScan : IConsumer<Batch<LibraryFileSystemChangedEvent>>
+public class OnFileSystemChangedScan : IConsumer<LibraryFileSystemChangedEvent>
 {
     private readonly IFileSystem _fs;
     private readonly IUnitOfWorkService _uow;
@@ -22,18 +22,14 @@ public class OnFileSystemChangedScan : IConsumer<Batch<LibraryFileSystemChangedE
         _repository = repository;
     }
 
-    public async Task Consume(ConsumeContext<Batch<LibraryFileSystemChangedEvent>> context)
+    public async Task Consume(ConsumeContext<LibraryFileSystemChangedEvent> context)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
-            var libraries = await _repository
-                .ToListAsync(x => context.Message.Select(y => y.Message.LibraryId).Contains(x.Id), context.CancellationToken);
+            var library = await _repository
+                .SingleAsync(x => x.Id == context.Message.LibraryId, context.CancellationToken);
 
-            foreach (var library in libraries)
-            {
-                library.Scan(_fs);
-            }
-
+            library.Scan(_fs);
             await uow.CommitAsync(context.CancellationToken);
         }
     }
