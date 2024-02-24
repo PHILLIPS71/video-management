@@ -8,18 +8,21 @@ namespace Giantnodes.Service.Dashboard.Domain.Services;
 public interface IFileSystemService : IApplicationService, ISingletonDependency
 {
     /// <summary>
-    /// Checks if a path exists on the file system asynchronously.
+    /// Asynchronously checks whether the specified path exists using a timeout of 30 seconds.
     /// </summary>
-    /// <param name="path">A path to search for file system entries.</param>
-    /// <returns>A bool indicating if the path exists on the file system.</returns>
+    /// <param name="path">The path to check for existence.</param>
+    /// <returns>
+    /// A task representing the existence check. The task result indicates whether the path exists (true) or not (false).
+    /// </returns>
     public Task<bool> Exists(string path);
 
     /// <summary>
-    /// Gets all the <see cref="IFileSystemInfo"/> objects that are within the specified <paramref name="path"/>
-    /// excluding any that are not either a <see cref="IDirectoryInfo"/> or a media file.
+    /// Retrieves a read-only collection of file system entries (files and directories) in the specified path.
     /// </summary>
-    /// <param name="path">A path to search for file system entries.</param>
-    /// <param name="search">Specifies whether the operation should include only the current directory or all sub-directories</param>
-    /// <returns>A read-only collection of the file system entries on the file system.</returns>
+    /// <param name="path">The path to retrieve file system entries from.</param>
+    /// <param name="search">Specifies whether to include only the current directory or all sub-directories</param>
+    /// <returns>
+    /// A read-only collection of <see cref="IFileSystemInfo"/> representing the file system entries in the specified path.
+    /// </returns>
     public ReadOnlyCollection<IFileSystemInfo> GetFileSystemEntries(string path, SearchOption search = SearchOption.TopDirectoryOnly);
 }

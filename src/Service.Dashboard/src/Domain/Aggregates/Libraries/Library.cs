@@ -91,6 +91,7 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
     /// <param name="fs">A file system abstraction where the library exists.</param>
     public void Scan(IFileSystem fs)
     {
+        // initialize variables to track the parent directory, paths, and a stack for depth-first traversal.
         var parent = Directory;
         var paths = new List<string> { parent.PathInfo.FullName };
 
@@ -99,6 +100,7 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
 
         Status = FileSystemStatus.Online;
 
+        // perform a depth-first traversal of the file system
         while (stack.Count > 0)
         {
             var path = stack.Pop();
@@ -106,10 +108,12 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
 
             try
             {
+                // retrieve information about video files in the current directory.
                 var infos = fs.GetVideoFiles(path);
 
                 foreach (var info in infos)
                 {
+                    // check if the entry already exists; otherwise, create and add it to the collection
                     var entry = _entries.SingleOrDefault(x => x.PathInfo.FullName == info.FullName);
                     if (entry == null)
                     {
@@ -117,6 +121,7 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
                         _entries.Add(entry);
                     }
 
+                    // update the entry based on the type of file or subdirectory
                     switch (info)
                     {
                         case IFileInfo file:
@@ -129,6 +134,7 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
                             break;
                     }
 
+                    // update the scanned timestamp and add the path to the list
                     entry.SetScannedAt(DateTime.UtcNow);
                     paths.Add(info.FullName);
                 }
@@ -148,6 +154,7 @@ public class Library : AggregateRoot<Guid>, ITimestampableEntity
             }
         }
 
+        // remove entries that no longer exist in the file system
         _entries.RemoveAll(x => paths.TrueForAll(path => path != x.PathInfo.FullName));
     }
 }

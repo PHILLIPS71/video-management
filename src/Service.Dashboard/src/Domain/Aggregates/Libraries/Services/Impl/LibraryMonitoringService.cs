@@ -16,6 +16,7 @@ public class LibraryMonitoringService : ILibraryMonitoringService
         _watcher = watcher;
     }
 
+    /// <inheritdoc />
     public async Task<bool> TryMonitorAsync(Library library)
     {
         var success = await _watcher.TryWatchAsync(
@@ -36,6 +37,7 @@ public class LibraryMonitoringService : ILibraryMonitoringService
         return success;
     }
 
+    /// <inheritdoc />
     public bool TryUnMonitor(Library library)
     {
         var success = _watcher.TryUnwatch(library.PathInfo.FullName);

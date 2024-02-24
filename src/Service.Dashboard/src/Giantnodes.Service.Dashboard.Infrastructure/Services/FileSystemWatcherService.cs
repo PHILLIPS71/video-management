@@ -53,6 +53,13 @@ public class FileSystemWatcherService : IFileSystemWatcherService
         return true;
     }
 
+    /// <summary>
+    /// Creates and configures a new file system watcher for the specified path, associated with a custom event type.
+    /// </summary>
+    /// <typeparam name="TEvent">The type of event to be raised when file system changes occur.</typeparam>
+    /// <param name="path">The path to watch for file system changes.</param>
+    /// <param name="raise">A function to convert <see cref="FileSystemEventArgs"/> to the custom event type.</param>
+    /// <returns>A task that represents the created file system watcher.</returns>
     private async Task<IFileSystemWatcher> Create<TEvent>(string path, Func<FileSystemEventArgs, TEvent> raise)
         where TEvent : class
     {
@@ -68,6 +75,7 @@ public class FileSystemWatcherService : IFileSystemWatcherService
                                NotifyFilters.LastWrite |
                                NotifyFilters.Size;
 
+        // subscribe to file system events, convert them to the custom event type, and publish through the event bus.
         Observable
             .Merge(
                 Observable.FromEventPattern<FileSystemEventArgs>(watcher, nameof(watcher.Created)),
