@@ -34,20 +34,30 @@ namespace Giantnodes.Service.Encoder.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("current_state");
 
-                    b.Property<string>("FilePath")
+                    b.Property<string>("InputFilePath")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("file_path");
+                        .HasColumnName("input_file_path");
 
                     b.Property<Guid?>("JobId")
                         .HasColumnType("uuid")
                         .HasColumnName("job_id");
+
+                    b.Property<string>("OutputFilePath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("output_file_path");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bytea")
                         .HasColumnName("row_version");
+
+                    b.Property<string>("TempFilePath")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("temp_file_path");
 
                     b.HasKey("CorrelationId")
                         .HasName("pk_encode_operation_saga_state");

@@ -24,7 +24,7 @@ public class FileProbedActivity : IStateMachineActivity<EncodeSagaState, FilePro
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeCompletedActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeOperationCompletedActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)

@@ -10,7 +10,11 @@ public class EncodeOperationSagaState : SagaStateMachineInstance
 
     public Guid? JobId { get; set; }
 
-    public string FilePath { get; set; } = null!;
+    public string InputFilePath { get; set; } = null!;
+
+    public string OutputFilePath { get; set; } = null!;
+
+    public string TempFilePath { get; set; } = null!;
 
     public byte[]? RowVersion { get; set; }
 }

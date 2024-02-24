@@ -7,12 +7,12 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
-public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, EncodeOperationStartedEvent>
+public class EncodeOperationFailedActivity : IStateMachineActivity<EncodeSagaState, EncodeOperationFailedEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
 
-    public EncodeStartedActivity(
+    public EncodeOperationFailedActivity(
         IUnitOfWorkService uow,
         IEncodeRepository repository)
     {
@@ -22,7 +22,7 @@ public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, Enco
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeStartedActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeOperationCompletedActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)
@@ -31,13 +31,13 @@ public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, Enco
     }
 
     public async Task Execute(
-        BehaviorContext<EncodeSagaState, EncodeOperationStartedEvent> context,
-        IBehavior<EncodeSagaState, EncodeOperationStartedEvent> next)
+        BehaviorContext<EncodeSagaState, EncodeOperationFailedEvent> context,
+        IBehavior<EncodeSagaState, EncodeOperationFailedEvent> next)
     {
         using (var uow = await _uow.BeginAsync(context.CancellationToken))
         {
             var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
-            encode.SetStatus(EncodeStatus.Encoding);
+            encode.SetStatus(EncodeStatus.Failed);
 
             await uow.CommitAsync(context.CancellationToken);
         }
@@ -46,8 +46,8 @@ public class EncodeStartedActivity : IStateMachineActivity<EncodeSagaState, Enco
     }
 
     public Task Faulted<TException>(
-        BehaviorExceptionContext<EncodeSagaState, EncodeOperationStartedEvent, TException> context,
-        IBehavior<EncodeSagaState, EncodeOperationStartedEvent> next)
+        BehaviorExceptionContext<EncodeSagaState, EncodeOperationFailedEvent, TException> context,
+        IBehavior<EncodeSagaState, EncodeOperationFailedEvent> next)
         where TException : Exception
     {
         return next.Faulted(context);

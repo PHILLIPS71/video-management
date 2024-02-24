@@ -7,16 +7,19 @@ public sealed class EncodeFile
 {
     public sealed record Job : Message
     {
-        public required string FilePath { get; init; }
+        public required string InputFilePath { get; init; }
 
-        public string? FileContainer { get; init; }
+        public required string OutputFilePath { get; init; }
     }
 
     public sealed class Validator : AbstractValidator<Job>
     {
         public Validator()
         {
-            RuleFor(p => p.FilePath)
+            RuleFor(p => p.InputFilePath)
+                .NotEmpty();
+
+            RuleFor(p => p.OutputFilePath)
                 .NotEmpty();
         }
     }

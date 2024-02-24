@@ -2,14 +2,12 @@
 
 namespace Giantnodes.Service.Encoder.Application.Contracts.Encoding.Commands;
 
-public sealed class EncodeOperationSubmit
+public sealed class TransferFile
 {
-    public sealed record Command : Message
+    public sealed record Job : Message
     {
         public required string InputFilePath { get; init; }
 
-        public required string OutputDirectoryPath { get; init; }
-
-        public string? Container { get; init; }
+        public required string OutputFilePath { get; set; }
     }
 }

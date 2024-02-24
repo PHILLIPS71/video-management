@@ -23,7 +23,9 @@ namespace Giantnodes.Service.Encoder.Persistence.Migrations
                     correlation_id = table.Column<Guid>(type: "uuid", nullable: false),
                     current_state = table.Column<string>(type: "text", nullable: false),
                     job_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    file_path = table.Column<string>(type: "text", nullable: false),
+                    input_file_path = table.Column<string>(type: "text", nullable: false),
+                    output_file_path = table.Column<string>(type: "text", nullable: false),
+                    temp_file_path = table.Column<string>(type: "text", nullable: false),
                     row_version = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: true)
                 },
                 constraints: table =>
