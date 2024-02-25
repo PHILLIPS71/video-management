@@ -4,7 +4,7 @@ import type { SidebarQuery$key } from '@/__generated__/SidebarQuery.graphql'
 import type { NavigationProps } from '@giantnodes/react'
 
 import { Button, Navigation } from '@giantnodes/react'
-import { IconAlbum, IconGauge, IconSettings } from '@tabler/icons-react'
+import { IconAlbum, IconGauge, IconSettings, IconTransform } from '@tabler/icons-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -46,6 +46,14 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
           <Link legacyBehavior passHref href="/">
             <Navigation.Link isSelected={route === ''}>
               <IconGauge size={20} /> Dashboard
+            </Navigation.Link>
+          </Link>
+        </Navigation.Item>
+
+        <Navigation.Item>
+          <Link legacyBehavior passHref href="/profiles">
+            <Navigation.Link isSelected={route === 'profiles'}>
+              <IconTransform size={20} /> Encode Profiles
             </Navigation.Link>
           </Link>
         </Navigation.Item>
