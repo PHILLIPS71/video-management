@@ -1,4 +1,5 @@
 ﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries;
@@ -30,6 +31,8 @@ public class ApplicationDbContext : GiantnodesDbContext<ApplicationDbContext>
 
     public DbSet<Encode> Encodes => Set<Encode>();
     public DbSet<EncodeSnapshot> EncodeSnapshots => Set<EncodeSnapshot>();
+
+    public DbSet<EncodeProfile> EncodeProfiles => Set<EncodeProfile>();
 
     public DbSet<VideoStream> VideoStreams => Set<VideoStream>();
     public DbSet<AudioStream> AudioStreams => Set<AudioStream>();
