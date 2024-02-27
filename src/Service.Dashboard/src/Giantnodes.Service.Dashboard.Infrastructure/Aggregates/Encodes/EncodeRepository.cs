@@ -16,7 +16,7 @@ public class EncodeRepository : IEncodeRepository
     }
 
     /// <summary>
-    /// Builds the <see name="FileSystemFile"/> aggregates consistency boundary.
+    /// Builds the <see name="Encode"/> aggregates consistency boundary.
     /// </summary>
     /// <returns>A <see cref="IQueryable{TEntity}"/> of the objects that make up the consistency boundary.</returns>
     private IQueryable<Encode> Build()
@@ -24,6 +24,7 @@ public class EncodeRepository : IEncodeRepository
         return _database
             .Encodes
             .Include(x => x.File)
+            .Include(x => x.Profile)
             .Include(x => x.Snapshots)
             .AsQueryable();
     }
