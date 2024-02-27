@@ -13,6 +13,9 @@ public class EncodeTuneType : ObjectType<EncodeTune>
             .Field(x => x.Name);
 
         descriptor
+            .Field(x => x.Value);
+
+        descriptor
             .Field(x => x.Description);
     }
 }

@@ -13,6 +13,9 @@ public class EncodePresetType : ObjectType<EncodePreset>
             .Field(x => x.Name);
 
         descriptor
+            .Field(x => x.Value);
+
+        descriptor
             .Field(x => x.Description);
     }
 }

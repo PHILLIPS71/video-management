@@ -10,6 +10,14 @@ public sealed class EncodeFile
         public required string InputFilePath { get; init; }
 
         public required string OutputFilePath { get; init; }
+
+        public required string Codec { get; init; }
+
+        public required string Preset { get; init; }
+
+        public string? Tune { get; init; }
+
+        public int? Quality { get; init; }
     }
 
     public sealed class Validator : AbstractValidator<Job>

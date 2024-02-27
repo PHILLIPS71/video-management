@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Events;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles.Repositories;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using MassTransit;
 
@@ -8,10 +9,12 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Acti
 public class EncodeSetupActivity : IStateMachineActivity<EncodeSagaState, EncodeCreatedEvent>
 {
     private readonly IFileSystem _fs;
+    private readonly IEncodeProfileRepository _repository;
 
-    public EncodeSetupActivity(IFileSystem fs)
+    public EncodeSetupActivity(IFileSystem fs, IEncodeProfileRepository repository)
     {
         _fs = fs;
+        _repository = repository;
     }
 
     public void Probe(ProbeContext context)
@@ -24,7 +27,7 @@ public class EncodeSetupActivity : IStateMachineActivity<EncodeSagaState, Encode
         visitor.Visit(this);
     }
 
-    public Task Execute(
+    public async Task Execute(
         BehaviorContext<EncodeSagaState, EncodeCreatedEvent> context,
         IBehavior<EncodeSagaState, EncodeCreatedEvent> next)
     {
@@ -36,11 +39,16 @@ public class EncodeSetupActivity : IStateMachineActivity<EncodeSagaState, Encode
         if (output == null)
             throw new DirectoryNotFoundException($"The directory of {context.Message.FilePath} cannot be found.");
 
-        context.Saga.EncodeId = context.Message.EncodeId;
+        var profile = await _repository.SingleAsync(x => x.Id == context.Message.EncodeProfileId);
         context.Saga.InputFilePath = context.Message.FilePath;
-        context.Saga.OutputDirectoryPath = output;
+        context.Saga.OutputFilePath = _fs.Path.ChangeExtension(context.Message.FilePath, profile.Container);
+        context.Saga.EncodeId = context.Message.EncodeId;
+        context.Saga.Codec = profile.Codec;
+        context.Saga.Preset = profile.Preset;
+        context.Saga.Tune = profile.Tune;
+        context.Saga.Quality = profile.Quality;
 
-        return next.Execute(context);
+        await next.Execute(context);
     }
 
     public Task Faulted<TException>(

@@ -31,7 +31,8 @@ public static class Setup
             .AddOptions<SqlTransportOptions>()
             .Configure(options =>
             {
-                var builder = new NpgsqlConnectionStringBuilder(configuration.GetConnectionString(name: "DatabaseConnection"));
+                var builder =
+                    new NpgsqlConnectionStringBuilder(configuration.GetConnectionString(name: "DatabaseConnection"));
 
                 options.Host = builder.Host;
                 options.Database = builder.Database;

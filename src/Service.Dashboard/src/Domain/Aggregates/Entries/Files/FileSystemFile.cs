@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
@@ -61,9 +62,9 @@ public class FileSystemFile : FileSystemEntry
         ProbedAt = timestamp.ToUniversalTime();
     }
 
-    public Encode Encode()
+    public Encode Encode(EncodeProfile profile)
     {
-        var encode = new Encode(this);
+        var encode = new Encode(this, profile);
         _encodes.Add(encode);
 
         return encode;

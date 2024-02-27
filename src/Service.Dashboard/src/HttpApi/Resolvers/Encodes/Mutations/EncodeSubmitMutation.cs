@@ -19,11 +19,13 @@ public class EncodeSubmitMutation
     public async Task<IQueryable<Encode>> EncodeSubmit(
         [Service] ApplicationDbContext database,
         [Service] IRequestClient<EncodeSubmit.Command> request,
+        [ID] Guid encode_profile_id,
         [ID] Guid[] entries,
         CancellationToken cancellation = default)
     {
         var command = new EncodeSubmit.Command
         {
+            EncodeProfileId = encode_profile_id,
             Entries = entries
         };
 

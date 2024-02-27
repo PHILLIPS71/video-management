@@ -33,15 +33,27 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
         }
 
         var media = await FFmpeg.GetMediaInfo(file.FullName, context.CancellationToken);
-        var video = media
-            .VideoStreams.First().SetCodec(VideoCodec.h264);
+
+        var videos = media
+            .VideoStreams
+            .Select(stream =>
+                stream
+                    .SetCodec(context.Job.Codec))
+            .ToList();
 
         var conversion = FFmpeg.Conversions
             .New()
-            .AddStream(video)
+            .AddStream(videos)
+            .AddParameter($"-preset {context.Job.Preset}")
             .SetOutput(context.Job.OutputFilePath)
             .SetOverwriteOutput(true)
             .UseMultiThread(true);
+
+        if (!string.IsNullOrWhiteSpace(context.Job.Tune))
+            conversion.AddParameter($"-tune {context.Job.Tune}");
+
+        if (context.Job.Quality.HasValue)
+            conversion.AddParameter($"-crf {context.Job.Quality.Value}");
 
         var stopwatch = new Stopwatch();
         conversion.OnDataReceived += async (_, args) =>

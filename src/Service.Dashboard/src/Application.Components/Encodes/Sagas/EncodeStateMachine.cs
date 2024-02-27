@@ -118,7 +118,11 @@ internal static class EncodeStateMachineBehaviorExtensions
                 {
                     CorrelationId = context.Saga.CorrelationId,
                     InputFilePath = context.Saga.InputFilePath,
-                    OutputDirectoryPath = context.Saga.OutputDirectoryPath
+                    OutputFilePath = context.Saga.OutputFilePath,
+                    Codec = context.Saga.Codec.Value,
+                    Preset = context.Saga.Preset.Value,
+                    Tune = context.Saga.Tune?.Value,
+                    Quality = context.Saga.Quality
                 }));
     }
 
