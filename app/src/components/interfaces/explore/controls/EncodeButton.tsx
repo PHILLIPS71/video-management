@@ -12,12 +12,20 @@ const MUTATION = graphql`
       encode {
         id
       }
+      errors {
+        ... on DomainError {
+          message
+        }
+        ... on ValidationError {
+          message
+        }
+      }
     }
   }
 `
 
 const EncodeButton: React.FC = () => {
-  const { directory, keys } = useExploreContext()
+  const { directory, keys, setErrors } = useExploreContext()
 
   const [commit, isLoading] = useMutation<EncodeButton_EncodeSubmitMutation>(MUTATION)
 
@@ -43,6 +51,22 @@ const EncodeButton: React.FC = () => {
         input: {
           entries,
         },
+      },
+      onCompleted: (payload) => {
+        if (payload.encode_submit.errors != null) {
+          const faults = payload.encode_submit.errors
+            .filter((error) => error.message !== undefined)
+            .map((error) => error.message!)
+
+          setErrors(faults)
+
+          return
+        }
+
+        setErrors([])
+      },
+      onError: (error) => {
+        setErrors([error.message])
       },
     })
   }

@@ -14,9 +14,13 @@ export const useExplore = (props: UseExploreProps) => {
   const { directory } = props
 
   const [keys, setKeys] = React.useState<Selection>(new Set<string>())
+  const [errors, setErrors] = React.useState<string[]>([])
 
   return {
     directory,
+
+    errors,
+    setErrors,
 
     keys,
     setKeys,
