@@ -27,6 +27,7 @@ type ExploreControlsProps = {
 
 const ExploreControls: React.FC<ExploreControlsProps> = ({ $key }) => {
   const { errors } = useExploreContext()
+
   const data = useFragment(FRAGMENT, $key)
 
   const size = React.useMemo<FileSizeReturnObject>(

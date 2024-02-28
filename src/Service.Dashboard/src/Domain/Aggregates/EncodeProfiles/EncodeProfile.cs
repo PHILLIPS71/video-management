@@ -10,6 +10,10 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity
 {
     private readonly List<Encode> _encodes = new();
 
+    public string Name { get; private set; }
+
+    public string Slug { get; private set; }
+
     public string Container { get; private set; }
 
     public EncodeCodec Codec { get; private set; }
@@ -26,13 +30,20 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity
 
     public IReadOnlyCollection<Encode> Encodes { get; private set; }
 
+    private EncodeProfile()
+    {
+    }
+
     public EncodeProfile(
+        string name,
         string container,
         EncodeCodec codec,
         EncodePreset preset,
         EncodeTune? tune = null,
         int? quality = null)
     {
+        Name = name;
+        Slug = name.ToSlug();
         Id = NewId.NextSequentialGuid();
         Container = container;
         Codec = codec;

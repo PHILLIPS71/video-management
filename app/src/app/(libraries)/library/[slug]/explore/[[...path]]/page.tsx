@@ -21,9 +21,9 @@ const QUERY = graphql`
   query page_LibrarySlugExploreQuery($where: FileSystemDirectoryFilterInput, $order: [FileSystemEntrySortInput!]) {
     file_system_directory(where: $where) {
       id
-      ...ExploreTableFragment @arguments(order: $order)
       ...ExploreBreadcrumbsFragment
       ...ExploreControlsFragment
+      ...ExploreTableFragment @arguments(order: $order)
     }
   }
 `

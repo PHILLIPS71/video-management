@@ -15,6 +15,12 @@ public class EncodeProfileType : ObjectType<EncodeProfile>
                 context.Service<ApplicationDbContext>().EncodeProfiles.SingleOrDefaultAsync(x => x.Id == id));
 
         descriptor
+            .Field(p => p.Name);
+
+        descriptor
+            .Field(p => p.Slug);
+
+        descriptor
             .Field(p => p.Codec);
 
         descriptor

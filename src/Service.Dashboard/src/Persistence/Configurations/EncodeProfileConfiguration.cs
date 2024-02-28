@@ -11,6 +11,10 @@ public class EncodeProfileConfiguration : IEntityTypeConfiguration<EncodeProfile
     public void Configure(EntityTypeBuilder<EncodeProfile> builder)
     {
         builder
+            .HasIndex(p => p.Slug)
+            .IsUnique();
+
+        builder
             .Property(p => p.Codec)
             .HasConversion(
                 value => value.Id,

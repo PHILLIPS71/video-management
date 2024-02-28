@@ -8,7 +8,7 @@ import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { EncodedTable, EncodingTable } from '@/components/tables'
 
-const DASHBOARD_QUERY = graphql`
+const QUERY = graphql`
   query page_DashboardPageQuery($first: Int, $after: String, $order: [EncodeSortInput!]) {
     ...EncodingTableFragment
       @arguments(
@@ -24,7 +24,7 @@ const DASHBOARD_QUERY = graphql`
 `
 
 const DashboardPage = () => {
-  const query = useLazyLoadQuery<page_DashboardPageQuery>(DASHBOARD_QUERY, {
+  const query = useLazyLoadQuery<page_DashboardPageQuery>(QUERY, {
     first: 8,
     order: [{ created_at: 'DESC' }],
   })
