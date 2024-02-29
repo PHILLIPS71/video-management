@@ -1,5 +1,6 @@
 using Giantnodes.Infrastructure.Domain.Entities;
 using Giantnodes.Infrastructure.Domain.Entities.Auditing;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles.Specifications;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
 using Giantnodes.Service.Dashboard.Domain.Enumerations;
 using MassTransit;
@@ -51,5 +52,10 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity
         Tune = tune;
         Quality = quality;
         Encodes = _encodes;
+    }
+    
+    public bool IsEncodable()
+    {
+        return new IsEncodableSpecification().IsSatisfiedBy(this);
     }
 }

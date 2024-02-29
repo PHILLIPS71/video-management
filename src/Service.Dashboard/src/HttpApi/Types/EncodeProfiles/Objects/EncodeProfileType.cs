@@ -36,6 +36,11 @@ public class EncodeProfileType : ObjectType<EncodeProfile>
             .Field(p => p.Container);
 
         descriptor
+            .Field("is_encodable")
+            .Type<BooleanType>()
+            .Resolve(x => x.Parent<EncodeProfile>().IsEncodable());
+
+        descriptor
             .Field(p => p.CreatedAt);
 
         descriptor

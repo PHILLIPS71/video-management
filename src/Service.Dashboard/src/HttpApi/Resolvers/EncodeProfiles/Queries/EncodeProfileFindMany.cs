@@ -8,7 +8,7 @@ namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.EncodeProfiles.Queries;
 public class EncodeProfileFindMany
 {
     [UsePaging]
-    [UseProjection]
+    // [UseProjection] using projection cannot translate EncodeProfiles.Codec.Tunes preventing is_encodable working
     [UseFiltering]
     [UseSorting]
     public IQueryable<EncodeProfile> EncodeProfiles([Service] ApplicationDbContext database)
