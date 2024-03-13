@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using Giantnodes.Infrastructure.Domain.Entities;
 using Giantnodes.Infrastructure.Domain.Entities.Auditing;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles.Specifications;
@@ -13,9 +14,7 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity
 
     public string Name { get; private set; }
 
-    public string Slug { get; private set; }
-
-    public string Container { get; private set; }
+    public VideoFileContainer? Container { get; private set; }
 
     public EncodeCodec Codec { get; private set; }
 
@@ -37,15 +36,14 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity
 
     public EncodeProfile(
         string name,
-        string container,
+        VideoFileContainer? container,
         EncodeCodec codec,
         EncodePreset preset,
         EncodeTune? tune = null,
         int? quality = null)
     {
-        Name = name;
-        Slug = name.ToSlug();
         Id = NewId.NextSequentialGuid();
+        Name = name;
         Container = container;
         Codec = codec;
         Preset = preset;
@@ -53,7 +51,55 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity
         Quality = quality;
         Encodes = _encodes;
     }
-    
+
+    public void SetName(string name)
+    {
+        Guard.Against.NullOrWhiteSpace(name);
+
+        Name = name.Trim();
+    }
+
+    public void SetContainer(VideoFileContainer? container)
+    {
+        if (container != null)
+            Guard.Against.OutOfRange(container);
+
+        Container = container;
+    }
+
+    public void SetCodec(EncodeCodec codec)
+    {
+        Guard.Against.OutOfRange(codec);
+
+        Codec = codec;
+    }
+
+    public void SetPreset(EncodePreset preset)
+    {
+        Guard.Against.OutOfRange(preset);
+
+        Preset = preset;
+    }
+
+    public void SetTune(EncodeTune? tune)
+    {
+        if (tune != null)
+        {
+            Guard.Against.OutOfRange(tune);
+            Guard.Against.NotFound(Codec.Tunes, tune);
+        }
+
+        Tune = tune;
+    }
+
+    public void SetQuality(int? quality)
+    {
+        if (quality.HasValue)
+            Guard.Against.OutOfRange(quality.Value, nameof(quality), Codec.Quality.Min, Codec.Quality.Max);
+
+        Quality = quality;
+    }
+
     public bool IsEncodable()
     {
         return new IsEncodableSpecification().IsSatisfiedBy(this);

@@ -33,7 +33,7 @@ public class FileSystemService : IFileSystemService
 
         return directory
             .EnumerateFileSystemInfos("*", search)
-            .Where(x => x is IDirectoryInfo || Enumeration.TryParse<VideoFileExtension>(x.Extension) != null)
+            .Where(x => x is IDirectoryInfo || Enumeration.TryParse<VideoFileContainer>(x.Extension) != null)
             .ToList()
             .AsReadOnly();
     }

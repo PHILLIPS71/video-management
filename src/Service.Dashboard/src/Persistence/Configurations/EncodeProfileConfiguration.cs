@@ -11,8 +11,14 @@ public class EncodeProfileConfiguration : IEntityTypeConfiguration<EncodeProfile
     public void Configure(EntityTypeBuilder<EncodeProfile> builder)
     {
         builder
-            .HasIndex(p => p.Slug)
+            .HasIndex(p => p.Name)
             .IsUnique();
+
+        builder
+            .Property(p => p.Container)
+            .HasConversion(
+                value => value.Id,
+                value => Enumeration.Parse<VideoFileContainer, int>(value, item => item.Id == value));
 
         builder
             .Property(p => p.Codec)

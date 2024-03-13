@@ -2,9 +2,9 @@ using Giantnodes.Service.Dashboard.Domain.Enumerations;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types;
 
-public class EncodeTuneType : ObjectType<EncodeTune>
+public class VideoFileContainerType : ObjectType<VideoFileContainer>
 {
-    protected override void Configure(IObjectTypeDescriptor<EncodeTune> descriptor)
+    protected override void Configure(IObjectTypeDescriptor<VideoFileContainer> descriptor)
     {
         descriptor
             .ImplementsNode()
@@ -17,9 +17,6 @@ public class EncodeTuneType : ObjectType<EncodeTune>
             .Field(x => x.Name);
 
         descriptor
-            .Field(x => x.Value);
-
-        descriptor
-            .Field(x => x.Description);
+            .Field(x => x.Extension);
     }
 }

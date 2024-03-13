@@ -7,7 +7,11 @@ public class EncodeCodecType : ObjectType<EncodeCodec>
     protected override void Configure(IObjectTypeDescriptor<EncodeCodec> descriptor)
     {
         descriptor
-            .Field(x => x.Id);
+            .ImplementsNode()
+            .IdField(p => p.Id);
+
+        descriptor
+            .Field(p => p.Id);
 
         descriptor
             .Field(x => x.Name);

@@ -7,7 +7,11 @@ public class EncodePresetType : ObjectType<EncodePreset>
     protected override void Configure(IObjectTypeDescriptor<EncodePreset> descriptor)
     {
         descriptor
-            .Field(x => x.Id);
+            .ImplementsNode()
+            .IdField(p => p.Id);
+
+        descriptor
+            .Field(p => p.Id);
 
         descriptor
             .Field(x => x.Name);

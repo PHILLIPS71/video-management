@@ -18,7 +18,7 @@ public class EncodeProfileType : ObjectType<EncodeProfile>
             .Field(p => p.Name);
 
         descriptor
-            .Field(p => p.Slug);
+            .Field(p => p.Container);
 
         descriptor
             .Field(p => p.Codec);
@@ -31,9 +31,6 @@ public class EncodeProfileType : ObjectType<EncodeProfile>
 
         descriptor
             .Field(p => p.Quality);
-
-        descriptor
-            .Field(p => p.Container);
 
         descriptor
             .Field("is_encodable")

@@ -40,8 +40,12 @@ public class EncodeSetupActivity : IStateMachineActivity<EncodeSagaState, Encode
             throw new DirectoryNotFoundException($"The directory of {context.Message.FilePath} cannot be found.");
 
         var profile = await _repository.SingleAsync(x => x.Id == context.Message.EncodeProfileId);
+
+        context.Saga.OutputFilePath = context.Message.FilePath;
+        if (profile.Container != null)
+            context.Saga.OutputFilePath = _fs.Path.ChangeExtension(context.Message.FilePath, profile.Container.Extension);
+
         context.Saga.InputFilePath = context.Message.FilePath;
-        context.Saga.OutputFilePath = _fs.Path.ChangeExtension(context.Message.FilePath, profile.Container);
         context.Saga.EncodeId = context.Message.EncodeId;
         context.Saga.Codec = profile.Codec;
         context.Saga.Preset = profile.Preset;

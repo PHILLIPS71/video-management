@@ -1,4 +1,3 @@
-using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles;
 using Giantnodes.Service.Dashboard.Domain.Enumerations;
 using MassTransit;
 
