@@ -1,12 +1,18 @@
-import type { EncodeProfileTableFragment$key } from '@/__generated__/EncodeProfileTableFragment.graphql'
+import type {
+  EncodeProfileTableFragment$data,
+  EncodeProfileTableFragment$key,
+} from '@/__generated__/EncodeProfileTableFragment.graphql'
 import type { EncodeProfileTableRefetchQuery } from '@/__generated__/EncodeProfileTableRefetchQuery.graphql'
+import type { EncodeProfileUpdateInput } from '@/components/interfaces/profiles'
 
 import { Button, Chip, Table, Typography } from '@giantnodes/react'
 import { IconAlertTriangle, IconEdit, IconTrash } from '@tabler/icons-react'
 import React from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
 
-const FRAGMENT = graphql`
+import { EncodeProfileDialog } from '@/components/interfaces/profiles'
+
+const QUERY = graphql`
   fragment EncodeProfileTableFragment on Query
   @refetchable(queryName: "EncodeProfileTableRefetchQuery")
   @argumentDefinitions(
@@ -23,13 +29,19 @@ const FRAGMENT = graphql`
           name
           quality
           is_encodable
+          container {
+            id
+          }
           codec {
+            id
             name
           }
           preset {
+            id
             name
           }
           tune {
+            id
             name
           }
         }
@@ -45,11 +57,25 @@ type EncodeProfileTableProps = {
   $key: EncodeProfileTableFragment$key
 }
 
+type EncodeProfileNode = NonNullable<
+  NonNullable<EncodeProfileTableFragment$data['encode_profiles']>['edges']
+>[0]['node']
+
 const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
-  const { data } = usePaginationFragment<EncodeProfileTableRefetchQuery, EncodeProfileTableFragment$key>(FRAGMENT, $key)
+  const { data } = usePaginationFragment<EncodeProfileTableRefetchQuery, EncodeProfileTableFragment$key>(QUERY, $key)
+
+  const getProfileInput = (node: EncodeProfileNode): EncodeProfileUpdateInput => ({
+    id: node.id,
+    name: node.name,
+    container: node.container?.id,
+    codec: node.codec.id,
+    preset: node.preset.id,
+    tune: node.tune?.id,
+    quality: node.quality,
+  })
 
   return (
-    <Table aria-label="encode profile table" size="sm">
+    <Table aria-label="encode profile table">
       <Table.Head>
         <Table.Column key="name" isRowHeader>
           Name
@@ -87,9 +113,11 @@ const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
             </Table.Cell>
             <Table.Cell>
               <div className="flex flex-row justify-end gap-3">
-                <Button color="neutral" size="xs">
-                  <IconEdit size={16} />
-                </Button>
+                <EncodeProfileDialog profile={getProfileInput(item.node)}>
+                  <Button color="neutral" size="xs">
+                    <IconEdit size={16} />
+                  </Button>
+                </EncodeProfileDialog>
 
                 <Button color="danger" size="xs">
                   <IconTrash size={16} />

@@ -131,7 +131,7 @@ const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((pr
 
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="flex flex-col gap-y-4">
+      <div className="flex flex-col gap-y-3">
         {errors.length > 0 && (
           <Alert color="danger">
             <IconAlertCircleFilled size={16} />
@@ -146,7 +146,7 @@ const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((pr
           </Alert>
         )}
 
-        <div className="flex flex-row gap-4 flex-wrap md:flex-nowrap">
+        <div className="flex flex-row gap-3 flex-wrap md:flex-nowrap">
           <Form.Group {...form.register('name')} error={!!form.formState.errors.name}>
             <Form.Label>Name</Form.Label>
             <Input>
@@ -178,7 +178,7 @@ const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((pr
         </Form.Group>
 
         <Form.Group {...form.register('is_watched')} error={!!form.formState.errors.is_watched}>
-          <span className="flex gap-2 items-center">
+          <span className="flex gap-3 items-center">
             <Switch />
 
             <div className="flex flex-col">

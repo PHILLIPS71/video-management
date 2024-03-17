@@ -30,7 +30,7 @@ const DashboardPage = () => {
   })
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       <Card className="max-w-4xl">
         <Card.Header>Processing</Card.Header>
 

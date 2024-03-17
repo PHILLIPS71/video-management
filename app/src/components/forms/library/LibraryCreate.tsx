@@ -101,6 +101,10 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
     [commit, onComplete]
   )
 
+  React.useEffect(() => {
+    onLoadingChange?.(isLoading)
+  }, [isLoading, onLoadingChange])
+
   React.useImperativeHandle(
     ref,
     () => ({
@@ -114,13 +118,9 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
     [form, onSubmit]
   )
 
-  React.useEffect(() => {
-    onLoadingChange?.(isLoading)
-  }, [isLoading, onLoadingChange])
-
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)}>
-      <div className="flex flex-col gap-y-4">
+      <div className="flex flex-col gap-y-3">
         {errors.length > 0 && (
           <Alert color="danger">
             <IconAlertCircleFilled size={16} />
@@ -135,13 +135,13 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
           </Alert>
         )}
 
-        <div className="flex flex-row gap-4 flex-wrap md:flex-nowrap">
+        <div className="flex flex-row gap-3 flex-wrap md:flex-nowrap">
           <Form.Group {...form.register('name')} error={!!form.formState.errors.name}>
             <Form.Label>Name</Form.Label>
             <Input>
               <Input.Control type="text" />
             </Input>
-            <Form.Feedback type="error">{form.formState.errors.name?.message}!!!</Form.Feedback>
+            <Form.Feedback type="error">{form.formState.errors.name?.message}</Form.Feedback>
           </Form.Group>
 
           <Form.Group {...form.register('slug')} error={!!form.formState.errors.slug}>
@@ -168,7 +168,7 @@ const LibraryCreate = React.forwardRef<LibraryCreateRef, LibraryCreateProps>((pr
         </Form.Group>
 
         <Form.Group {...form.register('is_watched')} error={!!form.formState.errors.is_watched}>
-          <span className="flex gap-2 items-center">
+          <span className="flex gap-3 items-center">
             <Switch />
 
             <Form.Label>
