@@ -1,3 +1,4 @@
+import type { EncodeProfileTable_DeleteEncodeProfileMutation } from '@/__generated__/EncodeProfileTable_DeleteEncodeProfileMutation.graphql'
 import type {
   EncodeProfileTableFragment$data,
   EncodeProfileTableFragment$key,
@@ -8,7 +9,7 @@ import type { EncodeProfileUpdateInput } from '@/components/interfaces/profiles'
 import { Button, Chip, Table, Typography } from '@giantnodes/react'
 import { IconAlertTriangle, IconEdit, IconTrash } from '@tabler/icons-react'
 import React from 'react'
-import { graphql, usePaginationFragment } from 'react-relay'
+import { graphql, useMutation, usePaginationFragment } from 'react-relay'
 
 import { EncodeProfileDialog } from '@/components/interfaces/profiles'
 
@@ -53,6 +54,24 @@ const QUERY = graphql`
   }
 `
 
+const MUTATION = graphql`
+  mutation EncodeProfileTable_DeleteEncodeProfileMutation($input: Encode_profile_deleteInput!) {
+    encode_profile_delete(input: $input) {
+      encodeProfile {
+        id @deleteRecord
+      }
+      errors {
+        ... on DomainError {
+          message
+        }
+        ... on ValidationError {
+          message
+        }
+      }
+    }
+  }
+`
+
 type EncodeProfileTableProps = {
   $key: EncodeProfileTableFragment$key
 }
@@ -64,6 +83,8 @@ type EncodeProfileNode = NonNullable<
 const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
   const { data } = usePaginationFragment<EncodeProfileTableRefetchQuery, EncodeProfileTableFragment$key>(QUERY, $key)
 
+  const [commit] = useMutation<EncodeProfileTable_DeleteEncodeProfileMutation>(MUTATION)
+
   const getProfileInput = (node: EncodeProfileNode): EncodeProfileUpdateInput => ({
     id: node.id,
     name: node.name,
@@ -73,6 +94,19 @@ const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
     tune: node.tune?.id,
     quality: node.quality,
   })
+
+  const remove = React.useCallback(
+    (entry: EncodeProfileNode) => {
+      commit({
+        variables: {
+          input: {
+            id: entry.id,
+          },
+        },
+      })
+    },
+    [commit]
+  )
 
   return (
     <Table aria-label="encode profile table">
@@ -119,7 +153,7 @@ const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
                   </Button>
                 </EncodeProfileDialog>
 
-                <Button color="danger" size="xs">
+                <Button color="danger" size="xs" onPress={() => remove(item.node)}>
                   <IconTrash size={16} />
                 </Button>
               </div>

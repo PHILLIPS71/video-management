@@ -8,7 +8,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles;
 
-public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity
+public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity, ISoftDeletableEntity
 {
     private readonly List<Encode> _encodes = new();
 
@@ -23,6 +23,10 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity
     public EncodeTune? Tune { get; private set; }
 
     public int? Quality { get; private set; }
+
+    public bool IsDeleted { get; private set; }
+
+    public DateTime? DeletedAt { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
 
