@@ -15,11 +15,7 @@ public sealed class LibraryRepository : ILibraryRepository
         _database = database;
     }
 
-    /// <summary>
-    /// Builds the <see name="Library"/> aggregates consistency boundary.
-    /// </summary>
-    /// <returns>A <see cref="IQueryable{TEntity}"/> of the objects that make up the consistency boundary.</returns>
-    private IQueryable<Library> Build()
+    public IQueryable<Library> ToQueryable()
     {
         return _database
             .Libraries
@@ -31,28 +27,28 @@ public sealed class LibraryRepository : ILibraryRepository
         Expression<Func<Library, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().AnyAsync(predicate, cancellation);
+        return ToQueryable().AnyAsync(predicate, cancellation);
     }
 
     public Task<Library> SingleAsync(
         Expression<Func<Library, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().SingleAsync(predicate, cancellation);
+        return ToQueryable().SingleAsync(predicate, cancellation);
     }
 
     public Task<Library?> SingleOrDefaultAsync(
         Expression<Func<Library, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().SingleOrDefaultAsync(predicate, cancellation);
+        return ToQueryable().SingleOrDefaultAsync(predicate, cancellation);
     }
 
     public Task<List<Library>> ToListAsync(
         Expression<Func<Library, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build()
+        return ToQueryable()
             .Where(predicate)
             .ToListAsync(cancellation);
     }
@@ -60,5 +56,10 @@ public sealed class LibraryRepository : ILibraryRepository
     public Library Create(Library entity)
     {
         return _database.Libraries.Add(entity).Entity;
+    }
+
+    public Library Delete(Library entity)
+    {
+        return _database.Libraries.Remove(entity).Entity;
     }
 }

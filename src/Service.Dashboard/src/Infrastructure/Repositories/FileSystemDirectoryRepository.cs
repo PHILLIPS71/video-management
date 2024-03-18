@@ -15,11 +15,7 @@ public class FileSystemDirectoryRepository : IFileSystemDirectoryRepository
         _database = database;
     }
 
-    /// <summary>
-    /// Builds the <see name="FileSystemDirectory"/> aggregates consistency boundary.
-    /// </summary>
-    /// <returns>A <see cref="IQueryable{TEntity}"/> of the objects that make up the consistency boundary.</returns>
-    private IQueryable<FileSystemDirectory> Build()
+    public IQueryable<FileSystemDirectory> ToQueryable()
     {
         return _database
             .FileSystemDirectories
@@ -33,28 +29,28 @@ public class FileSystemDirectoryRepository : IFileSystemDirectoryRepository
         Expression<Func<FileSystemDirectory, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().AnyAsync(predicate, cancellation);
+        return ToQueryable().AnyAsync(predicate, cancellation);
     }
 
     public Task<FileSystemDirectory> SingleAsync(
         Expression<Func<FileSystemDirectory, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().SingleAsync(predicate, cancellation);
+        return ToQueryable().SingleAsync(predicate, cancellation);
     }
 
     public Task<FileSystemDirectory?> SingleOrDefaultAsync(
         Expression<Func<FileSystemDirectory, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().SingleOrDefaultAsync(predicate, cancellation);
+        return ToQueryable().SingleOrDefaultAsync(predicate, cancellation);
     }
 
     public Task<List<FileSystemDirectory>> ToListAsync(
         Expression<Func<FileSystemDirectory, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build()
+        return ToQueryable()
             .Where(predicate)
             .ToListAsync(cancellation);
     }
@@ -62,5 +58,10 @@ public class FileSystemDirectoryRepository : IFileSystemDirectoryRepository
     public FileSystemDirectory Create(FileSystemDirectory entity)
     {
         return _database.FileSystemDirectories.Add(entity).Entity;
+    }
+
+    public FileSystemDirectory Delete(FileSystemDirectory entity)
+    {
+        return _database.FileSystemDirectories.Remove(entity).Entity;
     }
 }

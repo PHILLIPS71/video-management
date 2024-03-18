@@ -1,12 +1,17 @@
 ﻿namespace Giantnodes.Infrastructure.Domain.Entities.Auditing;
 
 /// <summary>
-/// An entity that tracks when an entity was deleted, but does not remove the data from the data source.
+/// A interface defines a contract for entities that can be soft-deleted.
 /// </summary>
 public interface ISoftDeletableEntity
 {
     /// <summary>
-    /// The date and time when this entity was deleted.
+    /// A boolean property that indicates whether the entity has been deleted.
+    /// </summary>
+    public bool IsDeleted { get; }
+
+    /// <summary>
+    /// A nullable DateTime property that represents the date and time when the entity was deleted.
     /// </summary>
     public DateTime? DeletedAt { get; }
 }

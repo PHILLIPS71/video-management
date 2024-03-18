@@ -15,11 +15,7 @@ public class FileSystemFileRepository : IFileSystemFileRepository
         _database = database;
     }
 
-    /// <summary>
-    /// Builds the <see name="FileSystemFile"/> aggregates consistency boundary.
-    /// </summary>
-    /// <returns>A <see cref="IQueryable{TEntity}"/> of the objects that make up the consistency boundary.</returns>
-    private IQueryable<FileSystemFile> Build()
+    public IQueryable<FileSystemFile> ToQueryable()
     {
         return _database
             .FileSystemFiles
@@ -33,32 +29,37 @@ public class FileSystemFileRepository : IFileSystemFileRepository
         Expression<Func<FileSystemFile, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().AnyAsync(predicate, cancellation);
+        return ToQueryable().AnyAsync(predicate, cancellation);
     }
 
     public Task<FileSystemFile> SingleAsync(
         Expression<Func<FileSystemFile, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().SingleAsync(predicate, cancellation);
+        return ToQueryable().SingleAsync(predicate, cancellation);
     }
 
     public Task<FileSystemFile?> SingleOrDefaultAsync(
         Expression<Func<FileSystemFile, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().SingleOrDefaultAsync(predicate, cancellation);
+        return ToQueryable().SingleOrDefaultAsync(predicate, cancellation);
     }
 
     public Task<List<FileSystemFile>> ToListAsync(
         Expression<Func<FileSystemFile, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().Where(predicate).ToListAsync(cancellation);
+        return ToQueryable().Where(predicate).ToListAsync(cancellation);
     }
 
     public FileSystemFile Create(FileSystemFile entity)
     {
         return _database.FileSystemFiles.Add(entity).Entity;
+    }
+
+    public FileSystemFile Delete(FileSystemFile entity)
+    {
+        return _database.FileSystemFiles.Remove(entity).Entity;
     }
 }

@@ -15,11 +15,7 @@ public class EncodeProfileRepository : IEncodeProfileRepository
         _database = database;
     }
 
-    /// <summary>
-    /// Builds the <see name="EncodeProfile"/> aggregates consistency boundary.
-    /// </summary>
-    /// <returns>A <see cref="IQueryable{TEntity}"/> of the objects that make up the consistency boundary.</returns>
-    private IQueryable<EncodeProfile> Build()
+    public IQueryable<EncodeProfile> ToQueryable()
     {
         return _database
             .EncodeProfiles
@@ -30,32 +26,37 @@ public class EncodeProfileRepository : IEncodeProfileRepository
         Expression<Func<EncodeProfile, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().AnyAsync(predicate, cancellation);
+        return ToQueryable().AnyAsync(predicate, cancellation);
     }
 
     public Task<EncodeProfile> SingleAsync(
         Expression<Func<EncodeProfile, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().SingleAsync(predicate, cancellation);
+        return ToQueryable().SingleAsync(predicate, cancellation);
     }
 
     public Task<EncodeProfile?> SingleOrDefaultAsync(
         Expression<Func<EncodeProfile, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().SingleOrDefaultAsync(predicate, cancellation);
+        return ToQueryable().SingleOrDefaultAsync(predicate, cancellation);
     }
 
     public Task<List<EncodeProfile>> ToListAsync(
         Expression<Func<EncodeProfile, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().Where(predicate).ToListAsync(cancellation);
+        return ToQueryable().Where(predicate).ToListAsync(cancellation);
     }
 
     public EncodeProfile Create(EncodeProfile entity)
     {
         return _database.EncodeProfiles.Add(entity).Entity;
+    }
+
+    public EncodeProfile Delete(EncodeProfile entity)
+    {
+        return _database.EncodeProfiles.Remove(entity).Entity;
     }
 }

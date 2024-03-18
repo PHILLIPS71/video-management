@@ -17,11 +17,7 @@ public class FileSystemEntryRepository : IFileSystemEntryRepository
         _database = database;
     }
 
-    /// <summary>
-    /// Builds the <see name="FileSystemEntry"/> aggregates consistency boundary.
-    /// </summary>
-    /// <returns>A <see cref="IQueryable{TEntity}"/> of the objects that make up the consistency boundary.</returns>
-    private IQueryable<FileSystemEntry> Build()
+    public IQueryable<FileSystemEntry> ToQueryable()
     {
         return _database
             .FileSystemEntries
@@ -39,32 +35,37 @@ public class FileSystemEntryRepository : IFileSystemEntryRepository
         Expression<Func<FileSystemEntry, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().AnyAsync(predicate, cancellation);
+        return ToQueryable().AnyAsync(predicate, cancellation);
     }
 
     public Task<FileSystemEntry> SingleAsync(
         Expression<Func<FileSystemEntry, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().SingleAsync(predicate, cancellation);
+        return ToQueryable().SingleAsync(predicate, cancellation);
     }
 
     public Task<FileSystemEntry?> SingleOrDefaultAsync(
         Expression<Func<FileSystemEntry, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().SingleOrDefaultAsync(predicate, cancellation);
+        return ToQueryable().SingleOrDefaultAsync(predicate, cancellation);
     }
 
     public Task<List<FileSystemEntry>> ToListAsync(
         Expression<Func<FileSystemEntry, bool>> predicate,
         CancellationToken cancellation = default)
     {
-        return Build().Where(predicate).ToListAsync(cancellation);
+        return ToQueryable().Where(predicate).ToListAsync(cancellation);
     }
 
     public FileSystemEntry Create(FileSystemEntry entity)
     {
         return _database.FileSystemEntries.Add(entity).Entity;
+    }
+
+    public FileSystemEntry Delete(FileSystemEntry entity)
+    {
+        return _database.FileSystemEntries.Remove(entity).Entity;
     }
 }
