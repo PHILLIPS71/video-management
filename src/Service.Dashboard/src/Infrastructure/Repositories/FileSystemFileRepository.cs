@@ -19,6 +19,7 @@ public class FileSystemFileRepository : IFileSystemFileRepository
     {
         return _database
             .FileSystemFiles
+            .Include(x => x.Encodes)
             .Include(x => x.VideoStreams)
             .Include(x => x.AudioStreams)
             .Include(x => x.SubtitleStreams)

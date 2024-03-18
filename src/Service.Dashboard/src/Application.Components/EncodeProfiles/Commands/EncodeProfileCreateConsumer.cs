@@ -36,7 +36,7 @@ public class EncodeProfileCreateConsumer : IConsumer<EncodeProfileCreate.Command
                 return;
             }
         }
-        
+
         var codec = Enumeration.TryParse<EncodeCodec>(context.Message.Codec);
         if (codec == null)
         {
@@ -67,6 +67,7 @@ public class EncodeProfileCreateConsumer : IConsumer<EncodeProfileCreate.Command
             container,
             codec,
             preset,
+            context.Message.UseHardwareAcceleration,
             tune,
             context.Message.Quality);
 

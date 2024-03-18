@@ -36,18 +36,26 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
 
         var videos = media
             .VideoStreams
-            .Select(stream =>
-                stream
-                    .SetCodec(context.Job.Codec))
+            .Select(stream => stream.SetCodec(context.Job.Codec))
             .ToList();
 
-        var conversion = FFmpeg.Conversions
+        var conversion = FFmpeg
+            .Conversions
             .New()
             .AddStream(videos)
             .AddParameter($"-preset {context.Job.Preset}")
             .SetOutput(context.Job.OutputFilePath)
             .SetOverwriteOutput(true)
             .UseMultiThread(true);
+
+        if (context.Job.UseHardwareAcceleration)
+        {
+            var decoder = media.VideoStreams.First().Codec;
+            var encoder = context.Job.Codec;
+
+            conversion = conversion
+                .UseHardwareAcceleration(nameof(HardwareAccelerator.auto), decoder, encoder);
+        }
 
         if (!string.IsNullOrWhiteSpace(context.Job.Tune))
             conversion.AddParameter($"-tune {context.Job.Tune}");

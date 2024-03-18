@@ -22,8 +22,10 @@ public class EncodeSagaState : SagaStateMachineInstance
     public EncodePreset Preset { get; set; } = null!;
 
     public EncodeTune? Tune { get; set; }
-    
+
     public int? Quality { get; set; }
+
+    public bool UseHardwareAcceleration { get; set; }
 
     public bool IsKeepingSourceFile { get; set; }
 

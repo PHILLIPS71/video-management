@@ -18,6 +18,8 @@ public sealed class EncodeFile
         public string? Tune { get; init; }
 
         public int? Quality { get; init; }
+
+        public bool UseHardwareAcceleration { get; init; }
     }
 
     public sealed class Validator : AbstractValidator<Job>

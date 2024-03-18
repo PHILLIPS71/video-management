@@ -1,7 +1,7 @@
 import type { EncodeProfileFormQuery } from '@/__generated__/EncodeProfileFormQuery.graphql'
 import type { SubmitHandler } from 'react-hook-form'
 
-import { Form, Input, Select, Typography } from '@giantnodes/react'
+import { Form, Input, Select, Switch, Typography } from '@giantnodes/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -52,6 +52,7 @@ const EncodeProfileSchema = z.object({
   preset: z.string(),
   tune: z.string().nullish(),
   quality: z.preprocess((x) => x || null, z.coerce.number().int().nullish()),
+  use_hardware_acceleration: z.boolean(),
 })
 
 export type EncodeProfileFormRef = {
@@ -79,6 +80,7 @@ const EncodeProfileForm = React.forwardRef<EncodeProfileFormRef, EncodeProfileFo
       preset: profile?.preset,
       tune: profile?.tune,
       quality: profile?.quality,
+      use_hardware_acceleration: profile?.use_hardware_acceleration,
     },
   })
 
@@ -115,7 +117,7 @@ const EncodeProfileForm = React.forwardRef<EncodeProfileFormRef, EncodeProfileFo
           <Form.Feedback type="error">{form.formState.errors.name?.message}</Form.Feedback>
         </Form.Group>
 
-        <div className="flex flex-row gap-3 flex-wrap sm:flex-nowrap">
+        <div className="flex flex-row items-center gap-3 flex-wrap sm:flex-nowrap">
           <Form.Group {...form.register('codec')} error={!!form.formState.errors.codec}>
             <Form.Label>Codec</Form.Label>
             <Select items={encode_codecs?.nodes} selectedKey={form.watch('codec')}>
@@ -144,7 +146,7 @@ const EncodeProfileForm = React.forwardRef<EncodeProfileFormRef, EncodeProfileFo
           </Form.Group>
         </div>
 
-        <div className="flex flex-row gap-3 flex-wrap sm:flex-nowrap">
+        <div className="flex flex-row items-center gap-3 flex-wrap sm:flex-nowrap">
           <Form.Group {...form.register('preset')} error={!!form.formState.errors.preset}>
             <Form.Label>Preset</Form.Label>
             <Select items={encode_presets?.nodes} selectedKey={form.watch('preset')}>
@@ -169,20 +171,31 @@ const EncodeProfileForm = React.forwardRef<EncodeProfileFormRef, EncodeProfileFo
           </Form.Group>
         </div>
 
-        <Form.Group {...form.register('tune')} error={!!form.formState.errors.tune}>
-          <Form.Label>Tune</Form.Label>
-          <Select isDisabled={codec?.tunes.length === 0} items={codec?.tunes} selectedKey={form.watch('tune')}>
-            {(item) => (
-              <Select.Option key={item.id} id={item.id} textValue={item.name}>
-                <div className="flex flex-col">
-                  <Typography.Text>{item.name}</Typography.Text>
-                  <Typography.Text variant="subtitle">{item.description}</Typography.Text>
-                </div>
-              </Select.Option>
-            )}
-          </Select>
-          <Form.Feedback type="error">{form.formState.errors.tune?.message}</Form.Feedback>
-        </Form.Group>
+        <div className="flex flex-row items-center gap-3 flex-wrap sm:flex-nowrap">
+          <Form.Group {...form.register('tune')} error={!!form.formState.errors.tune}>
+            <Form.Label>Tune</Form.Label>
+            <Select isDisabled={codec?.tunes.length === 0} items={codec?.tunes} selectedKey={form.watch('tune')}>
+              {(item) => (
+                <Select.Option key={item.id} id={item.id} textValue={item.name}>
+                  <div className="flex flex-col">
+                    <Typography.Text>{item.name}</Typography.Text>
+                    <Typography.Text variant="subtitle">{item.description}</Typography.Text>
+                  </div>
+                </Select.Option>
+              )}
+            </Select>
+            <Form.Feedback type="error">{form.formState.errors.tune?.message}</Form.Feedback>
+          </Form.Group>
+
+          <Form.Group
+            {...form.register('use_hardware_acceleration')}
+            error={!!form.formState.errors.use_hardware_acceleration}
+          >
+            <Form.Label>Use Hardware Acceleration</Form.Label>
+            <Switch />
+            <Form.Feedback type="error">{form.formState.errors.use_hardware_acceleration?.message}</Form.Feedback>
+          </Form.Group>
+        </div>
       </div>
     </Form>
   )

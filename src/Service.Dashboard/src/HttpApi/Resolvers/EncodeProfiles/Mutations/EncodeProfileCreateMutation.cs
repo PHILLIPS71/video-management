@@ -25,6 +25,7 @@ public class EncodeProfileCreateMutation
         [ID] int preset,
         [ID] int? tune,
         int? quality,
+        bool use_hardware_acceleration,
         CancellationToken cancellation = default)
     {
         var command = new EncodeProfileCreate.Command
@@ -35,6 +36,7 @@ public class EncodeProfileCreateMutation
             Preset = preset,
             Tune = tune,
             Quality = quality,
+            UseHardwareAcceleration = use_hardware_acceleration
         };
 
         Response response = await request.GetResponse<EncodeProfileCreate.Result, DomainFault, ValidationFault>(command, cancellation);

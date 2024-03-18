@@ -17,5 +17,7 @@ public sealed class EncodeOperationSubmit
         public string? Tune { get; init; }
 
         public int? Quality { get; set; }
+
+        public bool UseHardwareAcceleration { get; init; }
     }
 }

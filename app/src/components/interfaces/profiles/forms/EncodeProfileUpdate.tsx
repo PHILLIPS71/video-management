@@ -17,6 +17,7 @@ const MUTATION = graphql`
         id
         name
         quality
+        use_hardware_acceleration
         is_encodable
         codec {
           name
@@ -69,6 +70,7 @@ const EncodeProfileUpdate = React.forwardRef<EncodeProfileFormRef, EncodeProfile
             preset: data.preset,
             tune: data.tune,
             quality: data.quality,
+            use_hardware_acceleration: data.use_hardware_acceleration,
           },
         },
         onCompleted: (payload) => {

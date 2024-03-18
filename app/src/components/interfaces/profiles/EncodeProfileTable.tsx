@@ -29,6 +29,7 @@ const QUERY = graphql`
           id
           name
           quality
+          use_hardware_acceleration
           is_encodable
           container {
             id
@@ -93,6 +94,7 @@ const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
     preset: node.preset.id,
     tune: node.tune?.id,
     quality: node.quality,
+    use_hardware_acceleration: node.use_hardware_acceleration,
   })
 
   const remove = React.useCallback(

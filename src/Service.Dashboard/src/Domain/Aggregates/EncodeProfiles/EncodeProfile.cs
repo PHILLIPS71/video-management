@@ -24,6 +24,8 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity, ISoftDel
 
     public int? Quality { get; private set; }
 
+    public bool UseHardwareAcceleration { get; private set; }
+
     public bool IsDeleted { get; private set; }
 
     public DateTime? DeletedAt { get; private set; }
@@ -43,6 +45,7 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity, ISoftDel
         VideoFileContainer? container,
         EncodeCodec codec,
         EncodePreset preset,
+        bool useHardwareAcceleration,
         EncodeTune? tune = null,
         int? quality = null)
     {
@@ -53,6 +56,7 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity, ISoftDel
         Preset = preset;
         Tune = tune;
         Quality = quality;
+        UseHardwareAcceleration = useHardwareAcceleration;
         Encodes = _encodes;
     }
 
@@ -102,6 +106,11 @@ public class EncodeProfile : AggregateRoot<Guid>, ITimestampableEntity, ISoftDel
             Guard.Against.OutOfRange(quality.Value, nameof(quality), Codec.Quality.Min, Codec.Quality.Max);
 
         Quality = quality;
+    }
+
+    public void SetUseHardwareAcceleration(bool value)
+    {
+        UseHardwareAcceleration = value;
     }
 
     public bool IsEncodable()

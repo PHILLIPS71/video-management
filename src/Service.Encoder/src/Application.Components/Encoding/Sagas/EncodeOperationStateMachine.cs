@@ -105,7 +105,8 @@ internal static class EncodeOperationStateBehaviorExtensions
                     Codec = context.Message.Codec,
                     Preset = context.Message.Preset,
                     Tune = context.Message.Tune,
-                    Quality = context.Message.Quality
+                    Quality = context.Message.Quality,
+                    UseHardwareAcceleration = context.Message.UseHardwareAcceleration
                 }
             }));
     }

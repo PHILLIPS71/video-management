@@ -27,6 +27,8 @@ public class EncodeSubmitConsumer : IConsumer<EncodeSubmit.Command>
 
     public async Task Consume(ConsumeContext<EncodeSubmit.Command> context)
     {
+        using var uow = await _uow.BeginAsync(context.CancellationToken);
+
         var entries = await _entries.ToListAsync(x => context.Message.Entries.Contains(x.Id));
         if (entries.Count == 0)
         {
@@ -56,16 +58,13 @@ public class EncodeSubmitConsumer : IConsumer<EncodeSubmit.Command>
             }
         }
 
-        using (var uow = await _uow.BeginAsync(context.CancellationToken))
-        {
-            var encodes = files
-                .Select(file => file.Encode(profile))
-                .ToList();
+        var encodes = files
+            .Select(file => file.Encode(profile))
+            .ToList();
 
-            await uow.CommitAsync(context.CancellationToken);
+        await uow.CommitAsync(context.CancellationToken);
 
-            var ids = encodes.Select(x => x.Id).ToArray();
-            await context.RespondAsync(new EncodeSubmit.Result { Encodes = ids });
-        }
+        var ids = encodes.Select(x => x.Id).ToArray();
+        await context.RespondAsync(new EncodeSubmit.Result { Encodes = ids });
     }
 }

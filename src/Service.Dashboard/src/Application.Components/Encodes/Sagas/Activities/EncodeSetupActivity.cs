@@ -51,6 +51,7 @@ public class EncodeSetupActivity : IStateMachineActivity<EncodeSagaState, Encode
         context.Saga.Preset = profile.Preset;
         context.Saga.Tune = profile.Tune;
         context.Saga.Quality = profile.Quality;
+        context.Saga.UseHardwareAcceleration = profile.UseHardwareAcceleration;
 
         await next.Execute(context);
     }

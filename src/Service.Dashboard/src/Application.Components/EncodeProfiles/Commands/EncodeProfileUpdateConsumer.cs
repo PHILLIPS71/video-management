@@ -76,6 +76,7 @@ public class EncodeProfileUpdateConsumer : IConsumer<EncodeProfileUpdate.Command
         profile.SetPreset(preset);
         profile.SetTune(tune);
         profile.SetQuality(context.Message.Quality);
+        profile.SetUseHardwareAcceleration(context.Message.UseHardwareAcceleration);
 
         try
         {

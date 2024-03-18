@@ -122,7 +122,8 @@ internal static class EncodeStateMachineBehaviorExtensions
                     Codec = context.Saga.Codec.Value,
                     Preset = context.Saga.Preset.Value,
                     Tune = context.Saga.Tune?.Value,
-                    Quality = context.Saga.Quality
+                    Quality = context.Saga.Quality,
+                    UseHardwareAcceleration = context.Saga.UseHardwareAcceleration
                 }));
     }
 

@@ -18,6 +18,8 @@ public sealed class EncodeProfileCreate
         public int? Tune { get; init; }
 
         public int? Quality { get; init; }
+        
+        public required bool UseHardwareAcceleration { get; init; }
     }
     
     public sealed class Validator : AbstractValidator<Command>

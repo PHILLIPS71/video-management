@@ -33,6 +33,9 @@ public class EncodeProfileType : ObjectType<EncodeProfile>
             .Field(p => p.Quality);
 
         descriptor
+            .Field(p => p.UseHardwareAcceleration);
+
+        descriptor
             .Field("is_encodable")
             .Type<BooleanType>()
             .Resolve(x => x.Parent<EncodeProfile>().IsEncodable());
