@@ -4,7 +4,7 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries.Repositories;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Libraries;
+namespace Giantnodes.Service.Dashboard.Infrastructure.Repositories;
 
 public sealed class LibraryRepository : ILibraryRepository
 {

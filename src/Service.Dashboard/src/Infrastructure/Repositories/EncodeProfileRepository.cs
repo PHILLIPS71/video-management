@@ -1,64 +1,61 @@
 using System.Linq.Expressions;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles.Repositories;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Encodes;
+namespace Giantnodes.Service.Dashboard.Infrastructure.Repositories;
 
-public class EncodeRepository : IEncodeRepository
+public class EncodeProfileRepository : IEncodeProfileRepository
 {
     private readonly ApplicationDbContext _database;
 
-    public EncodeRepository(ApplicationDbContext database)
+    public EncodeProfileRepository(ApplicationDbContext database)
     {
         _database = database;
     }
 
     /// <summary>
-    /// Builds the <see name="Encode"/> aggregates consistency boundary.
+    /// Builds the <see name="EncodeProfile"/> aggregates consistency boundary.
     /// </summary>
     /// <returns>A <see cref="IQueryable{TEntity}"/> of the objects that make up the consistency boundary.</returns>
-    private IQueryable<Encode> Build()
+    private IQueryable<EncodeProfile> Build()
     {
         return _database
-            .Encodes
-            .Include(x => x.File)
-            .Include(x => x.Profile)
-            .Include(x => x.Snapshots)
+            .EncodeProfiles
             .AsQueryable();
     }
 
     public Task<bool> ExistsAsync(
-        Expression<Func<Encode, bool>> predicate,
+        Expression<Func<EncodeProfile, bool>> predicate,
         CancellationToken cancellation = default)
     {
         return Build().AnyAsync(predicate, cancellation);
     }
 
-    public Task<Encode> SingleAsync(
-        Expression<Func<Encode, bool>> predicate,
+    public Task<EncodeProfile> SingleAsync(
+        Expression<Func<EncodeProfile, bool>> predicate,
         CancellationToken cancellation = default)
     {
         return Build().SingleAsync(predicate, cancellation);
     }
 
-    public Task<Encode?> SingleOrDefaultAsync(
-        Expression<Func<Encode, bool>> predicate,
+    public Task<EncodeProfile?> SingleOrDefaultAsync(
+        Expression<Func<EncodeProfile, bool>> predicate,
         CancellationToken cancellation = default)
     {
         return Build().SingleOrDefaultAsync(predicate, cancellation);
     }
 
-    public Task<List<Encode>> ToListAsync(
-        Expression<Func<Encode, bool>> predicate,
+    public Task<List<EncodeProfile>> ToListAsync(
+        Expression<Func<EncodeProfile, bool>> predicate,
         CancellationToken cancellation = default)
     {
         return Build().Where(predicate).ToListAsync(cancellation);
     }
 
-    public Encode Create(Encode entity)
+    public EncodeProfile Create(EncodeProfile entity)
     {
-        return _database.Encodes.Add(entity).Entity;
+        return _database.EncodeProfiles.Add(entity).Entity;
     }
 }

@@ -1,4 +1,3 @@
-using Ardalis.GuardClauses;
 using EntityFramework.Exceptions.Common;
 using Giantnodes.Infrastructure;
 using Giantnodes.Infrastructure.Faults;

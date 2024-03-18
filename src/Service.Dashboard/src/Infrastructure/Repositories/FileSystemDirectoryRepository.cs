@@ -4,7 +4,7 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories.Reposit
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Directories;
+namespace Giantnodes.Service.Dashboard.Infrastructure.Repositories;
 
 public class FileSystemDirectoryRepository : IFileSystemDirectoryRepository
 {

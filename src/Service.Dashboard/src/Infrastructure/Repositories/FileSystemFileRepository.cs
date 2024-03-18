@@ -4,7 +4,7 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Repositories;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace Giantnodes.Service.Dashboard.Infrastructure.Aggregates.Files;
+namespace Giantnodes.Service.Dashboard.Infrastructure.Repositories;
 
 public class FileSystemFileRepository : IFileSystemFileRepository
 {

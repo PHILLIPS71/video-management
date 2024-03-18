@@ -9,7 +9,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\Service.Encoder\src\Application.Contracts\Giantnodes.Service.Encoder.Application.Contracts.csproj" />
         <ProjectReference Include="..\Application.Contracts\Giantnodes.Service.Dashboard.Application.Contracts.csproj" />
-        <ProjectReference Include="..\Giantnodes.Service.Dashboard.Infrastructure\Giantnodes.Service.Dashboard.Infrastructure.csproj" />
+        <ProjectReference Include="..\Infrastructure\Giantnodes.Service.Dashboard.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
