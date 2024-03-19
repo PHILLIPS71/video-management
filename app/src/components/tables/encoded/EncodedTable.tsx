@@ -72,7 +72,7 @@ const EncodedTable: React.FC<EncodedTableProps> = ({ $key }) => {
 
       {hasNext && (
         <div className="flex flex-row items-center justify-center p-2">
-          <Button size="xs" onClick={() => loadNext(8)}>
+          <Button size="xs" onPress={() => loadNext(8)}>
             Show more
           </Button>
         </div>
