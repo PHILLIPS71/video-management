@@ -14,6 +14,5 @@ public class EncodeStateMachineDefinition : SagaDefinition<EncodeSagaState>
         endpointConfigurator.ConcurrentMessageLimit = 3;
 
         endpointConfigurator.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(3)));
-        endpointConfigurator.UseEntityFrameworkOutbox<ApplicationDbContext>(context);
     }
 }

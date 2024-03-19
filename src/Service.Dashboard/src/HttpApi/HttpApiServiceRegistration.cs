@@ -54,6 +54,12 @@ public static class HttpApiServiceRegistration
                     });
 
                 options
+                    .AddConfigureEndpointsCallback((context, name, configure) => 
+                    {
+                        configure.UseEntityFrameworkOutbox<ApplicationDbContext>(context);
+                    });
+
+                options
                     .UsingPostgres((context, config) =>
                     {
                         config.UseDelayedMessageScheduler();

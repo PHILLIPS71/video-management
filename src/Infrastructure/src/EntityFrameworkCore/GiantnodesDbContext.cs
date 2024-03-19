@@ -21,7 +21,7 @@ public class GiantnodesDbContext<TDbContext> : DbContext
         = typeof(GiantnodesDbContext<TDbContext>)
             .GetMethod(nameof(ConfigureAuditProperties), BindingFlags.Instance | BindingFlags.NonPublic);
 
-    private static readonly MethodInfo? ConfigureValueConverterMethodInfo
+    private static readonly MethodInfo? ConfigureIdValueGeneratedMethodInfo
         = typeof(GiantnodesDbContext<TDbContext>)
             .GetMethod(nameof(ConfigureIdValueGenerated), BindingFlags.Instance | BindingFlags.NonPublic);
 
@@ -49,13 +49,13 @@ public class GiantnodesDbContext<TDbContext> : DbContext
                 .MakeGenericMethod(type.ClrType)
                 .Invoke(this, [modelBuilder, type]);
 
-            ConfigureValueConverterMethodInfo?
+            ConfigureIdValueGeneratedMethodInfo?
                 .MakeGenericMethod(type.ClrType)
-                .Invoke(this, [modelBuilder]);
+                .Invoke(this, [modelBuilder, type]);
 
-            ConfigureConcurrencyTokenMethodInfo?
-                .MakeGenericMethod(type.ClrType)
-                .Invoke(this, [modelBuilder]);
+            // ConfigureConcurrencyTokenMethodInfo?
+            //     .MakeGenericMethod(type.ClrType)
+            //     .Invoke(this, [modelBuilder, type]);
         }
     }
 
@@ -63,6 +63,7 @@ public class GiantnodesDbContext<TDbContext> : DbContext
     public override int SaveChanges()
     {
         NullifyEmptyStrings();
+
         SetTimestampEntityProperties();
         SetSoftDeleteEntityProperties();
 
@@ -104,16 +105,16 @@ public class GiantnodesDbContext<TDbContext> : DbContext
     /// the database and must be set explicitly.
     /// </summary>
     /// <param name="builder">The builder being used to construct the model for this context.</param>
+    /// <param name="mutable">The mutable entity type for the <typeparamref name="TEntity"/>.</param>
     /// <typeparam name="TEntity">The entity type to configure the Id property for.</typeparam>
-    private static void ConfigureIdValueGenerated<TEntity>(ModelBuilder builder)
+    protected void ConfigureIdValueGenerated<TEntity>(ModelBuilder builder, IMutableEntityType mutable)
         where TEntity : class
     {
         if (!typeof(IEntity<Guid>).IsAssignableFrom(typeof(TEntity)))
             return;
 
         var identifier = builder.Entity<TEntity>().Property(x => ((IEntity<Guid>)x).Id);
-        if (identifier.Metadata.PropertyInfo != null &&
-            identifier.Metadata.PropertyInfo.IsDefined(typeof(DatabaseGeneratedAttribute), true))
+        if (identifier.Metadata.PropertyInfo?.IsDefined(typeof(DatabaseGeneratedAttribute), true) == true)
             return;
 
         identifier.ValueGeneratedNever();
@@ -124,10 +125,14 @@ public class GiantnodesDbContext<TDbContext> : DbContext
     /// <see cref="IHasConcurrencyToken"/> to be a row version, enabling optimistic concurrency control.
     /// </summary>
     /// <param name="builder">The builder being used to construct the model for this context.</param>
+    /// <param name="mutable">The mutable entity type for the <typeparamref name="TEntity"/>.</param>
     /// <typeparam name="TEntity">The entity type to configure the concurrency token property for.</typeparam>
-    private static void ConfigureConcurrencyToken<TEntity>(ModelBuilder builder)
+    protected void ConfigureConcurrencyToken<TEntity>(ModelBuilder builder, IMutableEntityType mutable)
         where TEntity : class
     {
+        if (mutable.IsOwned())
+            return;
+
         if (!typeof(IHasConcurrencyToken).IsAssignableFrom(typeof(TEntity)))
             return;
 

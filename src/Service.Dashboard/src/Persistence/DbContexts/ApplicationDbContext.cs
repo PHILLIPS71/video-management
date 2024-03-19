@@ -38,17 +38,17 @@ public class ApplicationDbContext : GiantnodesDbContext<ApplicationDbContext>
     public DbSet<AudioStream> AudioStreams => Set<AudioStream>();
     public DbSet<SubtitleStream> SubtitleStreams => Set<SubtitleStream>();
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(builder);
+        base.OnModelCreating(modelBuilder);
 
         foreach (var configuration in Configurations)
-            configuration.Configure(builder);
+            configuration.Configure(modelBuilder);
 
-        builder.AddTransactionalOutboxEntities();
+        modelBuilder.AddTransactionalOutboxEntities();
 
-        builder.HasDefaultSchema(Schema);
-        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        modelBuilder.HasDefaultSchema(Schema);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 
     private static IEnumerable<ISagaClassMap> Configurations

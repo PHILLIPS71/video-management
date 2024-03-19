@@ -24,8 +24,11 @@ public sealed class EntityFrameworkUnitOfWork<TDbContext> : UnitOfWork, ITransie
         if (options.Timeout.HasValue)
             _database.Database.SetCommandTimeout(options.Timeout.Value);
 
-        if ((options.Scope == TransactionScopeOption.Required && _database.Database.CurrentTransaction == null) ||
-            options.Scope == TransactionScopeOption.RequiresNew)
+        var isTransactionRequired =
+            options.Scope == TransactionScopeOption.Required && _database.Database.CurrentTransaction == null ||
+            options.Scope == TransactionScopeOption.RequiresNew;
+
+        if (isTransactionRequired)
             _transaction = await _database.Database.BeginTransactionAsync(cancellation);
     }
 
