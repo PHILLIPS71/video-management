@@ -22,6 +22,37 @@
   },
   "rules": {
     "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "default",
+        "format": ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"],
+      },
+      {
+        "selector": "import",
+        "format": ["camelCase", "PascalCase"],
+      },
+      {
+        "selector": "variable",
+        "format": ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"],
+      },
+      {
+        "selector": "function",
+        "format": ["camelCase", "PascalCase"],
+      },
+      {
+        "selector": "typeLike",
+        "format": ["PascalCase"],
+      },
+      {
+        "selector": "enumMember",
+        "format": ["UPPER_CASE"],
+      },
+      {
+        "selector": "property",
+        "format": null,
+      },
+    ],
     "no-console": "warn",
     "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["accu"] }],
     "no-underscore-dangle": ["error", { "allow": ["__typename"] }],
@@ -40,6 +71,7 @@
         "reservedFirst": true,
       },
     ],
+    "import/prefer-default-export": "off",
     "import/extensions": "off",
     "import/order": [
       "error",
