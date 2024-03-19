@@ -8,8 +8,16 @@ public sealed class EncodeOperationSubmit
     {
         public required string InputFilePath { get; init; }
 
-        public required string OutputDirectoryPath { get; init; }
+        public required string OutputFilePath { get; init; }
 
-        public string? Container { get; init; }
+        public required string Codec { get; init; }
+
+        public required string Preset { get; init; }
+
+        public string? Tune { get; init; }
+
+        public int? Quality { get; set; }
+
+        public bool UseHardwareAcceleration { get; init; }
     }
 }

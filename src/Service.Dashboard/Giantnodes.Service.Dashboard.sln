@@ -24,7 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Domain.Shared", "src\Domain.Shared\Giantnodes.Service.Dashboard.Domain.Shared.csproj", "{FD25D825-DF1E-4C5F-AA33-D0A13739B4E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Infrastructure", "src\Giantnodes.Service.Dashboard.Infrastructure\Giantnodes.Service.Dashboard.Infrastructure.csproj", "{B2239264-4E0C-4428-8BC1-D9D9C56EE389}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Infrastructure", "src\Infrastructure\Giantnodes.Service.Dashboard.Infrastructure.csproj", "{B2239264-4E0C-4428-8BC1-D9D9C56EE389}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Persistence", "src\Persistence\Giantnodes.Service.Dashboard.Persistence.csproj", "{55626EB5-C72A-4D36-9BE0-4397BF170445}"
 EndProject

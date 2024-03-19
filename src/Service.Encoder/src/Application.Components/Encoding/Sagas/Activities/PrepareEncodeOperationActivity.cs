@@ -33,13 +33,11 @@ public class PrepareEncodeOperationActivity
         if (!file.Exists)
             throw new FileNotFoundException(new FileNotFoundException().Message, context.Message.InputFilePath);
 
-        var container = file.Extension;
-        if (!string.IsNullOrWhiteSpace(context.Message.Container))
-            container = context.Message.Container;
-
         context.Saga.InputFilePath = context.Message.InputFilePath;
-        context.Saga.OutputFilePath = GetPath(context.Message.OutputDirectoryPath, file.Name, container);
-        context.Saga.TempFilePath = GetPath(_fs.Path.GetTempPath(), context.Saga.CorrelationId.ToString(), container);
+        context.Saga.OutputFilePath = context.Message.OutputFilePath;
+        context.Saga.TempFilePath = _fs.Path.Join(
+            _fs.Path.GetTempPath(),
+            $"{context.Saga.CorrelationId}{_fs.Path.GetExtension(context.Message.OutputFilePath)}");
 
         await next.Execute(context);
     }
@@ -50,18 +48,5 @@ public class PrepareEncodeOperationActivity
         where TException : Exception
     {
         return next.Faulted(context);
-    }
-
-    /// <summary>
-    /// Concatenates the specified directory, name, and container to form a complete file path. The file extension of
-    /// the resulting path is modified based on the specified container parameter.
-    /// </summary>
-    /// <param name="directory">The directory part of the file path.</param>
-    /// <param name="name">The name of the file.</param>
-    /// <param name="container">The container or file extension to be used for modifying the file extension.</param>
-    /// <returns>A string representing the complete file path formed by joining directory, modified name, and container.</returns>
-    private string GetPath(string directory, string name, string container)
-    {
-        return _fs.Path.Join(directory, _fs.Path.ChangeExtension(name, container));
     }
 }

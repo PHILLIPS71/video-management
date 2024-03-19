@@ -18,12 +18,20 @@ const MUTATION = graphql`
           message
         }
       }
+      errors {
+        ... on DomainError {
+          message
+        }
+        ... on ValidationError {
+          message
+        }
+      }
     }
   }
 `
 
 const ScanButton: React.FC = () => {
-  const { directory } = useExploreContext()
+  const { directory, setErrors } = useExploreContext()
 
   const [commit, isLoading] = useMutation<ScanButton_DirectoryProbeMutation>(MUTATION)
 
@@ -33,6 +41,22 @@ const ScanButton: React.FC = () => {
         input: {
           directory_id: directory,
         },
+      },
+      onCompleted: (payload) => {
+        if (payload.directory_probe.errors != null) {
+          const faults = payload.directory_probe.errors
+            .filter((error) => error.message !== undefined)
+            .map((error) => error.message!)
+
+          setErrors(faults)
+
+          return
+        }
+
+        setErrors([])
+      },
+      onError: (error) => {
+        setErrors([error.message])
       },
     })
   }

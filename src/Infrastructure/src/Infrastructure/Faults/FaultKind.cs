@@ -7,12 +7,15 @@ public class FaultKind : Enumeration
 
     public static readonly FaultKind NotFound =
         new(101, FaultType.InvalidRequest, "not_found", "the resource your are looking for cannot be found");
-    
+
+    public static readonly FaultKind OutOfRange =
+        new(102, FaultType.InvalidRequest, "out_of_range", "the value provided is out of the allowed range");
+
     public static readonly FaultKind Constraint =
-        new(102, FaultType.InvalidRequest, "constraint_fault", "duplicate value violates a unique constraint");
+        new(103, FaultType.InvalidRequest, "constraint_fault", "duplicate value violates a unique constraint");
 
     public static readonly FaultKind Platform =
-        new(103, FaultType.Api, "platform_not_supported", "the operating system is not supported");
+        new(104, FaultType.Api, "platform_not_supported", "the operating system is not supported");
 
     public FaultKind(int id, FaultType type, string code, string message)
         : base(id, code)

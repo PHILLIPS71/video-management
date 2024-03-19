@@ -1,10 +1,53 @@
 import type { EncodeButton_EncodeSubmitMutation } from '@/__generated__/EncodeButton_EncodeSubmitMutation.graphql'
+import type { EncodeButtonFragment$key } from '@/__generated__/EncodeButtonFragment.graphql'
+import type { EncodeButtonQuery } from '@/__generated__/EncodeButtonQuery.graphql'
+import type { Selection } from '@giantnodes/react'
 
-import { Button } from '@giantnodes/react'
+import { Button, Chip, Menu } from '@giantnodes/react'
+import { IconCaretDownFilled } from '@tabler/icons-react'
 import React from 'react'
-import { graphql, useMutation } from 'react-relay'
+import { graphql, useLazyLoadQuery, useMutation, usePaginationFragment } from 'react-relay'
 
 import { useExploreContext } from '@/components/interfaces/explore/use-explore.hook'
+
+const QUERY = graphql`
+  query EncodeButtonQuery($first: Int, $after: String, $order: [EncodeProfileSortInput!]) {
+    ...EncodeButtonFragment @arguments(first: $first, after: $after, order: $order)
+  }
+`
+
+const FRAGMENT = graphql`
+  fragment EncodeButtonFragment on Query
+  @refetchable(queryName: "EncodeButtonRefetchQuery")
+  @argumentDefinitions(
+    first: { type: "Int" }
+    after: { type: "String" }
+    order: { type: "[EncodeProfileSortInput!]" }
+  ) {
+    encode_profiles(first: $first, after: $after, order: $order)
+      @connection(key: "EncodeButtonFragment_encode_profiles") {
+      edges {
+        node {
+          id
+          name
+          is_encodable
+          codec {
+            name
+          }
+          preset {
+            name
+          }
+          tune {
+            name
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+      }
+    }
+  }
+`
 
 const MUTATION = graphql`
   mutation EncodeButton_EncodeSubmitMutation($input: Encode_submitInput!) {
@@ -12,12 +55,30 @@ const MUTATION = graphql`
       encode {
         id
       }
+      errors {
+        ... on DomainError {
+          message
+        }
+        ... on ValidationError {
+          message
+        }
+      }
     }
   }
 `
 
 const EncodeButton: React.FC = () => {
-  const { directory, keys } = useExploreContext()
+  const { directory, keys, setErrors } = useExploreContext()
+
+  const query = useLazyLoadQuery<EncodeButtonQuery>(QUERY, {
+    first: 8,
+    order: [{ name: 'ASC' }],
+  })
+
+  const { data, hasNext, loadNext } = usePaginationFragment<EncodeButtonQuery, EncodeButtonFragment$key>(
+    FRAGMENT,
+    query
+  )
 
   const [commit, isLoading] = useMutation<EncodeButton_EncodeSubmitMutation>(MUTATION)
 
@@ -37,20 +98,79 @@ const EncodeButton: React.FC = () => {
     return []
   }, [directory, keys])
 
-  const onPress = () => {
+  const disabledKeys = React.useMemo<string[]>(
+    () => data.encode_profiles?.edges?.filter((x) => !x.node.is_encodable).map((x) => x.node.id) ?? [],
+    [data.encode_profiles]
+  )
+
+  const onPress = (key: Selection) => {
     commit({
       variables: {
         input: {
+          encode_profile_id: key,
           entries,
         },
+      },
+      onCompleted: (payload) => {
+        if (payload.encode_submit.errors != null) {
+          const faults = payload.encode_submit.errors
+            .filter((error) => error.message !== undefined)
+            .map((error) => error.message!)
+
+          setErrors(faults)
+
+          return
+        }
+
+        setErrors([])
+      },
+      onError: (error) => {
+        setErrors([error.message])
       },
     })
   }
 
   return (
-    <Button color="brand" isDisabled={isDisabled || isLoading} size="xs" onPress={() => onPress()}>
-      Encode
-    </Button>
+    <Menu size="xs">
+      <Button className="flex items-center flex-row" color="brand" isDisabled={isDisabled || isLoading} size="xs">
+        <span>Encode</span>
+        <IconCaretDownFilled size={16} />
+      </Button>
+
+      <Menu.Popover placement="bottom right">
+        <Menu.List disabledKeys={disabledKeys} onAction={(key) => onPress(key)}>
+          {data.encode_profiles?.edges?.map((profile) => (
+            <Menu.Item key={profile.node.id} className="flex items-center gap-2" id={profile.node.id}>
+              {profile.node.name}
+
+              <div className="flex items-end flex-grow justify-end gap-2">
+                <Chip color="success" size="sm">
+                  {profile.node.codec.name.toLocaleLowerCase()}
+                </Chip>
+
+                <Chip color="info" size="sm">
+                  {profile.node.preset.name.toLocaleLowerCase()}
+                </Chip>
+
+                {profile.node.tune && (
+                  <Chip color="warning" size="sm">
+                    {profile.node.tune.name.toLocaleLowerCase()}
+                  </Chip>
+                )}
+              </div>
+            </Menu.Item>
+          ))}
+        </Menu.List>
+
+        {hasNext && (
+          <div className="flex flex-row items-center justify-center p-2">
+            <Button size="xs" onPress={() => loadNext(8)}>
+              Show more
+            </Button>
+          </div>
+        )}
+      </Menu.Popover>
+    </Menu>
   )
 }
 

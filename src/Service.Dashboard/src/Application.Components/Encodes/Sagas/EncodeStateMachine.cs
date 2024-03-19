@@ -17,13 +17,16 @@ public sealed class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState
         InstanceState(x => x.CurrentState);
 
         Event(() => Created);
-        Event(() => Cancelled);
         Event(() => Started);
         Event(() => Heartbeat);
         Event(() => Progressed);
         Event(() => Completed);
         Event(() => Failed);
-        Event(() => FileProbed, e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
+
+        Event(() => Cancelled,
+            e => e.CorrelateBy((instance, context) => instance.EncodeId == context.Message.EncodeId));
+        Event(() => FileProbed,
+            e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
 
         Initially(
             When(Created)
@@ -35,7 +38,7 @@ public sealed class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState
             When(FileProbed)
                 .Then(context => context.Saga.JobId = null)
                 .Activity(context => context.OfType<FileProbedActivity>())
-                .RequestFileEncode()
+                .Activity(context => context.OfInstanceType<EncodeOperationRequestActivity>())
                 .TransitionTo(Queued));
 
         During(Queued,
@@ -106,20 +109,6 @@ internal static class EncodeStateMachineBehaviorExtensions
                     FilePath = factory(context)
                 }
             }));
-    }
-
-    public static EventActivityBinder<EncodeSagaState, TEvent> RequestFileEncode<TEvent>(
-        this EventActivityBinder<EncodeSagaState, TEvent> binder)
-        where TEvent : class
-    {
-        return binder
-            .PublishAsync(context => context.Init<EncodeOperationSubmit.Command>(
-                new EncodeOperationSubmit.Command
-                {
-                    CorrelationId = context.Saga.CorrelationId,
-                    InputFilePath = context.Saga.InputFilePath,
-                    OutputDirectoryPath = context.Saga.OutputDirectoryPath
-                }));
     }
 
     public static EventActivityBinder<EncodeSagaState, EncodeCancelledEvent> RequestOperationCancel(

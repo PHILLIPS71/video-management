@@ -24,7 +24,7 @@ public static class FileSystemExtensions
 
         return directory
             .EnumerateFileSystemInfos("*", search)
-            .Where(x => x is IDirectoryInfo || Giantnodes.Infrastructure.Enumeration.TryParse<VideoFileExtension>(x.Extension) != null)
+            .Where(x => x is IDirectoryInfo || Giantnodes.Infrastructure.Enumeration.TryParse<VideoFileContainer>(x.Extension) != null)
             .ToList()
             .AsReadOnly();
     }

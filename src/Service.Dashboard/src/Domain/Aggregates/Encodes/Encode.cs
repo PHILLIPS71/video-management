@@ -1,6 +1,7 @@
 using Giantnodes.Infrastructure.Domain.Entities;
 using Giantnodes.Infrastructure.Domain.Entities.Auditing;
 using Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Events;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Values;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
@@ -14,6 +15,8 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
     private readonly List<EncodeSnapshot> _snapshots = new();
 
     public FileSystemFile File { get; private set; }
+
+    public EncodeProfile Profile { get; private set; }
 
     public EncodeSpeed? Speed { get; private set; }
 
@@ -42,17 +45,19 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         Snapshots = _snapshots;
     }
 
-    public Encode(FileSystemFile file)
+    public Encode(FileSystemFile file, EncodeProfile profile)
     {
         Id = NewId.NextSequentialGuid();
         File = file;
+        Profile = profile;
         Status = EncodeStatus.Submitted;
         Snapshots = _snapshots;
 
         DomainEvents.Add(new EncodeCreatedEvent
         {
-            FileId = File.Id,
             EncodeId = Id,
+            EncodeProfileId = Profile.Id,
+            FileId = File.Id,
             FilePath = File.PathInfo.FullName
         });
     }

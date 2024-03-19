@@ -14,9 +14,7 @@ public class EncodeSagaState : SagaStateMachineInstance
 
     public string InputFilePath { get; set; } = null!;
 
-    public string OutputDirectoryPath { get; set; } = null!;
-
-    public string? OutputFilePath { get; set; }
+    public string OutputFilePath { get; set; } = null!;
 
     public bool IsKeepingSourceFile { get; set; }
 

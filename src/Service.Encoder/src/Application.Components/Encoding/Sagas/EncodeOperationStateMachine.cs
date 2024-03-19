@@ -89,9 +89,8 @@ internal static class EncodeOperationStateBehaviorExtensions
                 }));
     }
 
-    public static EventActivityBinder<EncodeOperationSagaState, TEvent> RequestEncodeFile<TEvent>(
-        this EventActivityBinder<EncodeOperationSagaState, TEvent> binder)
-        where TEvent : class
+    public static EventActivityBinder<EncodeOperationSagaState, EncodeOperationSubmit.Command> RequestEncodeFile(
+        this EventActivityBinder<EncodeOperationSagaState, EncodeOperationSubmit.Command> binder)
     {
         return binder
             .Then(context => context.Saga.JobId = NewId.NextSequentialGuid())
@@ -102,7 +101,12 @@ internal static class EncodeOperationStateBehaviorExtensions
                 {
                     CorrelationId = context.Saga.CorrelationId,
                     InputFilePath = context.Saga.InputFilePath,
-                    OutputFilePath = context.Saga.TempFilePath
+                    OutputFilePath = context.Saga.TempFilePath,
+                    Codec = context.Message.Codec,
+                    Preset = context.Message.Preset,
+                    Tune = context.Message.Tune,
+                    Quality = context.Message.Quality,
+                    UseHardwareAcceleration = context.Message.UseHardwareAcceleration
                 }
             }));
     }

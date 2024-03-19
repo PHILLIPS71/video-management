@@ -21,9 +21,9 @@ const QUERY = graphql`
   query page_LibrarySlugExploreQuery($where: FileSystemDirectoryFilterInput, $order: [FileSystemEntrySortInput!]) {
     file_system_directory(where: $where) {
       id
-      ...ExploreTableFragment @arguments(order: $order)
       ...ExploreBreadcrumbsFragment
       ...ExploreControlsFragment
+      ...ExploreTableFragment @arguments(order: $order)
     }
   }
 `
@@ -82,9 +82,9 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
   const context = useExplore({ directory: query.file_system_directory.id })
 
   return (
-    <div className="flex lg:flex-row flex-col gap-2">
+    <div className="flex lg:flex-row flex-col gap-3">
       <ExploreContext.Provider value={context}>
-        <div className="flex flex-col flex-1 gap-2">
+        <div className="flex flex-col flex-1 gap-3">
           <Card transparent>
             <Card.Header>
               <Suspense fallback="LOADING...">
@@ -109,7 +109,7 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
         </div>
       </ExploreContext.Provider>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         <Card className="h-fit lg:w-80">
           <Card.Header>
             <Typography.Text as="strong">Resolution</Typography.Text>

@@ -13,6 +13,10 @@ public class EncodeSagaStateMap : SagaClassMap<EncodeSagaState>
             .IsRowVersion();
 
         builder
+            .HasIndex(p => p.InputFilePath)
+            .IsUnique();
+
+        builder
             .HasIndex(p => p.OutputFilePath)
             .IsUnique();
     }

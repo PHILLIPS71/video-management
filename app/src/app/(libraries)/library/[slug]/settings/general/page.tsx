@@ -33,15 +33,13 @@ const LibrarySettingsGeneralPage = () => {
           <LibraryUpdate ref={ref} library={library} onComplete={onComplete} onLoadingChange={setLoading} />
         </Card.Body>
 
-        <Card.Footer className="flex items-center justify-end gap-2">
-          <div className="flex gap-2">
-            <Button color="neutral" size="xs" onPress={() => ref.current?.reset()}>
-              Cancel
-            </Button>
-            <Button isDisabled={isLoading} size="xs" onPress={() => ref.current?.submit()}>
-              Save
-            </Button>
-          </div>
+        <Card.Footer className="flex items-center justify-end gap-3">
+          <Button color="neutral" size="xs" onPress={() => ref.current?.reset()}>
+            Reset
+          </Button>
+          <Button isDisabled={isLoading} size="xs" onPress={() => ref.current?.submit()}>
+            Save
+          </Button>
         </Card.Footer>
       </Card>
     </section>

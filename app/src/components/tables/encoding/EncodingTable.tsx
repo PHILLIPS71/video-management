@@ -124,7 +124,7 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
                 <div className="flex flex-row justify-end gap-2">
                   <EncodeBadges $key={item.node} />
 
-                  <Button color="neutral" size="xs" variant="blank" onClick={() => cancel(item.node)}>
+                  <Button color="neutral" size="xs" variant="blank" onPress={() => cancel(item.node)}>
                     <IconProgressX size={16} />
                   </Button>
                 </div>
@@ -136,7 +136,7 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
 
       {hasNext && (
         <div className="flex flex-row items-center justify-center p-2">
-          <Button size="xs" onClick={() => loadNext(8)}>
+          <Button size="xs" onPress={() => loadNext(8)}>
             Show more
           </Button>
         </div>

@@ -50,7 +50,8 @@ public abstract class Enumeration : IComparable
     /// <returns>An IEnumerable containing all values of the enumeration type.</returns>
     public static IEnumerable<T> GetAll<T>() where T : Enumeration
     {
-        return typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+        return typeof(T)
+            .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
             .Select(f => f.GetValue(null))
             .Cast<T>();
     }
@@ -100,7 +101,7 @@ public abstract class Enumeration : IComparable
             return null;
         }
     }
-    
+
     /// <summary>
     /// Attempts to parse an enumeration value based on its name.
     /// </summary>
