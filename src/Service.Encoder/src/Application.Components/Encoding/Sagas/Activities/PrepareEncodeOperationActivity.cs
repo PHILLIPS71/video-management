@@ -37,7 +37,7 @@ public class PrepareEncodeOperationActivity
         context.Saga.OutputFilePath = context.Message.OutputFilePath;
         context.Saga.TempFilePath = _fs.Path.Join(
             _fs.Path.GetTempPath(),
-            string.Join(context.Saga.CorrelationId.ToString(), _fs.Path.GetExtension(context.Message.OutputFilePath)));
+            $"{context.Saga.CorrelationId}{_fs.Path.GetExtension(context.Message.OutputFilePath)}");
 
         await next.Execute(context);
     }
