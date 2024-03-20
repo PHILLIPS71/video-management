@@ -12,9 +12,7 @@ public class EncodeOperationCompletedActivity : IStateMachineActivity<EncodeSaga
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
 
-    public EncodeOperationCompletedActivity(
-        IUnitOfWorkService uow,
-        IEncodeRepository repository)
+    public EncodeOperationCompletedActivity(IUnitOfWorkService uow, IEncodeRepository repository)
     {
         _uow = uow;
         _repository = repository;

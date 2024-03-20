@@ -12,9 +12,7 @@ public class EncodeOperationFailedActivity : IStateMachineActivity<EncodeSagaSta
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
 
-    public EncodeOperationFailedActivity(
-        IUnitOfWorkService uow,
-        IEncodeRepository repository)
+    public EncodeOperationFailedActivity(IUnitOfWorkService uow, IEncodeRepository repository)
     {
         _uow = uow;
         _repository = repository;

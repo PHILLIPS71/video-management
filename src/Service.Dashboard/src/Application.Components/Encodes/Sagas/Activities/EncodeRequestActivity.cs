@@ -6,12 +6,12 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
-public class EncodeOperationRequestActivity : IStateMachineActivity<EncodeSagaState>
+public class EncodeRequestActivity : IStateMachineActivity<EncodeSagaState>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
 
-    public EncodeOperationRequestActivity(IUnitOfWorkService uow, IEncodeRepository repository)
+    public EncodeRequestActivity(IUnitOfWorkService uow, IEncodeRepository repository)
     {
         _uow = uow;
         _repository = repository;
@@ -19,7 +19,7 @@ public class EncodeOperationRequestActivity : IStateMachineActivity<EncodeSagaSt
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeOperationRequestActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeRequestActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)

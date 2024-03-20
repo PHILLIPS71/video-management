@@ -6,14 +6,12 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
-public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, EncodeOperationEncodeProgressedEvent>
+public class EncodeOperationProgressedActivity : IStateMachineActivity<EncodeSagaState, EncodeOperationEncodeProgressedEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
 
-    public EncodeProgressedActivity(
-        IUnitOfWorkService uow,
-        IEncodeRepository repository)
+    public EncodeOperationProgressedActivity(IUnitOfWorkService uow, IEncodeRepository repository)
     {
         _uow = uow;
         _repository = repository;
@@ -21,7 +19,7 @@ public class EncodeProgressedActivity : IStateMachineActivity<EncodeSagaState, E
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeProgressedActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeOperationProgressedActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)

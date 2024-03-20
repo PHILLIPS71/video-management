@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using Giantnodes.Infrastructure.Domain.Entities;
 using Giantnodes.Infrastructure.Domain.Entities.Auditing;
 using Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Events;
@@ -23,6 +24,8 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
     public EncodeStatus Status { get; private set; }
 
     public float? Percent { get; private set; }
+
+    public string? FfmpegCommand { get; private set; }
 
     public DateTime? StartedAt { get; private set; }
 
@@ -122,6 +125,13 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
             Bitrate = Speed.Bitrate,
             Scale = Speed.Scale,
         });
+    }
+
+    public void SetFfmpegCommand(string command)
+    {
+        Guard.Against.NullOrWhiteSpace(command);
+
+        FfmpegCommand = command;
     }
 
     public void AddSnapshot(EncodeSnapshot snapshot)
