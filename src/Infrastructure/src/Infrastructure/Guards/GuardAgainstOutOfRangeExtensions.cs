@@ -21,6 +21,24 @@ public static class GuardAgainstOutOfRangeExtensions
             throw new InvalidEnumArgumentException(message);
         }
 
+    /// <summary>
+    /// Throws an exception if the specified date occurs in the future.
+    /// </summary>
+    /// <param name="guard">The guard clause instance.</param>
+    /// <param name="input">The date to validate.</param>
+    /// <param name="parameter">The name of the parameter being validated (optional).</param>
+    /// <param name="message">The custom error message to use (optional).</param>
+    /// <returns>The input date if it is not in the future.</returns>
+    /// <exception cref="ArgumentException">Thrown if the input date occurs in the future.</exception>
+    public static DateTime FutureDate(
+        this IGuardClause guard,
+        DateTime input,
+        [CallerArgumentExpression("input")] string? parameter = null,
+        string? message = null)
+    {
+        if (input > DateTime.UtcNow)
+            throw new ArgumentException(message ?? $"{nameof(input)} cannot occur in the future.", parameter);
+
         return input;
     }
 }
