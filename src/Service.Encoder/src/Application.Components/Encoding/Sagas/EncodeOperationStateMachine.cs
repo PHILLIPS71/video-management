@@ -16,11 +16,11 @@ public class EncodeOperationStateMachine : MassTransitStateMachine<EncodeOperati
 
         Event(() => Submitted);
 
-        Event(() => EncodeStarted,
+        Event(() => Started,
             e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
-        Event(() => EncodeCompleted,
+        Event(() => Encoded,
             e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
-        Event(() => TransferCompleted,
+        Event(() => Transferred,
             e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
         Event(() => Faulted,
             e => e.CorrelateBy((instance, context) => instance.JobId == context.Message.JobId));
@@ -34,17 +34,17 @@ public class EncodeOperationStateMachine : MassTransitStateMachine<EncodeOperati
                 .TransitionTo(Queued));
 
         During(Queued,
-            When(EncodeStarted)
+            When(Started)
                 .PublishOperationStarted()
                 .TransitionTo(Encoding));
 
         During(Encoding,
-            When(EncodeCompleted)
+            When(Encoded)
                 .RequestTransferFile()
                 .TransitionTo(Transferring));
 
         During(Transferring,
-            When(TransferCompleted)
+            When(Transferred)
                 .PublishOperationCompleted()
                 .Finalize());
 
@@ -55,10 +55,11 @@ public class EncodeOperationStateMachine : MassTransitStateMachine<EncodeOperati
                 .Finalize(),
             When(Faulted)
                 .PublishOperationFailed()
+                .Activity(context => context.OfInstanceType<EncodeOperationCleanUpActivity>())
                 .Finalize());
 
         During(Encoding,
-            Ignore(EncodeStarted));
+            Ignore(Started));
 
         SetCompletedWhenFinalized();
     }
@@ -66,12 +67,11 @@ public class EncodeOperationStateMachine : MassTransitStateMachine<EncodeOperati
     public required State Queued { get; set; }
     public required State Encoding { get; set; }
     public required State Transferring { get; set; }
-
     public required Event<EncodeOperationSubmit.Command> Submitted { get; set; }
+    public required Event<JobStarted<EncodeFile.Job>> Started { get; set; }
+    public required Event<JobCompleted<EncodeFile.Job>> Encoded { get; set; }
+    public required Event<JobCompleted<TransferFile.Job>> Transferred { get; set; }
     public required Event<JobFaulted> Faulted { get; set; }
-    public required Event<JobStarted<EncodeFile.Job>> EncodeStarted { get; set; }
-    public required Event<JobCompleted<EncodeFile.Job>> EncodeCompleted { get; set; }
-    public required Event<JobCompleted<TransferFile.Job>> TransferCompleted { get; set; }
     public required Event<EncodeOperationCancel.Command> Cancellation { get; set; }
 }
 
