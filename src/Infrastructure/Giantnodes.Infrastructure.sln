@@ -1,5 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B5DBFE24-B9A7-404E-8FDB-E50983388B40}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure", "src\Infrastructure\Giantnodes.Infrastructure.csproj", "{406E15DB-0896-492C-B2A2-AAC36BC2D8CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.EntityFrameworkCore", "src\EntityFrameworkCore\Giantnodes.Infrastructure.EntityFrameworkCore.csproj", "{272FFD02-768E-4D0D-9B18-711742BE7F76}"
@@ -7,8 +9,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.GraphQL", "src\GraphQL\Giantnodes.Infrastructure.GraphQL.csproj", "{8181FFD1-4D24-420D-A244-E0DDA9496060}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Infrastructure.MassTransit", "src\MassTransit\Giantnodes.Infrastructure.MassTransit.csproj", "{E5B61D37-29D7-4E10-91D8-6CF87B880680}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B5DBFE24-B9A7-404E-8FDB-E50983388B40}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{07BCF856-D3F6-494D-9529-488C82D0EE77}"
 EndProject
@@ -40,6 +40,5 @@ Global
 		{272FFD02-768E-4D0D-9B18-711742BE7F76} = {B5DBFE24-B9A7-404E-8FDB-E50983388B40}
 		{8181FFD1-4D24-420D-A244-E0DDA9496060} = {B5DBFE24-B9A7-404E-8FDB-E50983388B40}
 		{E5B61D37-29D7-4E10-91D8-6CF87B880680} = {B5DBFE24-B9A7-404E-8FDB-E50983388B40}
-		{C90E4C91-3AFB-4835-BFC2-A0D121F5B10B} = {07BCF856-D3F6-494D-9529-488C82D0EE77}
 	EndGlobalSection
 EndGlobal
