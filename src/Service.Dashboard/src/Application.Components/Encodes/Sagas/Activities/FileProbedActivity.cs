@@ -14,9 +14,7 @@ public class FileProbedActivity : IStateMachineActivity<EncodeSagaState, FilePro
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
 
-    public FileProbedActivity(
-        IUnitOfWorkService uow,
-        IEncodeRepository repository)
+    public FileProbedActivity(IUnitOfWorkService uow, IEncodeRepository repository)
     {
         _uow = uow;
         _repository = repository;

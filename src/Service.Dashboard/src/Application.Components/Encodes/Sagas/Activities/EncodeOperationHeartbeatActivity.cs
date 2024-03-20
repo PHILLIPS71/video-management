@@ -7,14 +7,12 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
-public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, EncodeOperationEncodeHeartbeatEvent>
+public class EncodeOperationHeartbeatActivity : IStateMachineActivity<EncodeSagaState, EncodeOperationEncodeHeartbeatEvent>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IEncodeRepository _repository;
 
-    public EncodeHeartbeatActivity(
-        IUnitOfWorkService uow,
-        IEncodeRepository repository)
+    public EncodeOperationHeartbeatActivity(IUnitOfWorkService uow, IEncodeRepository repository)
     {
         _uow = uow;
         _repository = repository;
@@ -22,7 +20,7 @@ public class EncodeHeartbeatActivity : IStateMachineActivity<EncodeSagaState, En
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeHeartbeatActivity>());
+        context.CreateScope(KebabCaseEndpointNameFormatter.Instance.Message<EncodeOperationHeartbeatActivity>());
     }
 
     public void Accept(StateMachineVisitor visitor)

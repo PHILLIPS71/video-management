@@ -18,6 +18,7 @@ public sealed class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState
 
         Event(() => Created);
         Event(() => Started);
+        Event(() => Built);
         Event(() => Heartbeat);
         Event(() => Progressed);
         Event(() => Completed);
@@ -38,7 +39,7 @@ public sealed class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState
             When(FileProbed)
                 .Then(context => context.Saga.JobId = null)
                 .Activity(context => context.OfType<FileProbedActivity>())
-                .Activity(context => context.OfInstanceType<EncodeOperationRequestActivity>())
+                .Activity(context => context.OfInstanceType<EncodeRequestActivity>())
                 .TransitionTo(Queued));
 
         During(Queued,
@@ -47,10 +48,12 @@ public sealed class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState
                 .TransitionTo(Processing));
 
         During(Processing,
+            When(Built)
+                .Activity(context => context.OfType<EncodeOperationBuiltActivity>()),
             When(Heartbeat)
-                .Activity(context => context.OfType<EncodeHeartbeatActivity>()),
+                .Activity(context => context.OfType<EncodeOperationHeartbeatActivity>()),
             When(Progressed)
-                .Activity(context => context.OfType<EncodeProgressedActivity>()),
+                .Activity(context => context.OfType<EncodeOperationProgressedActivity>()),
             When(Completed)
                 .Then(context => context.Saga.OutputFilePath = context.Message.OutputFilePath)
                 .Activity(context => context.OfType<EncodeOperationCompletedActivity>())
@@ -84,6 +87,7 @@ public sealed class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState
     public required Event<EncodeCreatedEvent> Created { get; set; }
     public required Event<FileProbedEvent> FileProbed { get; set; }
     public required Event<EncodeOperationStartedEvent> Started { get; set; }
+    public required Event<EncodeOperationEncodeBuiltEvent> Built { get; set; }
     public required Event<EncodeOperationEncodeHeartbeatEvent> Heartbeat { get; set; }
     public required Event<EncodeOperationEncodeProgressedEvent> Progressed { get; set; }
     public required Event<EncodeOperationCompletedEvent> Completed { get; set; }

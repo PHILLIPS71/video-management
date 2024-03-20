@@ -48,6 +48,12 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
             .SetOverwriteOutput(true)
             .UseMultiThread(true);
 
+        if (!string.IsNullOrWhiteSpace(context.Job.Tune))
+            conversion.AddParameter($"-tune {context.Job.Tune}");
+
+        if (context.Job.Quality.HasValue)
+            conversion.AddParameter($"-crf {context.Job.Quality.Value}");
+
         if (context.Job.UseHardwareAcceleration)
         {
             var decoder = media.VideoStreams.First().Codec;
@@ -56,12 +62,6 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
             conversion = conversion
                 .UseHardwareAcceleration(nameof(HardwareAccelerator.auto), decoder, encoder);
         }
-
-        if (!string.IsNullOrWhiteSpace(context.Job.Tune))
-            conversion.AddParameter($"-tune {context.Job.Tune}");
-
-        if (context.Job.Quality.HasValue)
-            conversion.AddParameter($"-crf {context.Job.Quality.Value}");
 
         var stopwatch = new Stopwatch();
         conversion.OnDataReceived += async (_, args) =>
@@ -107,6 +107,14 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
 
         try
         {
+            var @event = new EncodeOperationEncodeBuiltEvent
+            {
+                JobId = context.JobId,
+                CorrelationId = context.Job.CorrelationId,
+                FFmpegCommand = conversion.Build()
+            };
+
+            await context.Publish(@event, context.CancellationToken);
             await conversion.Start(context.CancellationToken);
         }
         catch (OperationCanceledException)
