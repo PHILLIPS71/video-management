@@ -76,6 +76,8 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
             case EncodeStatus.Cancelled:
                 Status = EncodeStatus.Cancelled;
                 CancelledAt = DateTime.UtcNow;
+
+                DomainEvents.Add(new EncodeCancelledEvent { EncodeId = Id });
                 break;
 
             case EncodeStatus.Degraded:

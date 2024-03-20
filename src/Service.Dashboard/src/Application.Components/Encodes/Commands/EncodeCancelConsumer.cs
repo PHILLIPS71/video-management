@@ -1,7 +1,6 @@
 using Giantnodes.Infrastructure.Faults;
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Commands;
-using Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Events;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using MassTransit;
@@ -21,21 +20,18 @@ public class EncodeCancelConsumer : IConsumer<EncodeCancel.Command>
 
     public async Task Consume(ConsumeContext<EncodeCancel.Command> context)
     {
-        using (var uow = await _uow.BeginAsync(context.CancellationToken))
+        using var uow = await _uow.BeginAsync(context.CancellationToken);
+
+        var encode = await _repository.SingleOrDefaultAsync(x => x.Id == context.Message.EncodeId);
+        if (encode == null)
         {
-            var encode = await _repository.SingleOrDefaultAsync(x => x.Id == context.Message.EncodeId);
-            if (encode == null)
-            {
-                await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.EncodeId));
-                return;
-            }
-
-            encode.SetStatus(EncodeStatus.Cancelled);
-
-            await context.Publish(new EncodeCancelledEvent { EncodeId = encode.Id }, context.CancellationToken);
-            await uow.CommitAsync(context.CancellationToken);
-
-            await context.RespondAsync(new EncodeCancel.Result { EncodeId = encode.Id });
+            await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.EncodeId));
+            return;
         }
+
+        encode.SetStatus(EncodeStatus.Cancelled);
+
+        await uow.CommitAsync(context.CancellationToken);
+        await context.RespondAsync(new EncodeCancel.Result { EncodeId = encode.Id });
     }
 }
