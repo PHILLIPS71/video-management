@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <RootNamespace>Giantnodes.Service.Dashboard.Application.Components.Tests</RootNamespace>
+        <RootNamespace>Giantnodes.Service.Dashboard.Application.Components.Tests.Unit</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
