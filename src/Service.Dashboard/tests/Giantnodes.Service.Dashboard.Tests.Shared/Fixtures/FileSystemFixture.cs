@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Giantnodes.Service.Dashboard.Tests.Shared.Fixtures;
 
-public class FileSystemFixture
+public class FileSystemFixture : IDisposable
 {
     /// <summary>
     /// A normalized root path of a mock file system directory the contains tv-shows
@@ -30,24 +30,20 @@ public class FileSystemFixture
         { MockUnixSupport.Path(@$"{RootPath}\Silicon Valley\Season 1\Silicon Valley - S01E08 - Optimal Tip-to-Tip Efficiency.mov"), new MockFileData(string.Empty) }
     });
 
-    protected FileSystemFixture()
-    {
-    }
-
     /// <summary>
     /// A collection of all the files and directories within the <see cref="RootPath" /> directory.
     /// </summary>
-    protected static IEnumerable<string> AllEntries => 
+    protected static IEnumerable<string> AllEntries =>
         FileSystem
             .DirectoryInfo
             .New(RootPath)
             .GetFileSystemInfos("*", SearchOption.AllDirectories)
             .Select(x => x.FullName);
-    
+
     /// <summary>
     /// A collection of all the files within the <see cref="RootPath" /> directory.
     /// </summary>
-    protected static IEnumerable<string> AllFiles => 
+    protected static IEnumerable<string> AllFiles =>
         FileSystem
             .DirectoryInfo
             .New(RootPath)
@@ -57,17 +53,17 @@ public class FileSystemFixture
     /// <summary>
     /// A collection of all the directories within the <see cref="RootPath" /> directory.
     /// </summary>
-    protected static IEnumerable<string> AllDirectories => 
+    protected static IEnumerable<string> AllDirectories =>
         FileSystem
             .DirectoryInfo
             .New(RootPath)
             .GetDirectories("*", SearchOption.AllDirectories)
             .Select(x => x.FullName);
-    
+
     /// <summary>
     /// A collection of the top level directories within the <see cref="RootPath" /> directory.
     /// </summary>
-    protected static IEnumerable<string> TopLevelDirectories => 
+    protected static IEnumerable<string> TopLevelDirectories =>
         FileSystem
             .DirectoryInfo
             .New(RootPath)
@@ -94,11 +90,24 @@ public class FileSystemFixture
     /// </summary>
     /// <param name="limit">The maximum amount of paths that can be returned.</param>
     /// <returns>A collection of <see cref="FileSystemInfo.FullName"/> values represented as objects.</returns>
-    public static IEnumerable<object[]> GetDirectories(int limit = 5) => 
+    public static IEnumerable<object[]> GetDirectories(int limit = 5) =>
         FileSystem
             .DirectoryInfo
             .New(RootPath)
             .GetDirectories("*", SearchOption.AllDirectories)
             .Select(x => new[] { x.FullName })
             .Take(limit);
+
+    /// <summary>
+    /// Disposes the resources used by the <see cref="FileSystemFixture"/> instance.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    
+    protected virtual void Dispose(bool dispose)
+    {
+    }
 }

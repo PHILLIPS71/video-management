@@ -30,9 +30,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{27214AD8-98E7-4A7D-B67B-575AC944C369}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Application.Components.Tests", "tests\Giantnodes.Service.Dashboard.Application.Components.Tests\Giantnodes.Service.Dashboard.Application.Components.Tests.csproj", "{2120E351-42AA-4478-86C6-DC35AB4E47DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Application.Components.Tests.Unit", "tests\Giantnodes.Service.Dashboard.Application.Components.Tests.Unit\Giantnodes.Service.Dashboard.Application.Components.Tests.Unit.csproj", "{2120E351-42AA-4478-86C6-DC35AB4E47DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Domain.Tests", "tests\Giantnodes.Service.Dashboard.Domain.Tests\Giantnodes.Service.Dashboard.Domain.Tests.csproj", "{B170206F-710A-4314-9255-EF861FD3A135}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Domain.Tests.Unit", "tests\Giantnodes.Service.Dashboard.Domain.Tests.Unit\Giantnodes.Service.Dashboard.Domain.Tests.Unit.csproj", "{B170206F-710A-4314-9255-EF861FD3A135}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giantnodes.Service.Dashboard.Tests.Shared", "tests\Giantnodes.Service.Dashboard.Tests.Shared\Giantnodes.Service.Dashboard.Tests.Shared.csproj", "{80D27505-2E68-4F77-B7FD-78A1C0F237FD}"
 EndProject
