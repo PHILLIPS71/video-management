@@ -32,14 +32,12 @@ public class EncodeOperationFailedActivity : IStateMachineActivity<EncodeSagaSta
         BehaviorContext<EncodeSagaState, EncodeOperationFailedEvent> context,
         IBehavior<EncodeSagaState, EncodeOperationFailedEvent> next)
     {
-        using (var uow = await _uow.BeginAsync(context.CancellationToken))
-        {
-            var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
-            encode.SetStatus(EncodeStatus.Failed);
+        using var uow = await _uow.BeginAsync(context.CancellationToken);
 
-            await uow.CommitAsync(context.CancellationToken);
-        }
+        var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
+        encode.SetFailed(context.Message.RaisedAt, context.Message.Exceptions.Message);
 
+        await uow.CommitAsync(context.CancellationToken);
         await next.Execute(context);
     }
 

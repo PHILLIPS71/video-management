@@ -146,9 +146,7 @@ const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, radius, size, variant
       {data.status === 'COMPLETED' && (
         <>
           <Chip color="info" {...chipProps}>
-            {dayjs
-              .duration(dayjs(data.completed_at ?? data.failed_at).diff(data.started_at ?? data.created_at))
-              .format('H[h] m[m] s[s]')}
+            {dayjs.duration(dayjs(data.completed_at).diff(data.created_at)).format('H[h] m[m] s[s]')}
           </Chip>
 
           {SizeChip()}
@@ -157,13 +155,13 @@ const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, radius, size, variant
 
       {data.status === 'CANCELLED' && (
         <Chip color="info" {...chipProps}>
-          {dayjs.duration(dayjs(data.cancelled_at).diff(data.started_at ?? data.created_at)).format('H[h] m[m] s[s]')}
+          {dayjs.duration(dayjs(data.cancelled_at).diff(data.created_at)).format('H[h] m[m] s[s]')}
         </Chip>
       )}
 
       {data.status === 'FAILED' && (
         <Chip color="info" {...chipProps}>
-          {dayjs.duration(dayjs(data.failed_at).diff(data.started_at ?? data.created_at)).format('H[h] m[m] s[s]')}
+          {dayjs.duration(dayjs(data.failed_at).diff(data.created_at)).format('H[h] m[m] s[s]')}
         </Chip>
       )}
     </div>

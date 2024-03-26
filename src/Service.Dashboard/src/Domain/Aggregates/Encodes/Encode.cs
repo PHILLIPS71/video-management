@@ -31,6 +31,8 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
 
     public DateTime? FailedAt { get; private set; }
 
+    public string? FailureReason { get; private set; }
+
     public DateTime? DegradedAt { get; private set; }
 
     public DateTime? CancelledAt { get; private set; }
@@ -87,10 +89,6 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
                 DegradedAt = DateTime.UtcNow;
                 break;
 
-            case EncodeStatus.Failed:
-                FailedAt = DateTime.UtcNow;
-                break;
-
             case EncodeStatus.Completed:
                 Percent = 1.0f;
                 CompletedAt = DateTime.UtcNow;
@@ -98,6 +96,16 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         }
 
         Status = status;
+    }
+
+    public void SetFailed(DateTime when, string reason)
+    {
+        Guard.Against.FutureDate(when);
+        Guard.Against.NullOrWhiteSpace(reason);
+
+        Status = EncodeStatus.Failed;
+        FailureReason = reason;
+        FailedAt = when;
     }
 
     public void SetProgress(float progress)
