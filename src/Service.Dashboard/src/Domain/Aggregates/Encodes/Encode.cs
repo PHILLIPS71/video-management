@@ -103,6 +103,7 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         Guard.Against.FutureDate(when);
         Guard.Against.NullOrWhiteSpace(reason);
 
+        Status = EncodeStatus.Failed;
         FailureReason = reason;
         FailedAt = when;
     }
