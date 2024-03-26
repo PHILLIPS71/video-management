@@ -6,14 +6,18 @@
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <RootNamespace>Giantnodes.Service.Dashboard.Application.Components.Tests.Unit</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MassTransit.TestFramework" Version="8.2.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.3" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
         <PackageReference Include="coverlet.collector" Version="6.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="NSubstitute" Version="5.1.0" />
         <PackageReference Include="xunit" Version="2.7.0" />
         <PackageReference Include="xunit.analyzers" Version="1.11.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7">
@@ -23,8 +27,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Domain\Giantnodes.Service.Dashboard.Domain.csproj"/>
-        <ProjectReference Include="..\Giantnodes.Service.Dashboard.Tests.Shared\Giantnodes.Service.Dashboard.Tests.Shared.csproj"/>
+        <ProjectReference Include="..\..\src\Application.Components\Giantnodes.Service.Dashboard.Application.Components.csproj" />
+        <ProjectReference Include="..\Giantnodes.Service.Dashboard.Tests.Shared\Giantnodes.Service.Dashboard.Tests.Shared.csproj" />
     </ItemGroup>
 
 </Project>

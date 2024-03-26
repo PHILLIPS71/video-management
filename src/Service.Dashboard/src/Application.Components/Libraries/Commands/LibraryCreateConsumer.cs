@@ -28,6 +28,8 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
 
     public async Task Consume(ConsumeContext<LibraryCreate.Command> context)
     {
+        using var uow = await _uow.BeginAsync(context.CancellationToken);
+
         var directory = _fs.DirectoryInfo.New(context.Message.DirectoryPath);
         if (!directory.Exists)
         {
@@ -38,35 +40,24 @@ public class LibraryCreateConsumer : IConsumer<LibraryCreate.Command>
         var library = new Library(directory, context.Message.Name, context.Message.Slug);
         library.Scan(_fs);
 
+        if (context.Message.IsWatched)
+            library.SetWatched(context.Message.IsWatched);
+
         try
         {
-            if (context.Message.IsWatched)
-                library.SetWatched(context.Message.IsWatched);
+            _repository.Create(library);
+            await uow.CommitAsync(context.CancellationToken);
         }
-        catch (PlatformNotSupportedException)
+        catch (UniqueConstraintException ex) when (ex.InnerException is PostgresException pg)
         {
-            await context.RejectAsync(FaultKind.Platform);
+            var param = pg.ConstraintName switch
+            {
+                "ix_libraries_slug" => nameof(context.Message.Slug),
+                _ => null
+            };
+
+            await context.RejectAsync(FaultKind.Constraint, param);
             return;
-        }
-
-        using (var uow = await _uow.BeginAsync(context.CancellationToken))
-        {
-            try
-            {
-                _repository.Create(library);
-                await uow.CommitAsync(context.CancellationToken);
-            }
-            catch (UniqueConstraintException ex) when (ex.InnerException is PostgresException pg)
-            {
-                var param = pg.ConstraintName switch
-                {
-                    "ix_libraries_slug" => nameof(context.Message.Slug),
-                    _ => null
-                };
-
-                await context.RejectAsync(FaultKind.Constraint, param);
-                return;
-            }
         }
 
         await context.RespondAsync(new LibraryCreate.Result { Id = library.Id });

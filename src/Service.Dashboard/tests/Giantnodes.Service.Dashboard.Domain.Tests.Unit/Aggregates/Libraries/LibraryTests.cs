@@ -9,7 +9,7 @@ public class LibraryTests : FileSystemFixture
 {
     [Theory]
     [MemberData(nameof(GetDirectories), parameters: 5)]
-    public void Construct(string path)
+    public void Construct_ShouldCreateLibrary_WhenGivenValidDirectory(string path)
     {
         // arrange
         var directory = FileSystem.DirectoryInfo.New(path);
@@ -26,7 +26,7 @@ public class LibraryTests : FileSystemFixture
 
     [Theory]
     [MemberData(nameof(GetDirectories), parameters: 5)]
-    public void Construct_Drive_Status_Online_Directory_Found(string path)
+    public void Construct_ShouldSetStatusOnline_WhenGivenValidDirectory(string path)
     {
         // arrange
         var directory = FileSystem.DirectoryInfo.New(path);
@@ -39,7 +39,7 @@ public class LibraryTests : FileSystemFixture
     }
 
     [Fact]
-    public void Construct_Drive_Status_Offline_Directory_Not_Found()
+    public void Construct_ShouldSetStatusOffline_WhenGivenNonExistentDirectory()
     {
         // arrange
         var directory = FileSystem.DirectoryInfo.New(@"C:\tv-shows\Mr. Robot\Season 1");

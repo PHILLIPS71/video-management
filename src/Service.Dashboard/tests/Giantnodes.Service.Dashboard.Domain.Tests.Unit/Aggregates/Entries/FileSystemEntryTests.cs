@@ -11,7 +11,7 @@ public class FileSystemEntryTests : FileSystemFixture
 {
     [Theory]
     [MemberData(nameof(GetFiles), parameters: 5)]
-    public void Should_Build_FileSystemFile(string path)
+    public void Build_ShouldCreateFileSystemFile_WhenGivenFilePath(string path)
     {
         // arrange
         var file = FileSystem.FileInfo.New(path);
@@ -30,7 +30,7 @@ public class FileSystemEntryTests : FileSystemFixture
 
     [Theory]
     [MemberData(nameof(GetDirectories), parameters: 5)]
-    public void Should_Build_FileSystemDirectory(string path)
+    public void Build_ShouldCreateFileSystemDirectory_WhenGivenDirectoryPath(string path)
     {
         // arrange
         var directory = FileSystem.DirectoryInfo.New(path);
