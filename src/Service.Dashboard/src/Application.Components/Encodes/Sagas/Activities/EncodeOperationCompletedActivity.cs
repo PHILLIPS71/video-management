@@ -1,6 +1,5 @@
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
-using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using MassTransit;
@@ -32,14 +31,12 @@ public class EncodeOperationCompletedActivity : IStateMachineActivity<EncodeSaga
         BehaviorContext<EncodeSagaState, EncodeOperationCompletedEvent> context,
         IBehavior<EncodeSagaState, EncodeOperationCompletedEvent> next)
     {
-        using (var uow = await _uow.BeginAsync(context.CancellationToken))
-        {
-            var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
-            encode.SetStatus(EncodeStatus.Completed);
+        using var uow = await _uow.BeginAsync(context.CancellationToken);
+        var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
 
-            await uow.CommitAsync(context.CancellationToken);
-        }
+        encode.SetCompleted(context.Message.RaisedAt);
 
+        await uow.CommitAsync(context.CancellationToken);
         await next.Execute(context);
     }
 

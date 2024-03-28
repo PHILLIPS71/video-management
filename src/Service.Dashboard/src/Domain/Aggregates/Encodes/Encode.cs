@@ -70,35 +70,24 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         });
     }
 
-    public void SetStatus(EncodeStatus status)
+    public void SetStarted(DateTime when)
     {
-        if (Status is EncodeStatus.Completed or EncodeStatus.Cancelled)
-            throw new InvalidOperationException($"the status cannot be changed when in a {Status} status");
+        Guard.Against.FutureDate(when);
 
-        switch (status)
-        {
-            case EncodeStatus.Encoding:
-                StartedAt = DateTime.UtcNow;
-                break;
+        Status = EncodeStatus.Encoding;
+        StartedAt = when;
+    }
 
-            case EncodeStatus.Cancelled:
-                Status = EncodeStatus.Cancelled;
-                CancelledAt = DateTime.UtcNow;
+    public void SetCompleted(DateTime when)
+    {
+        Guard.Against.FutureDate(when);
 
-                DomainEvents.Add(new EncodeCancelledEvent { EncodeId = Id });
-                break;
+        if (Status == EncodeStatus.Cancelled)
+            throw new InvalidOperationException("cannot set a encode to completed that has been cancelled.");
 
-            case EncodeStatus.Degraded:
-                DegradedAt = DateTime.UtcNow;
-                break;
-
-            case EncodeStatus.Completed:
-                Percent = 1.0f;
-                CompletedAt = DateTime.UtcNow;
-                break;
-        }
-
-        Status = status;
+        Status = EncodeStatus.Completed;
+        CompletedAt = DateTime.UtcNow;
+        Percent = 1.0f;
     }
 
     public void SetFailed(DateTime when, string reason)
@@ -111,13 +100,25 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         FailedAt = when;
     }
 
+    public void SetCancelled(DateTime when)
+    {
+        Guard.Against.FutureDate(when);
+
+        if (Status == EncodeStatus.Cancelled)
+            return;
+
+        Status = EncodeStatus.Cancelled;
+        CancelledAt = DateTime.UtcNow;
+
+        DomainEvents.Add(new EncodeCancelledEvent { EncodeId = Id });
+    }
+
     public void SetProgress(float progress)
     {
         if (Status is not EncodeStatus.Encoding)
-            throw new InvalidOperationException($"the encode is not in a {EncodeStatus.Encoding} status.");
+            throw new InvalidOperationException("cannot set progress when not in a encoding status.");
 
-        if (progress is < 0 or > 1)
-            throw new ArgumentOutOfRangeException(nameof(progress), progress, "the progress percent value needs to be between 0 and 1.");
+        Guard.Against.OutOfRange(progress, nameof(progress), 0, 1);
 
         Percent = progress;
     }
@@ -125,7 +126,7 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
     public void SetSpeed(EncodeSpeed speed)
     {
         if (Status is not EncodeStatus.Encoding)
-            throw new InvalidOperationException($"the encode is not in a {EncodeStatus.Encoding} status.");
+            throw new InvalidOperationException("cannot set speed when not in a encoding status.");
 
         Speed = speed;
 
