@@ -1,5 +1,6 @@
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
+using Giantnodes.Service.Dashboard.Domain.Values;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using MassTransit;
@@ -32,9 +33,10 @@ public class EncodeOperationBuiltActivity : IStateMachineActivity<EncodeSagaStat
         IBehavior<EncodeSagaState, EncodeOperationEncodeBuiltEvent> next)
     {
         using var uow = await _uow.BeginAsync(context.CancellationToken);
-
         var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
-        encode.SetFfmpegCommand(context.Message.FFmpegCommand);
+
+        var machine = new Machine(context.Message.MachineName, context.Message.MachineUserName);
+        encode.SetFfmpegConversion(machine, context.Message.FFmpegCommand);
 
         await uow.CommitAsync(context.CancellationToken);
         await next.Execute(context);

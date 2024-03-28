@@ -18,5 +18,8 @@ public class EncodeConfiguration : IEntityTypeConfiguration<Encode>
 
         builder
             .OwnsOne(p => p.Speed);
+
+        builder
+            .OwnsOne(p => p.Machine);
     }
 }

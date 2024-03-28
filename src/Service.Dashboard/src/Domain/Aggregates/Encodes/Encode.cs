@@ -7,6 +7,7 @@ using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Values;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
+using Giantnodes.Service.Dashboard.Domain.Values;
 using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
@@ -26,6 +27,8 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
     public float? Percent { get; private set; }
 
     public string? FfmpegCommand { get; private set; }
+
+    public Machine? Machine { get; private set; }
 
     public DateTime? StartedAt { get; private set; }
 
@@ -135,10 +138,11 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         });
     }
 
-    public void SetFfmpegCommand(string command)
+    public void SetFfmpegConversion(Machine machine, string command)
     {
         Guard.Against.NullOrWhiteSpace(command);
 
+        Machine = machine;
         FfmpegCommand = command;
     }
 
