@@ -27,10 +27,19 @@ public class EncodeType : ObjectType<Encode>
             .Field(p => p.Speed);
 
         descriptor
+            .Field(p => p.FfmpegCommand);
+
+        descriptor
+            .Field(p => p.Machine);
+
+        descriptor
             .Field(p => p.StartedAt);
 
         descriptor
             .Field(p => p.FailedAt);
+
+        descriptor
+            .Field(p => p.FailureReason);
 
         descriptor
             .Field(p => p.CancelledAt);

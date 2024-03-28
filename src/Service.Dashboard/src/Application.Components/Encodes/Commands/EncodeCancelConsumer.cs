@@ -29,7 +29,7 @@ public class EncodeCancelConsumer : IConsumer<EncodeCancel.Command>
             return;
         }
 
-        encode.SetStatus(EncodeStatus.Cancelled);
+        encode.SetCancelled(InVar.Timestamp);
 
         await uow.CommitAsync(context.CancellationToken);
         await context.RespondAsync(new EncodeCancel.Result { EncodeId = encode.Id });

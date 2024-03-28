@@ -4,11 +4,11 @@ namespace Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Values;
 
 public class EncodeSpeed : ValueObject
 {
-    public float Frames { get; set; }
+    public float Frames { get; init; }
 
-    public long Bitrate { get; set; }
+    public long Bitrate { get; init; }
 
-    public float Scale { get; set; }
+    public float Scale { get; init; }
 
     protected EncodeSpeed()
     {

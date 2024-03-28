@@ -111,7 +111,9 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
             {
                 JobId = context.JobId,
                 CorrelationId = context.Job.CorrelationId,
-                FFmpegCommand = conversion.Build()
+                FFmpegCommand = conversion.Build(),
+                MachineName = Environment.MachineName,
+                MachineUserName = Environment.UserName,
             };
 
             await context.Publish(@event, context.CancellationToken);
