@@ -33,7 +33,11 @@ public sealed class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState
             When(Created)
                 .Activity(context => context.OfType<EncodeSetupActivity>())
                 .RequestFileProbe(context => context.Saga.InputFilePath)
-                .TransitionTo(Submitted));
+                .TransitionTo(Submitted)
+                .Catch<Exception>(ex => ex
+                    .Then(ctx => ctx.Saga.FailedReason = ctx.Exception.Message)
+                    .Activity(ctx => ctx.OfInstanceType<EncodeFailedActivity>())
+                    .Finalize()));
 
         During(Submitted,
             When(FileProbed)
@@ -70,7 +74,8 @@ public sealed class EncodeStateMachine : MassTransitStateMachine<EncodeSagaState
 
         DuringAny(
             When(Failed)
-                .Activity(context => context.OfType<EncodeOperationFailedActivity>())
+                .Then(context => context.Saga.FailedReason = context.Message.Exceptions.Message)
+                .Activity(context => context.OfInstanceType<EncodeFailedActivity>())
                 .Finalize(),
             When(Cancelled)
                 .RequestOperationCancel()
