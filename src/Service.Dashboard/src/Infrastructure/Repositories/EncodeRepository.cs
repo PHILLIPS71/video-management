@@ -20,7 +20,7 @@ public class EncodeRepository : IEncodeRepository
         return _database
             .Encodes
             .Include(x => x.File)
-            .Include(x => x.Profile)
+            .Include(x => x.Recipe)
             .Include(x => x.Snapshots)
             .AsQueryable();
     }

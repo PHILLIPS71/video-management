@@ -68,11 +68,11 @@ public class EncodeRequestActivity : IStateMachineActivity<EncodeSagaState>
                 CorrelationId = context.Saga.CorrelationId,
                 InputFilePath = context.Saga.InputFilePath,
                 OutputFilePath = context.Saga.OutputFilePath,
-                Codec = encode.Profile.Codec.Value,
-                Preset = encode.Profile.Preset.Value,
-                Tune = encode.Profile.Tune?.Value,
-                Quality = encode.Profile.Quality,
-                UseHardwareAcceleration = encode.Profile.UseHardwareAcceleration
+                Codec = encode.Recipe.Codec.Value,
+                Preset = encode.Recipe.Preset.Value,
+                Tune = encode.Recipe.Tune?.Value,
+                Quality = encode.Recipe.Quality,
+                UseHardwareAcceleration = encode.Recipe.UseHardwareAcceleration
             });
         }
     }

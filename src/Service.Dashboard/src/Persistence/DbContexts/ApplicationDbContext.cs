@@ -1,11 +1,11 @@
 ﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Recipes;
 using Giantnodes.Service.Dashboard.Domain.Values;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using MassTransit;
@@ -32,7 +32,7 @@ public class ApplicationDbContext : GiantnodesDbContext<ApplicationDbContext>
     public DbSet<Encode> Encodes => Set<Encode>();
     public DbSet<EncodeSnapshot> EncodeSnapshots => Set<EncodeSnapshot>();
 
-    public DbSet<EncodeProfile> EncodeProfiles => Set<EncodeProfile>();
+    public DbSet<Recipe> Recipes => Set<Recipe>();
 
     public DbSet<VideoStream> VideoStreams => Set<VideoStream>();
     public DbSet<AudioStream> AudioStreams => Set<AudioStream>();

@@ -1,6 +1,6 @@
 using System.IO.Abstractions;
 using Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Events;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles.Repositories;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Recipes.Repositories;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using MassTransit;
 
@@ -9,9 +9,9 @@ namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Acti
 public class EncodeSetupActivity : IStateMachineActivity<EncodeSagaState, EncodeCreatedEvent>
 {
     private readonly IFileSystem _fs;
-    private readonly IEncodeProfileRepository _repository;
+    private readonly IRecipeRepository _repository;
 
-    public EncodeSetupActivity(IFileSystem fs, IEncodeProfileRepository repository)
+    public EncodeSetupActivity(IFileSystem fs, IRecipeRepository repository)
     {
         _fs = fs;
         _repository = repository;
@@ -40,9 +40,9 @@ public class EncodeSetupActivity : IStateMachineActivity<EncodeSagaState, Encode
         context.Saga.InputFilePath = context.Message.FilePath;
         context.Saga.OutputFilePath = context.Message.FilePath;
 
-        var profile = await _repository.SingleAsync(x => x.Id == context.Message.EncodeProfileId);
-        if (profile.Container != null)
-            context.Saga.OutputFilePath = _fs.Path.ChangeExtension(context.Message.FilePath, profile.Container.Extension);
+        var recipe = await _repository.SingleAsync(x => x.Id == context.Message.RecipeId);
+        if (recipe.Container != null)
+            context.Saga.OutputFilePath = _fs.Path.ChangeExtension(context.Message.FilePath, recipe.Container.Extension);
 
         await next.Execute(context);
     }

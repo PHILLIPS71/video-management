@@ -1,10 +1,10 @@
 ﻿using Giantnodes.Infrastructure.Faults;
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Commands;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles.Repositories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Repositories;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Recipes.Repositories;
 using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Commands;
@@ -13,16 +13,16 @@ public class EncodeSubmitConsumer : IConsumer<EncodeSubmit.Command>
 {
     private readonly IUnitOfWorkService _uow;
     private readonly IFileSystemEntryRepository _entries;
-    private readonly IEncodeProfileRepository _profiles;
+    private readonly IRecipeRepository _recipes;
 
     public EncodeSubmitConsumer(
         IUnitOfWorkService uow,
         IFileSystemEntryRepository entries,
-        IEncodeProfileRepository profiles)
+        IRecipeRepository recipes)
     {
         _uow = uow;
         _entries = entries;
-        _profiles = profiles;
+        _recipes = recipes;
     }
 
     public async Task Consume(ConsumeContext<EncodeSubmit.Command> context)
@@ -36,10 +36,10 @@ public class EncodeSubmitConsumer : IConsumer<EncodeSubmit.Command>
             return;
         }
 
-        var profile = await _profiles.SingleOrDefaultAsync(x => x.Id == context.Message.EncodeProfileId);
-        if (profile == null)
+        var recipe = await _recipes.SingleOrDefaultAsync(x => x.Id == context.Message.RecipeId);
+        if (recipe == null)
         {
-            await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.EncodeProfileId));
+            await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.RecipeId));
             return;
         }
 
@@ -59,7 +59,7 @@ public class EncodeSubmitConsumer : IConsumer<EncodeSubmit.Command>
         }
 
         var encodes = files
-            .Select(file => file.Encode(profile))
+            .Select(file => file.Encode(recipe))
             .ToList();
 
         await uow.CommitAsync(context.CancellationToken);

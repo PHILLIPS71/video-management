@@ -7,7 +7,7 @@ public sealed class EncodeSubmit
 {
     public sealed record Command : Message
     {
-        public required Guid EncodeProfileId { get; init; }
+        public required Guid RecipeId { get; init; }
 
         public required Guid[] Entries { get; init; }
     }
