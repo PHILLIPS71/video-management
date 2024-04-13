@@ -1,28 +1,26 @@
 using FluentValidation;
 using Giantnodes.Infrastructure.Messages;
 
-namespace Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Commands;
+namespace Giantnodes.Service.Dashboard.Application.Contracts.Recipes;
 
-public sealed class EncodeSubmit
+public sealed class RecipeDelete
 {
     public sealed record Command : Message
     {
-        public required Guid RecipeId { get; init; }
-
-        public required Guid[] Entries { get; init; }
+        public required Guid Id { get; init; }
     }
 
     public sealed class Validator : AbstractValidator<Command>
     {
         public Validator()
         {
-            RuleFor(p => p.Entries)
+            RuleFor(p => p.Id)
                 .NotEmpty();
         }
     }
 
     public sealed record Result
     {
-        public required Guid[] Encodes { get; init; }
+        public required Guid Id { get; init; }
     }
 }

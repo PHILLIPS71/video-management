@@ -1,37 +1,36 @@
 using Giantnodes.Infrastructure.Faults.Exceptions;
 using Giantnodes.Infrastructure.Faults.Types;
 using Giantnodes.Infrastructure.Validation.Exceptions;
-using Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Commands;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
+using Giantnodes.Service.Dashboard.Application.Contracts.Recipes;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Recipes;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
-namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Mutations;
+namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Recipes.Mutations;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class EncodeSubmitMutation
+public class RecipeDeleteMutation
 {
     [Error<DomainException>]
     [Error<ValidationException>]
+    [UseFirstOrDefault]
     [UseProjection]
-    public async Task<IQueryable<Encode>> EncodeSubmit(
+    public async Task<IQueryable<Recipe>> RecipeDelete(
         [Service] ApplicationDbContext database,
-        [Service] IRequestClient<EncodeSubmit.Command> request,
-        [ID] Guid recipe_id,
-        [ID] Guid[] entries,
+        [Service] IRequestClient<RecipeDelete.Command> request,
+        [ID] Guid id,
         CancellationToken cancellation = default)
     {
-        var command = new EncodeSubmit.Command
+        var command = new RecipeDelete.Command
         {
-            RecipeId = recipe_id,
-            Entries = entries
+            Id = id,
         };
 
-        Response response = await request.GetResponse<EncodeSubmit.Result, DomainFault, ValidationFault>(command, cancellation);
+        Response response = await request.GetResponse<RecipeDelete.Result, DomainFault, ValidationFault>(command, cancellation);
         return response switch
         {
-            (_, EncodeSubmit.Result result) => database.Encodes.AsNoTracking().Where(x => result.Encodes.Contains(x.Id)),
+            (_, RecipeDelete.Result result) => database.Recipes.IgnoreQueryFilters().AsNoTracking().Where(x => x.Id == result.Id),
             (_, DomainFault fault) => throw new DomainException(fault),
             (_, ValidationFault fault) => throw new ValidationException(fault),
             _ => throw new InvalidOperationException()

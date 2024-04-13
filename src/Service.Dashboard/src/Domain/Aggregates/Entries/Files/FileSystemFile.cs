@@ -1,8 +1,8 @@
 ﻿using System.IO.Abstractions;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Directories;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Recipes;
 using Giantnodes.Service.Dashboard.Domain.Values;
 using FileStream = Giantnodes.Service.Dashboard.Domain.Values.FileStream;
 
@@ -62,9 +62,9 @@ public class FileSystemFile : FileSystemEntry
         ProbedAt = timestamp.ToUniversalTime();
     }
 
-    public Encode Encode(EncodeProfile profile)
+    public Encode Encode(Recipe recipe)
     {
-        var encode = new Encode(this, profile);
+        var encode = new Encode(this, recipe);
         _encodes.Add(encode);
 
         return encode;

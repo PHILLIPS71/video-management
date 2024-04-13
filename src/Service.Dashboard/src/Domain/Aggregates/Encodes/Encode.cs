@@ -2,10 +2,10 @@ using Ardalis.GuardClauses;
 using Giantnodes.Infrastructure.Domain.Entities;
 using Giantnodes.Infrastructure.Domain.Entities.Auditing;
 using Giantnodes.Service.Dashboard.Application.Contracts.Encodes.Events;
-using Giantnodes.Service.Dashboard.Domain.Aggregates.EncodeProfiles;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Entities;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Values;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Recipes;
 using Giantnodes.Service.Dashboard.Domain.Shared.Enums;
 using Giantnodes.Service.Dashboard.Domain.Values;
 using MassTransit;
@@ -18,7 +18,7 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
 
     public FileSystemFile File { get; private set; }
 
-    public EncodeProfile Profile { get; private set; }
+    public Recipe Recipe { get; private set; }
 
     public EncodeSpeed? Speed { get; private set; }
 
@@ -53,18 +53,18 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         Snapshots = _snapshots;
     }
 
-    public Encode(FileSystemFile file, EncodeProfile profile)
+    public Encode(FileSystemFile file, Recipe recipe)
     {
         Id = NewId.NextSequentialGuid();
         File = file;
-        Profile = profile;
+        Recipe = recipe;
         Status = EncodeStatus.Submitted;
         Snapshots = _snapshots;
 
         DomainEvents.Add(new EncodeCreatedEvent
         {
             EncodeId = Id,
-            EncodeProfileId = Profile.Id,
+            RecipeId = Recipe.Id,
             FileId = File.Id,
             FilePath = File.PathInfo.FullName
         });

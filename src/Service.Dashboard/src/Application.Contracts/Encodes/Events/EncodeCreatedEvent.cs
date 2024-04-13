@@ -6,7 +6,7 @@ public sealed record EncodeCreatedEvent : DomainEvent
 {
     public required Guid EncodeId { get; init; }
 
-    public required Guid EncodeProfileId { get; init; }
+    public required Guid RecipeId { get; init; }
 
     public required Guid FileId { get; init; }
 
