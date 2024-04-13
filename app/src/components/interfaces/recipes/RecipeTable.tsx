@@ -1,29 +1,26 @@
-import type { EncodeProfileTable_DeleteEncodeProfileMutation } from '@/__generated__/EncodeProfileTable_DeleteEncodeProfileMutation.graphql'
-import type {
-  EncodeProfileTableFragment$data,
-  EncodeProfileTableFragment$key,
-} from '@/__generated__/EncodeProfileTableFragment.graphql'
-import type { EncodeProfileTableRefetchQuery } from '@/__generated__/EncodeProfileTableRefetchQuery.graphql'
-import type { EncodeProfileUpdateInput } from '@/components/interfaces/profiles'
+import type { RecipeTable_DeleteRecipeMutation } from '@/__generated__/RecipeTable_DeleteRecipeMutation.graphql'
+import type { RecipeTableFragment$data, RecipeTableFragment$key } from '@/__generated__/RecipeTableFragment.graphql'
+import type { RecipeTableRefetchQuery } from '@/__generated__/RecipeTableRefetchQuery.graphql'
+import type { RecipeUpdateInput } from '@/components/interfaces/recipes'
 
 import { Button, Chip, Table, Typography } from '@giantnodes/react'
 import { IconAlertTriangle, IconEdit, IconTrash } from '@tabler/icons-react'
 import React from 'react'
 import { graphql, useMutation, usePaginationFragment } from 'react-relay'
 
-import { EncodeProfileDialog } from '@/components/interfaces/profiles'
+import { RecipeDialog } from '@/components/interfaces/recipes'
 
 const QUERY = graphql`
-  fragment EncodeProfileTableFragment on Query
-  @refetchable(queryName: "EncodeProfileTableRefetchQuery")
+  fragment RecipeTableFragment on Query
+  @refetchable(queryName: "RecipeTableRefetchQuery")
   @argumentDefinitions(
-    where: { type: "EncodeProfileFilterInput" }
+    where: { type: "RecipeFilterInput" }
     first: { type: "Int" }
     after: { type: "String" }
-    order: { type: "[EncodeProfileSortInput!]" }
+    order: { type: "[RecipeSortInput!]" }
   ) {
-    encode_profiles(where: $where, first: $first, after: $after, order: $order)
-      @connection(key: "EncodeProfileTableFragment_encode_profiles", filters: []) {
+    recipes(where: $where, first: $first, after: $after, order: $order)
+      @connection(key: "RecipeTableFragment_recipes", filters: []) {
       edges {
         node {
           id
@@ -56,9 +53,9 @@ const QUERY = graphql`
 `
 
 const MUTATION = graphql`
-  mutation EncodeProfileTable_DeleteEncodeProfileMutation($input: Encode_profile_deleteInput!) {
-    encode_profile_delete(input: $input) {
-      encodeProfile {
+  mutation RecipeTable_DeleteRecipeMutation($input: Recipe_deleteInput!) {
+    recipe_delete(input: $input) {
+      recipe {
         id @deleteRecord
       }
       errors {
@@ -73,20 +70,18 @@ const MUTATION = graphql`
   }
 `
 
-type EncodeProfileTableProps = {
-  $key: EncodeProfileTableFragment$key
+type RecipeTableProps = {
+  $key: RecipeTableFragment$key
 }
 
-type EncodeProfileNode = NonNullable<
-  NonNullable<EncodeProfileTableFragment$data['encode_profiles']>['edges']
->[0]['node']
+type RecipeNode = NonNullable<NonNullable<RecipeTableFragment$data['recipes']>['edges']>[0]['node']
 
-const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
-  const { data } = usePaginationFragment<EncodeProfileTableRefetchQuery, EncodeProfileTableFragment$key>(QUERY, $key)
+const RecipeTable: React.FC<RecipeTableProps> = ({ $key }) => {
+  const { data } = usePaginationFragment<RecipeTableRefetchQuery, RecipeTableFragment$key>(QUERY, $key)
 
-  const [commit] = useMutation<EncodeProfileTable_DeleteEncodeProfileMutation>(MUTATION)
+  const [commit] = useMutation<RecipeTable_DeleteRecipeMutation>(MUTATION)
 
-  const getProfileInput = (node: EncodeProfileNode): EncodeProfileUpdateInput => ({
+  const getRecipeInput = (node: RecipeNode): RecipeUpdateInput => ({
     id: node.id,
     name: node.name,
     container: node.container?.id,
@@ -98,7 +93,7 @@ const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
   })
 
   const remove = React.useCallback(
-    (entry: EncodeProfileNode) => {
+    (entry: RecipeNode) => {
       commit({
         variables: {
           input: {
@@ -111,7 +106,7 @@ const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
   )
 
   return (
-    <Table aria-label="encode profile table">
+    <Table aria-label="recipe table">
       <Table.Head>
         <Table.Column key="name" isRowHeader>
           Name
@@ -123,7 +118,7 @@ const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
         <Table.Column key="controls" />
       </Table.Head>
 
-      <Table.Body items={data.encode_profiles?.edges ?? []}>
+      <Table.Body items={data.recipes?.edges ?? []}>
         {(item) => (
           <Table.Row id={item.node.id}>
             <Table.Cell>
@@ -149,11 +144,11 @@ const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
             </Table.Cell>
             <Table.Cell>
               <div className="flex flex-row justify-end gap-3">
-                <EncodeProfileDialog profile={getProfileInput(item.node)}>
+                <RecipeDialog recipe={getRecipeInput(item.node)}>
                   <Button color="neutral" size="xs">
                     <IconEdit size={16} />
                   </Button>
-                </EncodeProfileDialog>
+                </RecipeDialog>
 
                 <Button color="danger" size="xs" onPress={() => remove(item.node)}>
                   <IconTrash size={16} />
@@ -167,4 +162,4 @@ const EncodeProfileTable: React.FC<EncodeProfileTableProps> = ({ $key }) => {
   )
 }
 
-export default EncodeProfileTable
+export default RecipeTable

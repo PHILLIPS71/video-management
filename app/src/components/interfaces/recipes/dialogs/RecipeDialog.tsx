@@ -1,17 +1,17 @@
-import type { EncodeProfileDialog_DeleteEncodeProfileMutation } from '@/__generated__/EncodeProfileDialog_DeleteEncodeProfileMutation.graphql'
-import type { EncodeProfileFormRef, EncodeProfileUpdateInput } from '@/components/interfaces/profiles'
+import type { RecipeDialog_DeleteRecipeMutation } from '@/__generated__/RecipeDialog_DeleteRecipeMutation.graphql'
+import type { RecipeFormRef, RecipeUpdateInput } from '@/components/interfaces/recipes'
 
 import { Alert, Button, Card, Dialog, Divider, Typography } from '@giantnodes/react'
 import { IconAlertCircleFilled, IconTrash, IconX } from '@tabler/icons-react'
 import React, { Suspense } from 'react'
 import { graphql, useMutation } from 'react-relay'
 
-import { EncodeProfileCreate, EncodeProfileUpdate } from '@/components/interfaces/profiles/forms'
+import { RecipeCreate, RecipeUpdate } from '@/components/interfaces/recipes/forms'
 
 const MUTATION = graphql`
-  mutation EncodeProfileDialog_DeleteEncodeProfileMutation($input: Encode_profile_deleteInput!) {
-    encode_profile_delete(input: $input) {
-      encodeProfile {
+  mutation RecipeDialog_DeleteRecipeMutation($input: Recipe_deleteInput!) {
+    recipe_delete(input: $input) {
+      recipe {
         id @deleteRecord
       }
       errors {
@@ -26,20 +26,20 @@ const MUTATION = graphql`
   }
 `
 
-type EncodeProfileDialogProps = React.PropsWithChildren & {
-  profile?: EncodeProfileUpdateInput
+type RecipeDialogProps = React.PropsWithChildren & {
+  recipe?: RecipeUpdateInput
 }
 
-const EncodeProfileDialog: React.FC<EncodeProfileDialogProps> = ({ children, profile }) => {
-  const ref = React.useRef<EncodeProfileFormRef>(null)
+const RecipeDialog: React.FC<RecipeDialogProps> = ({ children, recipe }) => {
+  const ref = React.useRef<RecipeFormRef>(null)
 
   const [errors, setErrors] = React.useState<string[]>([])
   const [isSaveLoading, setSaveLoading] = React.useState<boolean>(false)
 
-  const [commit, isDeleteLoading] = useMutation<EncodeProfileDialog_DeleteEncodeProfileMutation>(MUTATION)
+  const [commit, isDeleteLoading] = useMutation<RecipeDialog_DeleteRecipeMutation>(MUTATION)
 
   const remove = React.useCallback(
-    (entry: EncodeProfileUpdateInput, onComplete: () => void) => {
+    (entry: RecipeUpdateInput, onComplete: () => void) => {
       commit({
         variables: {
           input: {
@@ -47,8 +47,8 @@ const EncodeProfileDialog: React.FC<EncodeProfileDialogProps> = ({ children, pro
           },
         },
         onCompleted: (payload) => {
-          if (payload.encode_profile_delete.errors != null) {
-            const faults = payload.encode_profile_delete.errors
+          if (payload.recipe_delete.errors != null) {
+            const faults = payload.recipe_delete.errors
               .filter((error) => error.message !== undefined)
               .map((error) => error.message!)
 
@@ -93,16 +93,16 @@ const EncodeProfileDialog: React.FC<EncodeProfileDialogProps> = ({ children, pro
 
                 <div className="flex items-center justify-between">
                   <Typography.HeadingLevel>
-                    <Typography.Heading as={6}>{profile?.name ?? 'Create new profile'}</Typography.Heading>
+                    <Typography.Heading as={6}>{recipe?.name ?? 'Create new recipe'}</Typography.Heading>
                   </Typography.HeadingLevel>
 
                   <div className="flex items-center gap-3">
-                    {profile && (
+                    {recipe && (
                       <Button
                         color="danger"
                         isDisabled={isDeleteLoading}
                         size="xs"
-                        onPress={() => remove(profile, close)}
+                        onPress={() => remove(recipe, close)}
                       >
                         <IconTrash size={16} />
                       </Button>
@@ -120,15 +120,10 @@ const EncodeProfileDialog: React.FC<EncodeProfileDialogProps> = ({ children, pro
 
             <Card.Body>
               <Suspense fallback="Loading...">
-                {profile ? (
-                  <EncodeProfileUpdate
-                    ref={ref}
-                    profile={profile}
-                    onComplete={close}
-                    onLoadingChange={setSaveLoading}
-                  />
+                {recipe ? (
+                  <RecipeUpdate ref={ref} recipe={recipe} onComplete={close} onLoadingChange={setSaveLoading} />
                 ) : (
-                  <EncodeProfileCreate ref={ref} onComplete={close} onLoadingChange={setSaveLoading} />
+                  <RecipeCreate ref={ref} onComplete={close} onLoadingChange={setSaveLoading} />
                 )}
               </Suspense>
             </Card.Body>
@@ -148,8 +143,8 @@ const EncodeProfileDialog: React.FC<EncodeProfileDialogProps> = ({ children, pro
   )
 }
 
-EncodeProfileDialog.defaultProps = {
-  profile: undefined,
+RecipeDialog.defaultProps = {
+  recipe: undefined,
 }
 
-export default EncodeProfileDialog
+export default RecipeDialog

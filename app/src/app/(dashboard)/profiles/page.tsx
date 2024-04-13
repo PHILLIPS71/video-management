@@ -6,15 +6,15 @@ import { Button, Card, Typography } from '@giantnodes/react'
 import React, { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import { EncodeProfileDialog, EncodeProfileTable } from '@/components/interfaces/profiles'
+import { RecipeDialog, RecipeTable } from '@/components/interfaces/recipes'
 
 const QUERY = graphql`
-  query page_ProfilesPageQuery($first: Int, $after: String, $order: [EncodeProfileSortInput!]) {
-    ...EncodeProfileTableFragment @arguments(first: $first, after: $after, order: $order)
+  query page_ProfilesPageQuery($first: Int, $after: String, $order: [RecipeSortInput!]) {
+    ...RecipeTableFragment @arguments(first: $first, after: $after, order: $order)
   }
 `
 
-const EncodeProfileListPage: React.FC = () => {
+const RecipeListPage: React.FC = () => {
   const query = useLazyLoadQuery<page_ProfilesPageQuery>(QUERY, {
     first: 25,
     order: [{ name: 'ASC' }],
@@ -26,24 +26,23 @@ const EncodeProfileListPage: React.FC = () => {
         <div className="flex lg:flex-row flex-col gap-2">
           <Typography.HeadingLevel>
             <div className="flex-grow">
-              <Typography.Heading as={3}>Encode Profiles</Typography.Heading>
+              <Typography.Heading as={3}>Recipes</Typography.Heading>
               <Typography.Paragraph variant="subtitle">
-                Encode profiles are a set of predefined configurations that will be sent to ffmpeg during an encoding
-                operation.
+                Recipes are a set of predefined configurations that will be sent to ffmpeg during an encoding operation.
               </Typography.Paragraph>
             </div>
 
             <div className="mt-auto ml-auto">
-              <EncodeProfileDialog>
-                <Button size="xs">Create new profile</Button>
-              </EncodeProfileDialog>
+              <RecipeDialog>
+                <Button size="xs">Create new recipe</Button>
+              </RecipeDialog>
             </div>
           </Typography.HeadingLevel>
         </div>
 
         <Card>
           <Suspense>
-            <EncodeProfileTable $key={query} />
+            <RecipeTable $key={query} />
           </Suspense>
         </Card>
       </div>
@@ -51,4 +50,4 @@ const EncodeProfileListPage: React.FC = () => {
   )
 }
 
-export default EncodeProfileListPage
+export default RecipeListPage

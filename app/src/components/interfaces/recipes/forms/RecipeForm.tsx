@@ -1,4 +1,4 @@
-import type { EncodeProfileFormQuery } from '@/__generated__/EncodeProfileFormQuery.graphql'
+import type { RecipeFormQuery } from '@/__generated__/RecipeFormQuery.graphql'
 import type { SubmitHandler } from 'react-hook-form'
 
 import { Form, Input, Select, Switch, Typography } from '@giantnodes/react'
@@ -10,7 +10,7 @@ import { graphql } from 'relay-runtime'
 import * as z from 'zod'
 
 const QUERY = graphql`
-  query EncodeProfileFormQuery {
+  query RecipeFormQuery {
     encode_codecs {
       nodes {
         id
@@ -45,42 +45,42 @@ const QUERY = graphql`
   }
 `
 
-const EncodeProfileSchema = z.object({
+const RecipeSchema = z.object({
   name: z.string().trim().min(1).max(128),
   container: z.string().nullish(),
   codec: z.string(),
   preset: z.string(),
   tune: z.string().nullish(),
   quality: z.preprocess((x) => x || null, z.coerce.number().int().nullish()),
-  use_hardware_acceleration: z.boolean(),
+  use_hardware_acceleration: z.boolean().default(false),
 })
 
-export type EncodeProfileFormRef = {
+export type RecipeFormRef = {
   submit: () => void
   reset: () => void
 }
 
-export type EncodeProfileInput = z.infer<typeof EncodeProfileSchema>
+export type RecipeInput = z.infer<typeof RecipeSchema>
 
-type EncodeProfileFormProps = {
-  profile?: EncodeProfileInput
-  onSubmit: SubmitHandler<EncodeProfileInput>
+type RecipeFormProps = {
+  recipe?: RecipeInput
+  onSubmit: SubmitHandler<RecipeInput>
 }
 
-const EncodeProfileForm = React.forwardRef<EncodeProfileFormRef, EncodeProfileFormProps>((props, ref) => {
-  const { profile, onSubmit } = props
-  const { encode_codecs, encode_presets, video_file_containers } = useLazyLoadQuery<EncodeProfileFormQuery>(QUERY, {})
+const RecipeForm = React.forwardRef<RecipeFormRef, RecipeFormProps>((props, ref) => {
+  const { recipe, onSubmit } = props
+  const { encode_codecs, encode_presets, video_file_containers } = useLazyLoadQuery<RecipeFormQuery>(QUERY, {})
 
-  const form = useForm<EncodeProfileInput>({
-    resolver: zodResolver(EncodeProfileSchema),
+  const form = useForm<RecipeInput>({
+    resolver: zodResolver(RecipeSchema),
     defaultValues: {
-      name: profile?.name,
-      container: profile?.container,
-      codec: profile?.codec,
-      preset: profile?.preset,
-      tune: profile?.tune,
-      quality: profile?.quality,
-      use_hardware_acceleration: profile?.use_hardware_acceleration,
+      name: recipe?.name,
+      container: recipe?.container,
+      codec: recipe?.codec,
+      preset: recipe?.preset,
+      tune: recipe?.tune,
+      quality: recipe?.quality,
+      use_hardware_acceleration: recipe?.use_hardware_acceleration,
     },
   })
 
@@ -201,8 +201,8 @@ const EncodeProfileForm = React.forwardRef<EncodeProfileFormRef, EncodeProfileFo
   )
 })
 
-EncodeProfileForm.defaultProps = {
-  profile: undefined,
+RecipeForm.defaultProps = {
+  recipe: undefined,
 }
 
-export default EncodeProfileForm
+export default RecipeForm

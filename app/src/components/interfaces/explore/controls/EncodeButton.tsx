@@ -11,7 +11,7 @@ import { graphql, useLazyLoadQuery, useMutation, usePaginationFragment } from 'r
 import { useExploreContext } from '@/components/interfaces/explore/use-explore.hook'
 
 const QUERY = graphql`
-  query EncodeButtonQuery($first: Int, $after: String, $order: [EncodeProfileSortInput!]) {
+  query EncodeButtonQuery($first: Int, $after: String, $order: [RecipeSortInput!]) {
     ...EncodeButtonFragment @arguments(first: $first, after: $after, order: $order)
   }
 `
@@ -19,13 +19,8 @@ const QUERY = graphql`
 const FRAGMENT = graphql`
   fragment EncodeButtonFragment on Query
   @refetchable(queryName: "EncodeButtonRefetchQuery")
-  @argumentDefinitions(
-    first: { type: "Int" }
-    after: { type: "String" }
-    order: { type: "[EncodeProfileSortInput!]" }
-  ) {
-    encode_profiles(first: $first, after: $after, order: $order)
-      @connection(key: "EncodeButtonFragment_encode_profiles") {
+  @argumentDefinitions(first: { type: "Int" }, after: { type: "String" }, order: { type: "[RecipeSortInput!]" }) {
+    recipes(first: $first, after: $after, order: $order) @connection(key: "EncodeButtonFragment_recipes") {
       edges {
         node {
           id
@@ -99,15 +94,15 @@ const EncodeButton: React.FC = () => {
   }, [directory, keys])
 
   const disabledKeys = React.useMemo<string[]>(
-    () => data.encode_profiles?.edges?.filter((x) => !x.node.is_encodable).map((x) => x.node.id) ?? [],
-    [data.encode_profiles]
+    () => data.recipes?.edges?.filter((x) => !x.node.is_encodable).map((x) => x.node.id) ?? [],
+    [data.recipes]
   )
 
   const onPress = (key: Selection) => {
     commit({
       variables: {
         input: {
-          encode_profile_id: key,
+          recipe_id: key,
           entries,
         },
       },
@@ -139,22 +134,22 @@ const EncodeButton: React.FC = () => {
 
       <Menu.Popover placement="bottom right">
         <Menu.List disabledKeys={disabledKeys} onAction={(key) => onPress(key)}>
-          {data.encode_profiles?.edges?.map((profile) => (
-            <Menu.Item key={profile.node.id} className="flex items-center gap-2" id={profile.node.id}>
-              {profile.node.name}
+          {data.recipes?.edges?.map((recipe) => (
+            <Menu.Item key={recipe.node.id} className="flex items-center gap-2" id={recipe.node.id}>
+              {recipe.node.name}
 
               <div className="flex items-end flex-grow justify-end gap-2">
                 <Chip color="success" size="sm">
-                  {profile.node.codec.name.toLocaleLowerCase()}
+                  {recipe.node.codec.name.toLocaleLowerCase()}
                 </Chip>
 
                 <Chip color="info" size="sm">
-                  {profile.node.preset.name.toLocaleLowerCase()}
+                  {recipe.node.preset.name.toLocaleLowerCase()}
                 </Chip>
 
-                {profile.node.tune && (
+                {recipe.node.tune && (
                   <Chip color="warning" size="sm">
-                    {profile.node.tune.name.toLocaleLowerCase()}
+                    {recipe.node.tune.name.toLocaleLowerCase()}
                   </Chip>
                 )}
               </div>

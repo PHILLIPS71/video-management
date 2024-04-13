@@ -1,19 +1,21 @@
-import type { EncodeProfileUpdateMutation } from '@/__generated__/EncodeProfileUpdateMutation.graphql'
-import type { EncodeProfileFormRef, EncodeProfileInput } from '@/components/interfaces/profiles/forms'
+import type { RecipeCreateMutation } from '@/__generated__/RecipeCreateMutation.graphql'
+import type { RecipeFormRef, RecipeInput } from '@/components/interfaces/recipes/forms'
 import type { SubmitHandler } from 'react-hook-form'
 
 import { Alert } from '@giantnodes/react'
 import { IconAlertCircleFilled } from '@tabler/icons-react'
 import React from 'react'
 import { useMutation } from 'react-relay'
-import { graphql } from 'relay-runtime'
+import { ConnectionHandler, ROOT_ID, graphql } from 'relay-runtime'
 
-import EncodeProfileForm from '@/components/interfaces/profiles/forms/EncodeProfileForm'
+import RecipeForm from '@/components/interfaces/recipes/forms/RecipeForm'
+
+const CONNECTION = ConnectionHandler.getConnectionID(ROOT_ID, 'RecipeTableFragment_recipes', [])
 
 const MUTATION = graphql`
-  mutation EncodeProfileUpdateMutation($input: Encode_profile_updateInput!) {
-    encode_profile_update(input: $input) {
-      encodeProfile {
+  mutation RecipeCreateMutation($connections: [ID!]!, $input: Recipe_createInput!) {
+    recipe_create(input: $input) {
+      recipe @appendNode(connections: $connections, edgeTypeName: "RecipesEdge") {
         id
         name
         quality
@@ -41,29 +43,24 @@ const MUTATION = graphql`
   }
 `
 
-export type EncodeProfileUpdateInput = EncodeProfileInput & {
-  id: string
-}
-
-type EncodeProfileUpdateProps = {
-  profile: EncodeProfileUpdateInput
+type RecipeCreateProps = {
   onComplete?: (payload: any) => void
   onLoadingChange?: (isLoading: boolean) => void
 }
 
-const EncodeProfileUpdate = React.forwardRef<EncodeProfileFormRef, EncodeProfileUpdateProps>((props, ref) => {
-  const { profile, onComplete, onLoadingChange } = props
+const RecipeCreate = React.forwardRef<RecipeFormRef, RecipeCreateProps>((props, ref) => {
+  const { onComplete, onLoadingChange } = props
 
   const [errors, setErrors] = React.useState<string[]>([])
 
-  const [commit, isLoading] = useMutation<EncodeProfileUpdateMutation>(MUTATION)
+  const [commit, isLoading] = useMutation<RecipeCreateMutation>(MUTATION)
 
-  const onSubmit: SubmitHandler<EncodeProfileInput> = React.useCallback(
+  const onSubmit: SubmitHandler<RecipeInput> = React.useCallback(
     (data) => {
       commit({
         variables: {
+          connections: [CONNECTION],
           input: {
-            id: profile.id,
             name: data.name,
             container: data.container,
             codec: data.codec,
@@ -74,8 +71,8 @@ const EncodeProfileUpdate = React.forwardRef<EncodeProfileFormRef, EncodeProfile
           },
         },
         onCompleted: (payload) => {
-          if (payload.encode_profile_update.errors != null) {
-            const faults = payload.encode_profile_update.errors
+          if (payload.recipe_create.errors != null) {
+            const faults = payload.recipe_create.errors
               .filter((error) => error.message !== undefined)
               .map((error) => error.message!)
 
@@ -84,7 +81,7 @@ const EncodeProfileUpdate = React.forwardRef<EncodeProfileFormRef, EncodeProfile
             return
           }
 
-          if (payload.encode_profile_update.encodeProfile) onComplete?.(payload.encode_profile_update.encodeProfile)
+          if (payload.recipe_create.recipe) onComplete?.(payload.recipe_create.recipe)
 
           setErrors([])
         },
@@ -93,7 +90,7 @@ const EncodeProfileUpdate = React.forwardRef<EncodeProfileFormRef, EncodeProfile
         },
       })
     },
-    [profile, commit, onComplete]
+    [commit, onComplete]
   )
 
   React.useEffect(() => {
@@ -116,14 +113,14 @@ const EncodeProfileUpdate = React.forwardRef<EncodeProfileFormRef, EncodeProfile
         </Alert>
       )}
 
-      <EncodeProfileForm ref={ref} profile={profile} onSubmit={onSubmit} />
+      <RecipeForm ref={ref} onSubmit={onSubmit} />
     </div>
   )
 })
 
-EncodeProfileUpdate.defaultProps = {
+RecipeCreate.defaultProps = {
   onComplete: undefined,
   onLoadingChange: undefined,
 }
 
-export default EncodeProfileUpdate
+export default RecipeCreate
