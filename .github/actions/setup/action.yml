@@ -1,28 +1,28 @@
-name: '💽️  '
-author: 'PHILLIPS71'
+name: "💽️  "
+author: "PHILLIPS71"
 
 inputs:
   node-version:
-    default: '20'
-    description: '🔢  Node version'
+    default: "20"
+    description: "🔢  Node version"
     required: true
   pnpm-version:
-    default: '8'
-    description: '🔢  pnpm version'
+    default: "8"
+    description: "🔢  pnpm version"
     required: true
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
-    - name: '🔧  pnpm'
+    - name: "🔧  pnpm"
       uses: pnpm/action-setup@v3
       with:
         version: ${{ inputs.pnpm-version }}
 
-    - name: '💽️  Node ${{ inputs.node-version }}'
+    - name: "💽️  Node ${{ inputs.node-version }}"
       uses: actions/setup-node@v4
       with:
-        registry-url: 'https://registry.npmjs.org'
+        registry-url: "https://registry.npmjs.org"
         node-version: ${{ inputs.node-version }}
-        cache: 'pnpm'
-        cache-dependency-path: pnpm-lock.yaml
+        cache: "pnpm"
+        cache-dependency-path: ./app/pnpm-lock.yaml
