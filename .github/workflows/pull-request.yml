@@ -1,0 +1,109 @@
+name: "▶️  Pull Request"
+
+on:
+  pull_request_target:
+    branches:
+      - main
+
+concurrency:
+  group: pull-request-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  infrastructure:
+    name: "👷️  CI (Infrastructure)"
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🐙️  Checkout"
+        uses: actions/checkout@v4
+
+      - name: "💽️  Setup"
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: "🧪  Test"
+        run: dotnet test --verbosity quiet
+        working-directory: ./src/Infrastructure
+
+  dashboard:
+    name: "👷️  CI (Dashboard)"
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🐙️  Checkout"
+        uses: actions/checkout@v4
+
+      - name: "💽️  Setup"
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: "🧪  Test"
+        run: dotnet test --verbosity quiet
+        working-directory: ./src/Service.Dashboard
+
+  encoder:
+    name: "👷️  CI (Encoder)"
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - name: "🐙️  Checkout"
+        uses: actions/checkout@v4
+
+      - name: "💽️  Setup"
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: "🧪  Test"
+        run: dotnet test --verbosity quiet
+        working-directory: ./src/Service.Encoder
+
+  app:
+    name: "👷️  CI (App)"
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    needs: [dashboard]
+    strategy:
+      fail-fast: false
+    steps:
+      - name: "🐙️  Checkout"
+        uses: actions/checkout@v4
+
+      - name: "💽️  Setup"
+        uses: ./.github/actions/setup
+
+      - name: "📦  Install"
+        shell: bash
+        working-directory: ./src/Service.Encoder
+        run: |
+          pnpm install --frozen-lockfile
+
+      - name: "🔺️  Cache"
+        uses: ./.github/actions/cache
+
+      - name: "🏗️  Build"
+        working-directory: ./app
+        shell: bash
+        run: |
+          pnpm run build
+
+      - name: "🚨️  Lint"
+        working-directory: ./app
+        shell: bash
+        run: |
+          pnpm run lint
+
+      - name: "🦺  Type Check"
+        working-directory: ./app
+        shell: bash
+        run: |
+          pnpm run type-check
+
+      - name: "🧪  Test"
+        working-directory: ./app
+        shell: bash
+        run: |
+          pnpm run test
