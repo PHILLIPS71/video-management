@@ -75,7 +75,7 @@ jobs:
 
       - name: "📦  Install"
         shell: bash
-        working-directory: ./src/Service.Encoder
+        working-directory: ./app
         run: |
           pnpm install --frozen-lockfile
 
