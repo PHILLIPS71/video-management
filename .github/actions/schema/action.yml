@@ -1,0 +1,19 @@
+name: "📄  "
+
+inputs:
+  working-directory:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "📄  Build GraphQL Schema"
+      run: dotnet run -- schema export --output schema.graphql
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: "📄  Upload GraphQL Schema"
+      uses: actions/upload-artifact@v4
+      with:
+        name: schema-${{ github.run_number }}.graphql
+        path: ${{ inputs.working-directory }}/schema.graphql
+        retention-days: 1

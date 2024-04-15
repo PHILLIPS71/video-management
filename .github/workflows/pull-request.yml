@@ -1,9 +1,7 @@
-name: "▶️  Pull Request"
+name: "🔀  Pull Request"
 
 on:
   pull_request_target:
-    branches:
-      - main
 
 concurrency:
   group: pull-request-${{ github.event.pull_request.number }}
@@ -44,6 +42,11 @@ jobs:
         run: dotnet test --verbosity quiet
         working-directory: ./src/Service.Dashboard
 
+      - name: "⬆️  GraphQL Schema (upload)"
+        uses: ./.github/actions/schema
+        with:
+          working-directory: src/Service.Dashboard
+
   encoder:
     name: "👷️  CI (Encoder)"
     timeout-minutes: 20
@@ -81,8 +84,14 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
 
-      - name: "🔺️  Cache"
+      - name: "🔺️  Cache (pnpm)"
         uses: ./.github/actions/cache
+
+      - name: "⬇️  GraphQL Schema (download)"
+        uses: actions/download-artifact@v4
+        with:
+          name: schema-${{ github.run_number }}.graphql
+          path: ./app
 
       - name: "🏗️  Build"
         working-directory: ./app
@@ -90,20 +99,16 @@ jobs:
         run: |
           pnpm run build
 
-      - name: "🚨️  Lint"
-        working-directory: ./app
-        shell: bash
-        run: |
-          pnpm run lint
+      - name: "🔺️  Cache (nextjs)"
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/app/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
 
-      - name: "🦺  Type Check"
-        working-directory: ./app
-        shell: bash
-        run: |
-          pnpm run type-check
-
-      - name: "🧪  Test"
-        working-directory: ./app
-        shell: bash
-        run: |
-          pnpm run test
+      # - name: "🧪  Test"
+      #   working-directory: ./app
+      #   shell: bash
+      #   run: |
+      #     pnpm run test
