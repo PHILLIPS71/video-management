@@ -7,7 +7,7 @@ public static class Program
     public static Task Main(string[] args)
     {
         var host = CreateHostBuilder(args).Build();
-        return host.RunAsync();
+        return host.RunWithGraphQLCommandsAsync(args);
     }
 
     private static IHostBuilder CreateHostBuilder(string[] args) =>
