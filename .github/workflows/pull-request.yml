@@ -45,7 +45,7 @@ jobs:
       - name: "⬆️  GraphQL Schema (upload)"
         uses: ./.github/actions/schema
         with:
-          working-directory: src/Service.Dashboard
+          working-directory: src/Service.Dashboard/src/HttpApi
 
   encoder:
     name: "👷️  CI (Encoder)"
