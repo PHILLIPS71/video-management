@@ -8,6 +8,7 @@ runs:
   using: "composite"
   steps:
     - name: "📄  Build GraphQL Schema"
+      shell: bash
       run: dotnet run -- schema export --output schema.graphql
       working-directory: ${{ inputs.working-directory }}
 
