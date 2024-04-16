@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@giantnodes/react':
-    specifier: latest
-    version: 1.0.0-canary.1(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.3)
+    specifier: 1.0.0-canary.7
+    version: 1.0.0-canary.7(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.3)
   '@hookform/resolvers':
     specifier: ^3.3.4
     version: 3.3.4(react-hook-form@7.51.3)
@@ -231,15 +231,16 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@giantnodes/react@1.0.0-canary.1(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.3):
-    resolution: {integrity: sha512-kMVtD55D4Gz6w+y2kkpOZIDSgAK4Jw26FpswXr6+ic2Z85Axnb6sLmQdh50N6o3ae8b5A6KQlfFPm/1QvFUQvQ==}
+  /@giantnodes/react@1.0.0-canary.7(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.3):
+    resolution: {integrity: sha512-tsXDT/7NavA/u79afsWwbxXyxsY5H5i6dXTILw/qH4K+UYDv72jDWaOxdambLhxlBLBNFJ613XKoL9LW4AGY2A==}
     engines: {node: '>=16.x'}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
       tailwindcss: '>=3'
     dependencies:
-      '@giantnodes/theme': 1.0.0-canary.1(tailwindcss@3.4.3)
+      '@giantnodes/theme': 1.0.0-canary.7(tailwindcss@3.4.3)
+      '@react-aria/utils': 3.23.2(react@18.2.0)
       clsx: 2.1.0
       react: 18.2.0
       react-aria: 3.32.1(react-dom@18.2.0)(react@18.2.0)
@@ -249,8 +250,8 @@ packages:
       tailwindcss-react-aria-components: 1.1.1(tailwindcss@3.4.3)
     dev: false
 
-  /@giantnodes/theme@1.0.0-canary.1(tailwindcss@3.4.3):
-    resolution: {integrity: sha512-KJU6dYidB2HZ6Xd6PCRUGXm6hcRlURJdOSdJM4thNyhNm9TAjMj7boEdLCYNmmE8Kpff7hB/Q19tG9SzYuURfg==}
+  /@giantnodes/theme@1.0.0-canary.7(tailwindcss@3.4.3):
+    resolution: {integrity: sha512-JWzq7+IyfvjDn/YCGSc3KA8rDYPcmTWPuoA7dQFbHcIffsi0+/bqBSgTjMhaWBtKeEX90wUFIr2+t79H3fjVFg==}
     engines: {node: '>=16.x'}
     peerDependencies:
       tailwindcss: '>=3'

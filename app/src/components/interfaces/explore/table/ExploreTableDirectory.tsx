@@ -2,7 +2,6 @@ import type { ExploreTableDirectoryFragment$key } from '@/__generated__/ExploreT
 
 import { Link } from '@giantnodes/react'
 import { IconFolderFilled } from '@tabler/icons-react'
-import NextLink from 'next/link'
 import { usePathname } from 'next/navigation'
 import { graphql, useFragment } from 'react-relay'
 
@@ -32,9 +31,7 @@ const ExploreTableDirectory: React.FC<ExploreTableDirectoryProps> = ({ $key }) =
     <>
       <IconFolderFilled size={20} />
 
-      <NextLink legacyBehavior passHref href={`${pathname}/${data.path_info.name}`}>
-        <Link>{data.path_info.name}</Link>
-      </NextLink>
+      <Link href={`${pathname}/${data.path_info.name}`}>{data.path_info.name}</Link>
     </>
   )
 }
