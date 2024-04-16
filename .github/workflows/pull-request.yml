@@ -93,12 +93,6 @@ jobs:
           name: schema-${{ github.run_number }}.graphql
           path: ./app
 
-      - name: "🏗️  Build"
-        working-directory: ./app
-        shell: bash
-        run: |
-          pnpm run build
-
       - name: "🔺️  Cache (nextjs)"
         uses: actions/cache@v4
         with:
@@ -106,6 +100,12 @@ jobs:
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+
+      - name: "🏗️  Build"
+        working-directory: ./app
+        shell: bash
+        run: |
+          pnpm run build
 
       # - name: "🧪  Test"
       #   working-directory: ./app
