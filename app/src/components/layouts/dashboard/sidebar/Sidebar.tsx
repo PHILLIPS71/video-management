@@ -51,8 +51,8 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
         </Navigation.Item>
 
         <Navigation.Item>
-          <Link legacyBehavior passHref href="/profiles">
-            <Navigation.Link isSelected={route === 'profiles'}>
+          <Link legacyBehavior passHref href="/recipes">
+            <Navigation.Link isSelected={route === 'recipes'}>
               <IconTransform size={20} /> Recipes
             </Navigation.Link>
           </Link>
