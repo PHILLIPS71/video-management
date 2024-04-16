@@ -16,7 +16,8 @@
     "dev": "next dev",
     "start": "next start",
     "---": "",
-    "build": "next build",
+    "build": "pnpm run build:relay && pnpm run build:next",
+    "build:next": "next build",
     "build:graphql": "get-graphql-schema http://localhost:5263/graphql > schema.graphql & pnpm build:relay",
     "build:relay": "relay-compiler",
     "--- ": "",
@@ -28,7 +29,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@giantnodes/react": "0.0.0",
+    "@giantnodes/react": "1.0.0-canary.7",
     "@hookform/resolvers": "^3.3.4",
     "@tabler/icons-react": "^3.2.0",
     "clsx": "^2.1.0",

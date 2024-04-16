@@ -29,12 +29,7 @@ const ResolutionWidget: React.FC<ResolutionWidgetProps> = ({ directory }) => {
   })
 
   const total = React.useMemo<number>(
-    () =>
-      data.file_resolution_distribution.reduce<number>((accu, item) => {
-        accu += item.count
-
-        return accu
-      }, 0),
+    () => data.file_resolution_distribution.reduce<number>((accu, item) => accu + item.count, 0),
     [data.file_resolution_distribution]
   )
 

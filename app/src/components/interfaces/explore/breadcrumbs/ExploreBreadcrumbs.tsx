@@ -1,7 +1,6 @@
 import type { ExploreBreadcrumbsFragment$key } from '@/__generated__/ExploreBreadcrumbsFragment.graphql'
 
 import { Breadcrumb, Link } from '@giantnodes/react'
-import NextLink from 'next/link'
 import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
@@ -59,13 +58,11 @@ const ExploreBreadcrumbs: React.FC<ExploreBreadcrumbsProps> = ({ $key }) => {
         {Array.from(directories.keys()).map((directory, index) =>
           isBreadcrumbLink(index) ? (
             <Breadcrumb.Item key={directory}>
-              <NextLink legacyBehavior href={`/library/${data.library.slug}/explore/${directories.get(directory)}`}>
-                <Link href="#">{directory}</Link>
-              </NextLink>
+              <Link href={`/library/${data.library.slug}/explore/${directories.get(directory)}`}>{directory}</Link>
             </Breadcrumb.Item>
           ) : (
             <Breadcrumb.Item key={directory}>
-              <Link isDisabled href="#">
+              <Link isDisabled href={`/library/${data.library.slug}/explore`}>
                 {directory}
               </Link>
             </Breadcrumb.Item>

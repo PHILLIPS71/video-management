@@ -1,7 +1,6 @@
 import type { EncodeButton_EncodeSubmitMutation } from '@/__generated__/EncodeButton_EncodeSubmitMutation.graphql'
 import type { EncodeButtonFragment$key } from '@/__generated__/EncodeButtonFragment.graphql'
 import type { EncodeButtonQuery } from '@/__generated__/EncodeButtonQuery.graphql'
-import type { Selection } from '@giantnodes/react'
 
 import { Button, Chip, Menu } from '@giantnodes/react'
 import { IconCaretDownFilled } from '@tabler/icons-react'
@@ -98,11 +97,11 @@ const EncodeButton: React.FC = () => {
     [data.recipes]
   )
 
-  const onPress = (key: Selection) => {
+  const onPress = (key: React.Key) => {
     commit({
       variables: {
         input: {
-          recipe_id: key,
+          recipe_id: key.toString(),
           entries,
         },
       },

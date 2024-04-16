@@ -166,4 +166,6 @@ yarn-error.log*
 
 # Relay
 /app/schema.graphql
-__generated__/
+/app/src/__generated__/*
+
+!.gitkeep
