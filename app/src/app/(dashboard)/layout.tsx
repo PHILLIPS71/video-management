@@ -6,4 +6,5 @@ type DashboardLayoutProps = React.PropsWithChildren
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => <DefaultLayout>{children}</DefaultLayout>
 
+export const dynamic = 'force-dynamic'
 export default DashboardLayout
