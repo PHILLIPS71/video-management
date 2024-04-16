@@ -35,5 +35,4 @@ const PreferenceSettingsPage: NextPage = () => {
   )
 }
 
-export const dynamic = 'force-dynamic'
 export default PreferenceSettingsPage

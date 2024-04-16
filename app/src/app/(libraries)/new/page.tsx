@@ -47,5 +47,4 @@ const LibraryCreatePage = () => {
   )
 }
 
-export const dynamic = 'force-dynamic'
 export default LibraryCreatePage

@@ -45,5 +45,4 @@ const LibrarySlugPageLayout: React.FC<LibrarySlugPageLayoutProps> = ({ children,
   )
 }
 
-export const dynamic = 'force-dynamic'
 export default LibrarySlugPageLayout
