@@ -19,6 +19,9 @@ export const execute = async (parameters: RequestParameters, variables: Variable
   const response = await fetch(HTTP_ENDPOINT, {
     method: 'POST',
     cache: 'no-store',
+    next: {
+      revalidate: 0,
+    },
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
