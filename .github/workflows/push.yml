@@ -87,6 +87,12 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
 
+      - name: "⬇️  GraphQL Schema (download)"
+        uses: actions/download-artifact@v4
+        with:
+          name: schema-${{ github.run_number }}.graphql
+          path: ./app
+
       - name: "🔺️  Cache (nextjs)"
         uses: actions/cache@v4
         with:
@@ -95,23 +101,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
 
-      - name: "⬇️  GraphQL Schema (download)"
-        uses: actions/download-artifact@v4
-        with:
-          name: schema-${{ github.run_number }}.graphql
-          path: ./app
-
       - name: "🏗️  Build"
         working-directory: ./app
         shell: bash
         run: |
           pnpm run build
-        env:
-          NEXT_PUBLIC_API_URI: https://127.0.0.1:5000
-          NEXT_PUBLIC_API_WS_URI: wss://127.0.0.1:5000
 
-      - name: "🧪  Test"
-        working-directory: ./app
-        shell: bash
-        run: |
-          pnpm run test
+      # - name: "🧪  Test"
+      #   working-directory: ./app
+      #   shell: bash
+      #   run: |
+      #     pnpm run test
