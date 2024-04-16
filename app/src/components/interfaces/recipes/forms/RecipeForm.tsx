@@ -4,7 +4,7 @@ import type { SubmitHandler } from 'react-hook-form'
 import { Form, Input, Select, Switch, Typography } from '@giantnodes/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useLazyLoadQuery } from 'react-relay'
 import { graphql } from 'relay-runtime'
 import * as z from 'zod'
@@ -84,14 +84,22 @@ const RecipeForm = React.forwardRef<RecipeFormRef, RecipeFormProps>((props, ref)
     },
   })
 
+  const codecId = useWatch({ control: form.control, name: 'codec' })
+
   const codec = React.useMemo(
-    () => encode_codecs?.nodes?.find((x) => x.id === form.getValues('codec')),
-    [form.watch('codec'), form, encode_codecs?.nodes]
+    () => encode_codecs?.nodes?.find((x) => x.id === codecId),
+    [codecId, encode_codecs?.nodes]
   )
 
   React.useEffect(() => {
-    form.setValue('tune', null)
-  }, [form.watch('codec')])
+    const subscription = form.watch((_, { name }) => {
+      if (name !== 'codec') return
+
+      form.setValue('tune', null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [form, form.watch])
 
   React.useImperativeHandle(
     ref,
