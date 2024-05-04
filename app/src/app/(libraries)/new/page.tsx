@@ -23,11 +23,11 @@ const LibraryCreatePage = () => {
     <section className="mx-auto max-w-3xl">
       <Card>
         <Card.Header>
-          <Typography.Paragraph className="font-semibold text-md">Create a new library</Typography.Paragraph>
-          <Typography.Paragraph variant="subtitle">
+          <Typography.Paragraph>Create a new library</Typography.Paragraph>
+          <Typography.Text variant="subtitle">
             Your library will have its own dedicated metrics and control panel. A dashboard will be set up so you can
             easily interact with your new library.
-          </Typography.Paragraph>
+          </Typography.Text>
         </Card.Header>
 
         <Card.Body>

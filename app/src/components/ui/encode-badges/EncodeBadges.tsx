@@ -33,10 +33,8 @@ const FRAGMENT = graphql`
   }
 `
 
-const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, radius, size, variant }) => {
+const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, size }) => {
   const data = useFragment(FRAGMENT, $key)
-
-  const chipProps = React.useMemo<ChipProps>(() => ({ radius, size, variant }), [radius, size, variant])
 
   const percent = (value: number): string =>
     Intl.NumberFormat('en-US', {
@@ -105,13 +103,13 @@ const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, radius, size, variant
     }
 
     return (
-      <Chip color={color()} {...chipProps}>
+      <Chip color={color()} size={size}>
         {icon()}
 
         {percent(increase)}
       </Chip>
     )
-  }, [chipProps, data.snapshots])
+  }, [data.snapshots, size])
 
   return (
     <div className="flex flex-row items-center justify-end gap-2">
@@ -121,22 +119,22 @@ const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, radius, size, variant
         <>
           {data.speed != null && (
             <>
-              <Chip color="info" {...chipProps}>
+              <Chip color="info" size={size}>
                 {data.speed.frames} fps
               </Chip>
 
-              <Chip color="info" {...chipProps}>
+              <Chip color="info" size={size}>
                 {filesize(data.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s
               </Chip>
 
-              <Chip color="info" {...chipProps}>
+              <Chip color="info" size={size}>
                 {data.speed.scale.toFixed(2)}x
               </Chip>
             </>
           )}
 
           {data.percent != null && (
-            <Chip color="info" {...chipProps}>
+            <Chip color="info" size={size}>
               {percent(data.percent)}
             </Chip>
           )}
@@ -145,7 +143,7 @@ const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, radius, size, variant
 
       {data.status === 'COMPLETED' && (
         <>
-          <Chip color="info" {...chipProps}>
+          <Chip color="info" size={size}>
             {dayjs.duration(dayjs(data.completed_at).diff(data.created_at)).format('H[h] m[m] s[s]')}
           </Chip>
 
@@ -154,13 +152,13 @@ const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, radius, size, variant
       )}
 
       {data.status === 'CANCELLED' && (
-        <Chip color="info" {...chipProps}>
+        <Chip color="info" size={size}>
           {dayjs.duration(dayjs(data.cancelled_at).diff(data.created_at)).format('H[h] m[m] s[s]')}
         </Chip>
       )}
 
       {data.status === 'FAILED' && (
-        <Chip color="info" {...chipProps}>
+        <Chip color="info" size={size}>
           {dayjs.duration(dayjs(data.failed_at).diff(data.created_at)).format('H[h] m[m] s[s]')}
         </Chip>
       )}

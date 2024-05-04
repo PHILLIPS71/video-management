@@ -93,14 +93,14 @@ const RecipeDialog: React.FC<RecipeDialogProps> = ({ children, recipe }) => {
 
                 <div className="flex items-center justify-between">
                   <Typography.HeadingLevel>
-                    <Typography.Heading as={6}>{recipe?.name ?? 'Create new recipe'}</Typography.Heading>
+                    <Typography.Heading level={6}>{recipe?.name ?? 'Create new recipe'}</Typography.Heading>
                   </Typography.HeadingLevel>
 
                   <div className="flex items-center gap-3">
                     {recipe && (
                       <Button
                         color="danger"
-                        isDisabled={isDeleteLoading}
+                        isLoading={isDeleteLoading}
                         size="xs"
                         onPress={() => remove(recipe, close)}
                       >
@@ -110,8 +110,8 @@ const RecipeDialog: React.FC<RecipeDialogProps> = ({ children, recipe }) => {
 
                     <Divider orientation="horizontal" />
 
-                    <Button color="transparent" size="none" onPress={close}>
-                      <IconX size={22} strokeWidth={1} />
+                    <Button color="transparent" size="xs" onPress={close}>
+                      <IconX size={16} strokeWidth={1} />
                     </Button>
                   </div>
                 </div>

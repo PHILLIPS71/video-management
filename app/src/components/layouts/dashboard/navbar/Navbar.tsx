@@ -7,12 +7,13 @@ const Navbar: React.FC<NavigationProps> = (props) => (
   <Navigation orientation="horizontal" {...props}>
     <Navigation.Segment className="grow">
       <Navigation.Item>
-        <Input>
+        <Input.Group>
           <Input.Addon>
             <IconSearch size={20} />
           </Input.Addon>
-          <Input.Control aria-label="search" placeholder="Search..." type="text" />
-        </Input>
+
+          <Input aria-label="search" placeholder="Search..." type="text" />
+        </Input.Group>
       </Navigation.Item>
     </Navigation.Segment>
 

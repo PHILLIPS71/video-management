@@ -16,7 +16,7 @@ type ApplicationLayoutProps = React.PropsWithChildren
 const ApplicationLayout: React.FC<ApplicationLayoutProps> = ({ children }) => (
   <html lang="en">
     <head />
-    <body className={clsx([inter.variable, 'bg-shark-50', 'dark:bg-shark-950'])}>
+    <body className={clsx([inter.variable, 'bg-background'])}>
       <ApplicationProviders>{children}</ApplicationProviders>
     </body>
   </html>
