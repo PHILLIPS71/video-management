@@ -126,7 +126,7 @@ const EncodeButton: React.FC = () => {
 
   return (
     <Menu size="xs">
-      <Button className="flex items-center flex-row" color="brand" isDisabled={isDisabled || isLoading} size="xs">
+      <Button color="brand" isDisabled={isDisabled || isLoading} size="xs">
         <span>Encode</span>
         <IconCaretDownFilled size={16} />
       </Button>

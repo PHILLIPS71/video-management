@@ -85,7 +85,7 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
     <div className="flex lg:flex-row flex-col gap-3">
       <ExploreContext.Provider value={context}>
         <div className="flex flex-col flex-1 gap-3">
-          <Card transparent>
+          <Card>
             <Card.Header>
               <Suspense fallback="LOADING...">
                 <ExploreBreadcrumbs $key={query.file_system_directory} />
@@ -93,7 +93,7 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
             </Card.Header>
           </Card>
 
-          <Card transparent>
+          <Card>
             <Card.Header>
               <Suspense fallback="LOADING...">
                 <ExploreControls $key={query.file_system_directory} />

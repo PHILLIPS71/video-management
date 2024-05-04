@@ -124,7 +124,7 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
                 <div className="flex flex-row justify-end gap-2">
                   <EncodeBadges $key={item.node} />
 
-                  <Button color="neutral" size="xs" variant="outlined" onPress={() => cancel(item.node)}>
+                  <Button color="neutral" size="xs" onPress={() => cancel(item.node)}>
                     <IconProgressX size={16} />
                   </Button>
                 </div>

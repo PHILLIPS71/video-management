@@ -45,14 +45,14 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
       selectedKeys={keys}
       onSelectionChange={(selection) => setKeys(selection)}
     >
-      <Table.Head size="sm">
+      <Table.Head>
         <Table.Column key="name" isRowHeader>
-          <Input aria-label="search file system entries" className="max-w-xs">
+          <Input.Group aria-label="search file system entries" className="max-w-xs">
             <Input.Addon>
               <IconSearch size={16} />
             </Input.Addon>
-            <Input.Control aria-label="search library" placeholder="Search by name" type="text" />
-          </Input>
+            <Input aria-label="search library" placeholder="Search by name" type="text" />
+          </Input.Group>
         </Table.Column>
         <Table.Column key="size" className="text-right">
           <Typography.Text variant="subtitle">{dayjs(data.scanned_at).fromNow()}</Typography.Text>

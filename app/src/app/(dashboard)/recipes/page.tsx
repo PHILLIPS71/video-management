@@ -26,7 +26,7 @@ const RecipeListPage: React.FC = () => {
         <div className="flex lg:flex-row flex-col gap-2">
           <Typography.HeadingLevel>
             <div className="flex-grow">
-              <Typography.Heading as={3}>Recipes</Typography.Heading>
+              <Typography.Heading level={3}>Recipes</Typography.Heading>
               <Typography.Paragraph variant="subtitle">
                 Recipes are a set of predefined configurations that will be sent to ffmpeg during an encoding operation.
               </Typography.Paragraph>

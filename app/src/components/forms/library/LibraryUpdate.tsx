@@ -149,17 +149,17 @@ const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((pr
         <div className="flex flex-row gap-3 flex-wrap md:flex-nowrap">
           <Form.Group {...form.register('name')} error={!!form.formState.errors.name}>
             <Form.Label>Name</Form.Label>
-            <Input>
-              <Input.Control type="text" />
-            </Input>
+            <Input.Group>
+              <Input type="text" />
+            </Input.Group>
             <Form.Feedback type="error">{form.formState.errors.name?.message}!!!</Form.Feedback>
           </Form.Group>
 
           <Form.Group {...form.register('slug')} error={!!form.formState.errors.slug}>
             <Form.Label>Slug</Form.Label>
-            <Input>
-              <Input.Control type="text" />
-            </Input>
+            <Input.Group>
+              <Input type="text" />
+            </Input.Group>
             <Form.Feedback type="error">{form.formState.errors.slug?.message}</Form.Feedback>
             {form.watch('slug') !== undefined && SlugTransform.parse(form.watch('slug')) !== form.watch('slug') && (
               <Form.Caption className="text-yellow-600">
@@ -172,9 +172,9 @@ const LibraryUpdate = React.forwardRef<LibraryUpdateRef, LibraryUpdateProps>((pr
 
         <Form.Group name="folder">
           <Form.Label>Folder</Form.Label>
-          <Input>
-            <Input.Control disabled type="text" value={library.path_info.full_name} />
-          </Input>
+          <Input.Group>
+            <Input disabled type="text" value={library.path_info.full_name} />
+          </Input.Group>
         </Form.Group>
 
         <Form.Group {...form.register('is_watched')} error={!!form.formState.errors.is_watched}>

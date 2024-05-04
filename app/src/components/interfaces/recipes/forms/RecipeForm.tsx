@@ -119,9 +119,9 @@ const RecipeForm = React.forwardRef<RecipeFormRef, RecipeFormProps>((props, ref)
       <div className="flex flex-col gap-y-3">
         <Form.Group {...form.register('name')} error={!!form.formState.errors.name}>
           <Form.Label>Name</Form.Label>
-          <Input>
-            <Input.Control type="text" />
-          </Input>
+          <Input.Group>
+            <Input type="text" />
+          </Input.Group>
           <Form.Feedback type="error">{form.formState.errors.name?.message}</Form.Feedback>
         </Form.Group>
 
@@ -172,9 +172,9 @@ const RecipeForm = React.forwardRef<RecipeFormRef, RecipeFormProps>((props, ref)
 
           <Form.Group {...form.register('quality')} error={!!form.formState.errors.quality}>
             <Form.Label>Quality</Form.Label>
-            <Input>
-              <Input.Control max={codec?.quality.max} min={codec?.quality.min ?? 1} type="number" />
-            </Input>
+            <Input.Group>
+              <Input max={codec?.quality.max} min={codec?.quality.min ?? 1} type="number" />
+            </Input.Group>
             <Form.Feedback type="error">{form.formState.errors.quality?.message}</Form.Feedback>
           </Form.Group>
         </div>
