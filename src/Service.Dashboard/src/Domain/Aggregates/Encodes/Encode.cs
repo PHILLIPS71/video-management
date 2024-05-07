@@ -224,6 +224,13 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         Guard.Against.NullOrWhiteSpace(output);
 
         Output = string.Join(Environment.NewLine, Output, output);
+
+        DomainEvents.Add(new EncodeOutputtedEvent
+        {
+            EncodeId = Id,
+            Output = output,
+            FullOutput = Output
+        });
     }
 
     /// <summary>

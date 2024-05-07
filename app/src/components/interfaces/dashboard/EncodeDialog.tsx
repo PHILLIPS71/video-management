@@ -2,10 +2,12 @@ import type { EncodeDialogFragment$key } from '@/__generated__/EncodeDialogFragm
 
 import { Button, Card, Chip, Dialog, Typography } from '@giantnodes/react'
 import { IconX } from '@tabler/icons-react'
-import { graphql, useFragment } from 'react-relay'
+import React from 'react'
+import { graphql, useFragment, useSubscription } from 'react-relay'
 
 import CodeBlock from '@/components/ui/code-block/CodeBlock'
 import EncodeStatusBadge from '@/components/ui/encode-badges/EncodeStatusBadge'
+import ScrollAnchor from '@/components/ui/ScrollAnchor'
 
 const FRAGMENT = graphql`
   fragment EncodeDialogFragment on Encode {
@@ -23,12 +25,25 @@ const FRAGMENT = graphql`
   }
 `
 
+const OUTPUTTED_SUBSCRIPTION = graphql`
+  subscription EncodeDialogOutputtedSubscription {
+    encode_outputted {
+      output
+    }
+  }
+`
+
 type EncodeDialogProps = React.PropsWithChildren & {
   $key: EncodeDialogFragment$key
 }
 
 const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
   const data = useFragment(FRAGMENT, $key)
+
+  useSubscription({
+    subscription: OUTPUTTED_SUBSCRIPTION,
+    variables: {},
+  })
 
   return (
     <Dialog placement="right">
@@ -72,7 +87,9 @@ const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
                     <Card.Header>Logs</Card.Header>
 
                     <Card.Body className="overflow-y-auto">
-                      <CodeBlock language="excel">{data.output}</CodeBlock>
+                      <ScrollAnchor>
+                        <CodeBlock language="powershell">{data.output}</CodeBlock>
+                      </ScrollAnchor>
                     </Card.Body>
                   </Card>
                 )}
