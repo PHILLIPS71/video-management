@@ -16,36 +16,85 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
 {
     private readonly List<EncodeSnapshot> _snapshots = new();
 
+    /// <summary>
+    /// The file being encoded.
+    /// </summary>
     public FileSystemFile File { get; private set; }
 
+    /// <summary>
+    /// The recipe used for encoding.
+    /// </summary>
     public Recipe Recipe { get; private set; }
 
+    /// <summary>
+    /// The current encoding speed.
+    /// </summary>
     public EncodeSpeed? Speed { get; private set; }
 
+    /// <summary>
+    /// The current status of the encoding process.
+    /// </summary>
     public EncodeStatus Status { get; private set; }
 
-    public float? Percent { get; private set; }
-
-    public string? FfmpegCommand { get; private set; }
-
+    /// <summary>
+    /// The machine performing the encoding.
+    /// </summary>
     public Machine? Machine { get; private set; }
 
+    /// <summary>
+    /// The current progress percentage of the encoding process.
+    /// </summary>
+    public float? Percent { get; private set; }
+
+    /// <summary>
+    /// The ffmpeg command used for the encoding.
+    /// </summary>
+    public string? Command { get; private set; }
+
+    /// <summary>
+    /// The ffmpeg output log of the encoding process.
+    /// </summary>
+    public string? Output { get; private set; }
+
+    /// <summary>
+    /// The timestamp when the encoding started.
+    /// </summary>
     public DateTime? StartedAt { get; private set; }
 
+    /// <summary>
+    /// The timestamp when the encoding failed.
+    /// </summary>
     public DateTime? FailedAt { get; private set; }
 
+    /// <summary>
+    /// The reason for the encoding failure.
+    /// </summary>
     public string? FailureReason { get; private set; }
 
+    /// <summary>
+    /// The timestamp when the encoding was degraded.
+    /// </summary>
     public DateTime? DegradedAt { get; private set; }
 
+    /// <summary>
+    /// The timestamp when the encoding was cancelled.
+    /// </summary>
     public DateTime? CancelledAt { get; private set; }
 
+    /// <summary>
+    /// The timestamp when the encoding was completed.
+    /// </summary>
     public DateTime? CompletedAt { get; private set; }
 
+    /// <inheritdoc />
     public DateTime CreatedAt { get; private set; }
 
+    /// <inheritdoc />
     public DateTime? UpdatedAt { get; private set; }
 
+    /// <summary>
+    /// A collection of snapshots taken during the encoding process.
+    /// </summary>
     public IReadOnlyCollection<EncodeSnapshot> Snapshots { get; private set; }
 
     private Encode()
@@ -113,6 +162,10 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         DomainEvents.Add(new EncodeCancelledEvent { EncodeId = Id });
     }
 
+    /// <summary>
+    /// Sets the progress of the encoding process.
+    /// </summary>
+    /// <param name="progress">The current progress percentage.</param>
     public void SetProgress(float progress)
     {
         if (Status is not EncodeStatus.Encoding)
@@ -123,6 +176,10 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         Percent = progress;
     }
 
+    /// <summary>
+    /// Sets the encoding speed.
+    /// </summary>
+    /// <param name="speed">The encoding speed.</param>
     public void SetSpeed(EncodeSpeed speed)
     {
         if (Status is not EncodeStatus.Encoding)
@@ -139,14 +196,34 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         });
     }
 
+    /// <summary>
+    /// Sets the ffmpeg conversion command and the machine performing the encoding.
+    /// </summary>
+    /// <param name="machine">The machine performing the encoding.</param>
+    /// <param name="command">The ffmpeg command for the encoding.</param>
     public void SetFfmpegConversion(Machine machine, string command)
     {
         Guard.Against.NullOrWhiteSpace(command);
 
         Machine = machine;
-        FfmpegCommand = command;
+        Command = command;
     }
 
+    /// <summary>
+    /// Appends the given ffmpeg output to the encoding log.
+    /// </summary>
+    /// <param name="output">The ffmpeg output to be appended.</param>
+    public void AppendOutputLog(string output)
+    {
+        Guard.Against.NullOrWhiteSpace(output);
+
+        Output = string.Join(Environment.NewLine, Output, output);
+    }
+
+    /// <summary>
+    /// Adds a snapshot taken during the encoding process.
+    /// </summary>
+    /// <param name="snapshot">The snapshot to be added.</param>
     public void AddSnapshot(EncodeSnapshot snapshot)
     {
         _snapshots.Add(snapshot);
