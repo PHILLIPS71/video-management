@@ -174,6 +174,12 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
         Guard.Against.OutOfRange(progress, nameof(progress), 0, 1);
 
         Percent = progress;
+
+        DomainEvents.Add(new EncodeProgressedEvent
+        {
+            EncodeId = Id,
+            Percent = Percent.Value
+        });
     }
 
     /// <summary>
