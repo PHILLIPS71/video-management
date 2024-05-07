@@ -10,7 +10,7 @@ import { IconProgressX } from '@tabler/icons-react'
 import React from 'react'
 import { graphql, useMutation, usePaginationFragment, useSubscription } from 'react-relay'
 
-import EncodeDialog from '@/components/interfaces/dashboard/EncodeDialog'
+import { EncodeDialog } from '@/components/interfaces/dashboard'
 import { EncodeBadges } from '@/components/ui'
 
 const FRAGMENT = graphql`

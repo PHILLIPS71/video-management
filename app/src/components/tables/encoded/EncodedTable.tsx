@@ -5,7 +5,7 @@ import { Button, Link, Table } from '@giantnodes/react'
 import React from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
 
-import EncodeDialog from '@/components/interfaces/dashboard/EncodeDialog'
+import { EncodeDialog } from '@/components/interfaces/dashboard'
 import { EncodeBadges } from '@/components/ui'
 
 const FRAGMENT = graphql`
