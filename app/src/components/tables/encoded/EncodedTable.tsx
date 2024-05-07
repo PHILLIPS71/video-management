@@ -1,10 +1,11 @@
 import type { EncodedTableFragment$key } from '@/__generated__/EncodedTableFragment.graphql'
 import type { EncodedTableRefetchQuery } from '@/__generated__/EncodedTableRefetchQuery.graphql'
 
-import { Button, Table, Typography } from '@giantnodes/react'
+import { Button, Link, Table } from '@giantnodes/react'
 import React from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
 
+import EncodeDialog from '@/components/interfaces/dashboard/EncodeDialog'
 import { EncodeBadges } from '@/components/ui'
 
 const FRAGMENT = graphql`
@@ -27,6 +28,7 @@ const FRAGMENT = graphql`
             }
           }
           ...EncodeBadgesFragment
+          ...EncodeDialogFragment
         }
       }
       pageInfo {
@@ -60,7 +62,11 @@ const EncodedTable: React.FC<EncodedTableProps> = ({ $key }) => {
           {(item) => (
             <Table.Row id={item.node.id}>
               <Table.Cell>
-                <Typography.Paragraph>{item.node.file.path_info.name}</Typography.Paragraph>
+                <EncodeDialog $key={item.node}>
+                  <Button as={Link} color="transparent">
+                    {item.node.file.path_info.name}
+                  </Button>
+                </EncodeDialog>
               </Table.Cell>
               <Table.Cell>
                 <EncodeBadges $key={item.node} />

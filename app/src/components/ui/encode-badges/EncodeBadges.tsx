@@ -1,4 +1,4 @@
-import type { EncodeBadgesFragment$key, EncodeStatus } from '@/__generated__/EncodeBadgesFragment.graphql'
+import type { EncodeBadgesFragment$key } from '@/__generated__/EncodeBadgesFragment.graphql'
 import type { ChipProps } from '@giantnodes/react'
 
 import { Chip } from '@giantnodes/react'
@@ -7,6 +7,8 @@ import dayjs from 'dayjs'
 import { filesize } from 'filesize'
 import React from 'react'
 import { graphql, useFragment } from 'react-relay'
+
+import EncodeStatusBadge from '@/components/ui/encode-badges/EncodeStatusBadge'
 
 type EncodeBadgesProps = Omit<ChipProps, 'color'> & {
   $key: EncodeBadgesFragment$key
@@ -17,6 +19,7 @@ const FRAGMENT = graphql`
     status
     percent
     started_at
+    failure_reason
     failed_at
     cancelled_at
     completed_at
@@ -30,6 +33,7 @@ const FRAGMENT = graphql`
       size
       probed_at
     }
+    ...EncodeStatusBadgeFragment
   }
 `
 
@@ -41,34 +45,6 @@ const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, size }) => {
       style: 'percent',
       maximumFractionDigits: 2,
     }).format(value)
-
-  const getStatusColour = (status: EncodeStatus) => {
-    switch (status) {
-      case 'SUBMITTED':
-        return 'info'
-
-      case 'QUEUED':
-        return 'info'
-
-      case 'ENCODING':
-        return 'success'
-
-      case 'DEGRADED':
-        return 'warning'
-
-      case 'COMPLETED':
-        return 'success'
-
-      case 'CANCELLED':
-        return 'neutral'
-
-      case 'FAILED':
-        return 'danger'
-
-      default:
-        return 'neutral'
-    }
-  }
 
   const SizeChip = React.useCallback(() => {
     const difference = data.snapshots[data.snapshots.length - 1].size - data.snapshots[0].size
@@ -113,7 +89,7 @@ const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, size }) => {
 
   return (
     <div className="flex flex-row items-center justify-end gap-2">
-      <Chip color={getStatusColour(data.status)}>{data.status.toLowerCase()}</Chip>
+      <EncodeStatusBadge $key={data} />
 
       {data.status !== 'COMPLETED' && data.status !== 'CANCELLED' && data.status !== 'FAILED' && (
         <>
@@ -143,7 +119,7 @@ const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, size }) => {
 
       {data.status === 'COMPLETED' && (
         <>
-          <Chip color="info" size={size}>
+          <Chip color="info" size={size} title={dayjs(data.completed_at).format('L LT')}>
             {dayjs.duration(dayjs(data.completed_at).diff(data.created_at)).format('H[h] m[m] s[s]')}
           </Chip>
 
@@ -152,13 +128,13 @@ const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, size }) => {
       )}
 
       {data.status === 'CANCELLED' && (
-        <Chip color="info" size={size}>
+        <Chip color="info" size={size} title={dayjs(data.cancelled_at).format('L LT')}>
           {dayjs.duration(dayjs(data.cancelled_at).diff(data.created_at)).format('H[h] m[m] s[s]')}
         </Chip>
       )}
 
       {data.status === 'FAILED' && (
-        <Chip color="info" size={size}>
+        <Chip color="info" size={size} title={dayjs(data.failed_at).format('L LT')}>
           {dayjs.duration(dayjs(data.failed_at).diff(data.created_at)).format('H[h] m[m] s[s]')}
         </Chip>
       )}
