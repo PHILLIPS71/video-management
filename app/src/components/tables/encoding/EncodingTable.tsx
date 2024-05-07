@@ -59,10 +59,17 @@ const MUTATION = graphql`
   }
 `
 
-const SUBSCRIPTION = graphql`
-  subscription EncodingTableSubscription {
-    encode_speed_change {
+const PROGRESSED_SUBSCRIPTION = graphql`
+  subscription EncodingTableProgressedSubscription {
+    encode_progressed {
       percent
+    }
+  }
+`
+
+const SPEED_SUBSCRIPTION = graphql`
+  subscription EncodingTableSpeedSubscription {
+    encode_speed_change {
       speed {
         frames
         bitrate
@@ -87,7 +94,12 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
   const [commit] = useMutation<EncodingTable_EncodeCancelMutation>(MUTATION)
 
   useSubscription({
-    subscription: SUBSCRIPTION,
+    subscription: PROGRESSED_SUBSCRIPTION,
+    variables: {},
+  })
+
+  useSubscription({
+    subscription: SPEED_SUBSCRIPTION,
     variables: {},
   })
 
