@@ -63,7 +63,7 @@ const EncodedTable: React.FC<EncodedTableProps> = ({ $key }) => {
             <Table.Row id={item.node.id}>
               <Table.Cell>
                 <EncodeDialog $key={item.node}>
-                  <Button as={Link} color="transparent">
+                  <Button as={Link} className="p-0" color="transparent">
                     {item.node.file.path_info.name}
                   </Button>
                 </EncodeDialog>

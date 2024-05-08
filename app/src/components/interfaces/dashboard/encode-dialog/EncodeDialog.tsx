@@ -5,11 +5,11 @@ import { IconX } from '@tabler/icons-react'
 import React from 'react'
 import { graphql, useFragment, useSubscription } from 'react-relay'
 
-import EncodeDialogScript from '@/components/interfaces/dashboard/encode-dialog/EncodeDialogScript'
 import EncodeDialogSidebar from '@/components/interfaces/dashboard/encode-dialog/EncodeDialogSidebar'
+import EncodeDialogScript from '@/components/interfaces/dashboard/encode-dialog/panels/EncodeScriptPanel'
 import {
   EncodeDialogContext,
-  EncodeDialogPage,
+  EncodeDialogPanel,
   useEncodeDialog,
 } from '@/components/interfaces/dashboard/encode-dialog/use-encode-dialog.hook'
 import EncodeStatusBadge from '@/components/ui/encode-badges/EncodeStatusBadge'
@@ -25,7 +25,7 @@ const FRAGMENT = graphql`
       }
     }
     ...EncodeStatusBadgeFragment
-    ...EncodeDialogScriptFragment
+    ...EncodeScriptPanelFragment
   }
 `
 
@@ -43,7 +43,7 @@ type EncodeDialogProps = React.PropsWithChildren & {
 
 const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
   const data = useFragment(FRAGMENT, $key)
-  const context = useEncodeDialog({ page: EncodeDialogPage.SCRIPT })
+  const context = useEncodeDialog({ panel: EncodeDialogPanel.SCRIPT })
 
   useSubscription({
     subscription: OUTPUTTED_SUBSCRIPTION,
@@ -51,17 +51,17 @@ const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
   })
 
   const content = React.useCallback(() => {
-    switch (context.page) {
-      case EncodeDialogPage.SCRIPT:
+    switch (context.panel) {
+      case EncodeDialogPanel.SCRIPT:
         return <EncodeDialogScript $key={data} />
 
-      case EncodeDialogPage.ANALYTICS:
+      case EncodeDialogPanel.ANALYTICS:
         return <EncodeDialogScript $key={data} />
 
       default:
-        throw new Error(`unexpected value ${context.page} was provided.`)
+        throw new Error(`unexpected panel value ${context.panel} was provided.`)
     }
-  }, [context.page, data])
+  }, [context.panel, data])
 
   return (
     <Dialog placement="right">

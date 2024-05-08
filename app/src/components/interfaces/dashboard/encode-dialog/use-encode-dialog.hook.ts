@@ -2,7 +2,7 @@ import React from 'react'
 
 import { createContext } from '@/utilities/context'
 
-export enum EncodeDialogPage {
+export enum EncodeDialogPanel {
   SCRIPT,
   ANALYTICS,
 }
@@ -10,15 +10,15 @@ export enum EncodeDialogPage {
 type UseEncodeDialogReturn = ReturnType<typeof useEncodeDialog>
 
 type UseEncodeDialogProps = {
-  page: EncodeDialogPage
+  panel: EncodeDialogPanel
 }
 
 export const useEncodeDialog = (props: UseEncodeDialogProps) => {
-  const [page, setPage] = React.useState<EncodeDialogPage>(props.page)
+  const [panel, setPanel] = React.useState<EncodeDialogPanel>(props.panel)
 
   return {
-    page,
-    setPage,
+    panel,
+    setPanel,
   }
 }
 

@@ -1,5 +1,5 @@
-import type { EncodeDialogLogFragment$key } from '@/__generated__/EncodeDialogLogFragment.graphql'
-import type { EncodeDialogLogSubscription } from '@/__generated__/EncodeDialogLogSubscription.graphql'
+import type { EncodeOutputWidgetFragment$key } from '@/__generated__/EncodeOutputWidgetFragment.graphql'
+import type { EncodeOutputWidgetSubscription } from '@/__generated__/EncodeOutputWidgetSubscription.graphql'
 
 import { graphql, useFragment, useSubscription } from 'react-relay'
 
@@ -7,28 +7,28 @@ import CodeBlock from '@/components/ui/code-block/CodeBlock'
 import ScrollAnchor from '@/components/ui/ScrollAnchor'
 
 const FRAGMENT = graphql`
-  fragment EncodeDialogLogFragment on Encode {
+  fragment EncodeOutputWidgetFragment on Encode {
     id
     output
   }
 `
 
 const SUBSCRIPTION = graphql`
-  subscription EncodeDialogLogSubscription($where: EncodeFilterInput) {
+  subscription EncodeOutputWidgetSubscription($where: EncodeFilterInput) {
     encode_outputted(where: $where) {
-      ...EncodeDialogLogFragment
+      ...EncodeOutputWidgetFragment
     }
   }
 `
 
-type EncodeDialogLogProps = {
-  $key: EncodeDialogLogFragment$key
+type EncodeOutputWidgetProps = {
+  $key: EncodeOutputWidgetFragment$key
 }
 
-const EncodeDialogLog: React.FC<EncodeDialogLogProps> = ({ $key }) => {
+const EncodeOutputWidget: React.FC<EncodeOutputWidgetProps> = ({ $key }) => {
   const data = useFragment(FRAGMENT, $key)
 
-  useSubscription<EncodeDialogLogSubscription>({
+  useSubscription<EncodeOutputWidgetSubscription>({
     subscription: SUBSCRIPTION,
     variables: {
       where: {
@@ -46,4 +46,4 @@ const EncodeDialogLog: React.FC<EncodeDialogLogProps> = ({ $key }) => {
   )
 }
 
-export default EncodeDialogLog
+export default EncodeOutputWidget
