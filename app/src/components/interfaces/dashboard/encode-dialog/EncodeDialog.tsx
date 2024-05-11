@@ -27,6 +27,7 @@ const FRAGMENT = graphql`
     }
     ...EncodeStatusBadgeFragment
     ...EncodeScriptPanelFragment
+    ...EncodeAnalyticsPanelFragment
   }
 `
 
@@ -57,7 +58,7 @@ const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
         return <EncodeDialogScript $key={data} />
 
       case EncodeDialogPanel.ANALYTICS:
-        return <EncodeAnalyticsPanel />
+        return <EncodeAnalyticsPanel $key={data} />
 
       default:
         throw new Error(`unexpected panel value ${context.panel} was provided.`)
@@ -86,7 +87,14 @@ const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <Button color="transparent" size="xs" onPress={close}>
+                      <Button
+                        color="transparent"
+                        size="xs"
+                        onPress={() => {
+                          context.setPanel(EncodeDialogPanel.SCRIPT)
+                          close()
+                        }}
+                      >
                         <IconX size={16} strokeWidth={1} />
                       </Button>
                     </div>
