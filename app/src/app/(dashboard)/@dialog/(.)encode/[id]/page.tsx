@@ -15,13 +15,13 @@ const QUERY = graphql`
   }
 `
 
-type EncodePageProps = React.PropsWithChildren & {
+type EncodePageProps = {
   params: {
-    id: string
+    [x: string]: never
   }
 }
 
-const EncodePage: React.FC<EncodePageProps> = ({ children, params }) => {
+const EncodePage: React.FC<EncodePageProps> = ({ params }) => {
   const router = useRouter()
 
   const query = useLazyLoadQuery<page_EncodedDialog_Query>(QUERY, {
@@ -38,7 +38,7 @@ const EncodePage: React.FC<EncodePageProps> = ({ children, params }) => {
 
   return (
     <EncodeDialog isOpen $key={query.encode} onOpenChange={router.back}>
-      {children}
+      Open
     </EncodeDialog>
   )
 }

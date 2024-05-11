@@ -1,3 +1,9 @@
-const Default = () => null
+type DialogDefaultProps = {
+  params: {
+    id: string
+  }
+}
 
-export default Default
+const DialogDefault: React.FC<DialogDefaultProps> = () => null
+
+export default DialogDefault

@@ -30,9 +30,9 @@ const QUERY = graphql`
   }
 `
 
-type EncodePageProps = React.PropsWithChildren & {
+type EncodePageProps = {
   params: {
-    id: string
+    [x: string]: never
   }
 }
 
