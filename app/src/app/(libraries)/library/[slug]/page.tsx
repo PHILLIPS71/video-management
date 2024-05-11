@@ -33,7 +33,7 @@ const LibraryDashboard = () => {
   })
 
   return (
-    <Card className="max-w-6xl">
+    <Card className="max-w-6xl mx-auto">
       <Card.Header>Tasks</Card.Header>
 
       <Suspense>

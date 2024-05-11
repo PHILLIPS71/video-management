@@ -82,9 +82,9 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
   const context = useExplore({ directory: query.file_system_directory.id })
 
   return (
-    <div className="flex lg:flex-row flex-col gap-3">
+    <div className="flex flex-col lg:flex-row gap-3">
       <ExploreContext.Provider value={context}>
-        <div className="flex flex-col flex-1 gap-3">
+        <div className="flex flex-col grow gap-3">
           <Card>
             <Card.Header>
               <Suspense fallback="LOADING...">
@@ -109,10 +109,10 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
         </div>
       </ExploreContext.Provider>
 
-      <div className="flex flex-col gap-3">
-        <Card className="h-fit lg:w-80">
+      <div className="flex flex-col gap-3 w-80">
+        <Card>
           <Card.Header>
-            <Typography.Text as="strong">Resolution</Typography.Text>
+            <Typography.Text>Resolution</Typography.Text>
           </Card.Header>
 
           <Card.Body>

@@ -6,7 +6,7 @@ import { Input, Navigation } from '@giantnodes/react'
 import { IconBell, IconSearch } from '@tabler/icons-react'
 
 const Navbar: React.FC<NavigationProps> = (props) => (
-  <Navigation orientation="horizontal" {...props}>
+  <Navigation isBordered orientation="horizontal" {...props}>
     <Navigation.Segment className="flex-grow">
       <Navigation.Item>
         <Input.Group>
