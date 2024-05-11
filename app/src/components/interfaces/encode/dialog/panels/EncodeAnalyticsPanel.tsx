@@ -1,9 +1,9 @@
 import type { EncodeAnalyticsPanelFragment$key } from '@/__generated__/EncodeAnalyticsPanelFragment.graphql'
 
-import { Card } from '@giantnodes/react'
+import { Card, Typography } from '@giantnodes/react'
 import { graphql, useFragment } from 'react-relay'
 
-import EncodeSizeWidget from '@/components/interfaces/dashboard/encode-dialog/widgets/EncodeSizeWidget'
+import { EncodeSizeWidget } from '@/components/interfaces/encode'
 
 const FRAGMENT = graphql`
   fragment EncodeAnalyticsPanelFragment on Encode {
@@ -20,9 +20,11 @@ const EncodeAnalyticsPanel: React.FC<EncodeAnalyticsPanelProps> = ({ $key }) => 
 
   return (
     <Card>
-      <Card.Header>Size</Card.Header>
+      <Card.Header>
+        <Typography.Text>Size</Typography.Text>
+      </Card.Header>
 
-      <Card.Body className="min-h-56">
+      <Card.Body className="h-56">
         <EncodeSizeWidget $key={data} />
       </Card.Body>
     </Card>

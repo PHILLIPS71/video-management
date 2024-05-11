@@ -1,10 +1,7 @@
 import { Navigation } from '@giantnodes/react'
 import { IconReportAnalytics, IconScript } from '@tabler/icons-react'
 
-import {
-  EncodeDialogPanel,
-  useEncodeDialogContext,
-} from '@/components/interfaces/dashboard/encode-dialog/use-encode-dialog.hook'
+import { EncodeDialogPanel, useEncodeDialogContext } from '@/components/interfaces/encode/dialog/use-encode-dialog.hook'
 
 const EncodeDialogSidebar = () => {
   const { panel, setPanel } = useEncodeDialogContext()

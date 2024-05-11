@@ -6,14 +6,14 @@ import { IconX } from '@tabler/icons-react'
 import React from 'react'
 import { graphql, useFragment, useSubscription } from 'react-relay'
 
-import EncodeDialogSidebar from '@/components/interfaces/dashboard/encode-dialog/EncodeDialogSidebar'
-import EncodeAnalyticsPanel from '@/components/interfaces/dashboard/encode-dialog/panels/EncodeAnalyticsPanel'
-import EncodeDialogScript from '@/components/interfaces/dashboard/encode-dialog/panels/EncodeScriptPanel'
+import EncodeDialogSidebar from '@/components/interfaces/encode/dialog/EncodeDialogSidebar'
+import EncodeAnalyticsPanel from '@/components/interfaces/encode/dialog/panels/EncodeAnalyticsPanel'
+import EncodeDialogScript from '@/components/interfaces/encode/dialog/panels/EncodeScriptPanel'
 import {
   EncodeDialogContext,
   EncodeDialogPanel,
   useEncodeDialog,
-} from '@/components/interfaces/dashboard/encode-dialog/use-encode-dialog.hook'
+} from '@/components/interfaces/encode/dialog/use-encode-dialog.hook'
 import EncodeStatusBadge from '@/components/ui/encode-badges/EncodeStatusBadge'
 
 const FRAGMENT = graphql`

@@ -23,7 +23,7 @@ const RecipeListPage: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex flex-col gap-6">
-        <div className="flex lg:flex-row flex-col gap-2">
+        <div className="flex lg:flex-row flex-col gap-3">
           <Typography.HeadingLevel>
             <div className="flex-grow">
               <Typography.Heading level={3}>Recipes</Typography.Heading>

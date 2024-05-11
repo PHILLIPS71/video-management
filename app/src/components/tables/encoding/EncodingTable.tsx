@@ -10,7 +10,6 @@ import { IconProgressX } from '@tabler/icons-react'
 import React from 'react'
 import { graphql, useMutation, usePaginationFragment, useSubscription } from 'react-relay'
 
-import { EncodeDialog } from '@/components/interfaces/dashboard'
 import { EncodeBadges } from '@/components/ui'
 
 const FRAGMENT = graphql`
@@ -33,7 +32,6 @@ const FRAGMENT = graphql`
             }
           }
           ...EncodeBadgesFragment
-          ...EncodeDialogFragment
         }
       }
       pageInfo {
@@ -132,11 +130,7 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
           {(item) => (
             <Table.Row id={item.node.id}>
               <Table.Cell>
-                <EncodeDialog $key={item.node}>
-                  <Button as={Link} className="p-0" color="transparent">
-                    {item.node.file.path_info.name}
-                  </Button>
-                </EncodeDialog>
+                <Link href={`/encode/${item.node.id}`}>{item.node.file.path_info.name}</Link>
               </Table.Cell>
               <Table.Cell>
                 <div className="flex flex-row justify-end gap-2">

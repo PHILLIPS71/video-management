@@ -5,7 +5,7 @@ import type { page_EncodedDialog_Query } from '@/__generated__/page_EncodedDialo
 import { notFound, useRouter } from 'next/navigation'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import { EncodeDialog } from '@/components/interfaces/dashboard'
+import { EncodeDialog } from '@/components/interfaces/encode'
 
 const QUERY = graphql`
   query page_EncodedDialog_Query($where: EncodeFilterInput) {
