@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Queries;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class EncodeFindMany
+public class EncodeFindOne
 {
-    [UsePaging]
+    [UseFirstOrDefault]
     [UseProjection]
     [UseFiltering]
     [UseSorting]
-    public IQueryable<Encode> Encodes([Service] ApplicationDbContext database)
+    public IQueryable<Encode> Encode([Service] ApplicationDbContext database)
     {
         return database.Encodes.AsNoTracking();
     }
