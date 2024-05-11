@@ -9,6 +9,7 @@ import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
 import EncodeStatusBadge from '@/components/ui/encode-badges/EncodeStatusBadge'
+import { percent } from '@/utilities/numbers'
 
 type EncodeBadgesProps = Omit<ChipProps, 'color'> & {
   $key: EncodeBadgesFragment$key
@@ -39,12 +40,6 @@ const FRAGMENT = graphql`
 
 const EncodeBadges: React.FC<EncodeBadgesProps> = ({ $key, size }) => {
   const data = useFragment(FRAGMENT, $key)
-
-  const percent = (value: number): string =>
-    Intl.NumberFormat('en-US', {
-      style: 'percent',
-      maximumFractionDigits: 2,
-    }).format(value)
 
   const SizeChip = React.useCallback(() => {
     const difference = data.snapshots[data.snapshots.length - 1].size - data.snapshots[0].size

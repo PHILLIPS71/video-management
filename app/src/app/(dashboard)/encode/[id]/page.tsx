@@ -2,19 +2,27 @@
 
 import type { page_EncodedPage_Query } from '@/__generated__/page_EncodedPage_Query.graphql'
 
-import { Card, Typography } from '@giantnodes/react'
+import { Alert, Card, Typography } from '@giantnodes/react'
+import { IconAlertCircleFilled } from '@tabler/icons-react'
 import { notFound } from 'next/navigation'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import { EncodeCommandWidget, EncodeOutputWidget, EncodeSizeWidget } from '@/components/interfaces/encode'
+import {
+  EncodeCommandWidget,
+  EncodeOperationWidget,
+  EncodeOutputWidget,
+  EncodeSizeWidget,
+} from '@/components/interfaces/encode'
 import { FileSystemBreadcrumb } from '@/components/interfaces/file-system'
 
 const QUERY = graphql`
   query page_EncodedPage_Query($where: EncodeFilterInput) {
     encode(where: $where) {
+      failure_reason
       file {
         ...FileSystemBreadcrumbFragment
       }
+      ...EncodeOperationWidgetFragment
       ...EncodeCommandWidgetFragment
       ...EncodeOutputWidgetFragment
       ...EncodeSizeWidgetFragment
@@ -51,6 +59,18 @@ const EncodePage: React.FC<EncodePageProps> = ({ params }) => {
             </Card.Body>
           </Card>
 
+          {query.encode.failure_reason && (
+            <Alert color="danger">
+              <IconAlertCircleFilled size={16} />
+              <Alert.Body>
+                <Alert.Heading>The encode operation encountered an error</Alert.Heading>
+                <Alert.List>
+                  <Alert.Item>{query.encode.failure_reason}</Alert.Item>
+                </Alert.List>
+              </Alert.Body>
+            </Alert>
+          )}
+
           <Card>
             <Card.Header>
               <Typography.Text>Size</Typography.Text>
@@ -84,9 +104,7 @@ const EncodePage: React.FC<EncodePageProps> = ({ params }) => {
 
         <div className="flex flex-col gap-3 min-w-80">
           <Card>
-            <Card.Header>
-              <Typography.Text>Tbd</Typography.Text>
-            </Card.Header>
+            <EncodeOperationWidget $key={query.encode} />
           </Card>
         </div>
       </div>

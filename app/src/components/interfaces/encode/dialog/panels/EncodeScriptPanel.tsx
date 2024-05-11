@@ -3,10 +3,11 @@ import type { EncodeScriptPanelFragment$key } from '@/__generated__/EncodeScript
 import { Card, Typography } from '@giantnodes/react'
 import { graphql, useFragment } from 'react-relay'
 
-import { EncodeCommandWidget, EncodeOutputWidget } from '@/components/interfaces/encode'
+import { EncodeCommandWidget, EncodeOperationWidget, EncodeOutputWidget } from '@/components/interfaces/encode'
 
 const FRAGMENT = graphql`
   fragment EncodeScriptPanelFragment on Encode {
+    ...EncodeOperationWidgetFragment
     ...EncodeCommandWidgetFragment
     ...EncodeOutputWidgetFragment
   }
@@ -21,6 +22,10 @@ const EncodeScriptPanel: React.FC<EncodeScriptPanelProps> = ({ $key }) => {
 
   return (
     <>
+      <Card className="flex-none">
+        <EncodeOperationWidget $key={data} />
+      </Card>
+
       <Card className="flex-none">
         <Card.Header>
           <Typography.Text>Command</Typography.Text>
