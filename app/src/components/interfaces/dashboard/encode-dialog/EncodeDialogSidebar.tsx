@@ -12,16 +12,16 @@ const EncodeDialogSidebar = () => {
   return (
     <Navigation orientation="vertical" size="sm">
       <Navigation.Segment>
-        <Navigation.Item onClick={() => setPanel(EncodeDialogPanel.SCRIPT)}>
-          <Navigation.Link href="/" isSelected={panel === EncodeDialogPanel.SCRIPT}>
+        <Navigation.Item isSelected={panel === EncodeDialogPanel.SCRIPT}>
+          <Navigation.Trigger onPress={() => setPanel(EncodeDialogPanel.SCRIPT)}>
             <IconScript strokeWidth={1.5} />
-          </Navigation.Link>
+          </Navigation.Trigger>
         </Navigation.Item>
 
-        <Navigation.Item onClick={() => setPanel(EncodeDialogPanel.ANALYTICS)}>
-          <Navigation.Link href="/" isSelected={panel === EncodeDialogPanel.ANALYTICS}>
+        <Navigation.Item isSelected={panel === EncodeDialogPanel.ANALYTICS}>
+          <Navigation.Trigger onPress={() => setPanel(EncodeDialogPanel.ANALYTICS)}>
             <IconReportAnalytics strokeWidth={1.5} />
-          </Navigation.Link>
+          </Navigation.Trigger>
         </Navigation.Item>
       </Navigation.Segment>
     </Navigation>

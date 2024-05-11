@@ -6,6 +6,7 @@ import React from 'react'
 import { graphql, useFragment, useSubscription } from 'react-relay'
 
 import EncodeDialogSidebar from '@/components/interfaces/dashboard/encode-dialog/EncodeDialogSidebar'
+import EncodeAnalyticsPanel from '@/components/interfaces/dashboard/encode-dialog/panels/EncodeAnalyticsPanel'
 import EncodeDialogScript from '@/components/interfaces/dashboard/encode-dialog/panels/EncodeScriptPanel'
 import {
   EncodeDialogContext,
@@ -56,7 +57,7 @@ const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
         return <EncodeDialogScript $key={data} />
 
       case EncodeDialogPanel.ANALYTICS:
-        return <EncodeDialogScript $key={data} />
+        return <EncodeAnalyticsPanel />
 
       default:
         throw new Error(`unexpected panel value ${context.panel} was provided.`)
@@ -73,7 +74,7 @@ const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
             <Card className="flex flex-row overflow-hidden">
               <EncodeDialogSidebar />
 
-              <Card className="bg-background">
+              <Card className="grow bg-background">
                 <Card.Header>
                   <div className="flex flex-row gap-3 justify-between">
                     <div className="flex flex-row items-center flex-wrap gap-3">
