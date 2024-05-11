@@ -5,7 +5,6 @@ import { Button, Link, Table } from '@giantnodes/react'
 import React from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
 
-import { EncodeDialog } from '@/components/interfaces/dashboard'
 import { EncodeBadges } from '@/components/ui'
 
 const FRAGMENT = graphql`
@@ -28,7 +27,6 @@ const FRAGMENT = graphql`
             }
           }
           ...EncodeBadgesFragment
-          ...EncodeDialogFragment
         }
       }
       pageInfo {
@@ -62,11 +60,7 @@ const EncodedTable: React.FC<EncodedTableProps> = ({ $key }) => {
           {(item) => (
             <Table.Row id={item.node.id}>
               <Table.Cell>
-                <EncodeDialog $key={item.node}>
-                  <Button as={Link} className="p-0" color="transparent">
-                    {item.node.file.path_info.name}
-                  </Button>
-                </EncodeDialog>
+                <Link href={`/encode/${item.node.id}`}>{item.node.file.path_info.name}</Link>
               </Table.Cell>
               <Table.Cell>
                 <EncodeBadges $key={item.node} />

@@ -1,4 +1,5 @@
 import type { EncodeDialogFragment$key } from '@/__generated__/EncodeDialogFragment.graphql'
+import type { DialogProps } from '@giantnodes/react'
 
 import { Button, Card, Chip, Dialog, Typography } from '@giantnodes/react'
 import { IconX } from '@tabler/icons-react'
@@ -41,9 +42,9 @@ const OUTPUTTED_SUBSCRIPTION = graphql`
 
 type EncodeDialogProps = React.PropsWithChildren & {
   $key: EncodeDialogFragment$key
-}
+} & DialogProps
 
-const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
+const EncodeDialog: React.FC<EncodeDialogProps> = ({ $key, children, ...rest }) => {
   const data = useFragment(FRAGMENT, $key)
   const context = useEncodeDialog({ panel: EncodeDialogPanel.SCRIPT })
 
@@ -66,7 +67,7 @@ const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
   }, [context.panel, data])
 
   return (
-    <Dialog placement="right">
+    <Dialog placement="right" {...rest}>
       {children}
 
       <Dialog.Content>
@@ -91,8 +92,8 @@ const EncodeDialog: React.FC<EncodeDialogProps> = ({ children, $key }) => {
                         color="transparent"
                         size="xs"
                         onPress={() => {
-                          context.setPanel(EncodeDialogPanel.SCRIPT)
                           close()
+                          context.setPanel(EncodeDialogPanel.SCRIPT)
                         }}
                       >
                         <IconX size={16} strokeWidth={1} />
