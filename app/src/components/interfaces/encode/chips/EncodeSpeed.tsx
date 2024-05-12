@@ -50,9 +50,9 @@ const EncodeSpeed: React.FC<EncodeSpeedProps> = ({ $key }) => {
 
   return (
     <>
-      <Chip color="info">{data.speed.frames} fps</Chip>
+      <Chip color="warning">{data.speed.frames} fps</Chip>
 
-      <Chip color="info">{filesize(data.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s</Chip>
+      <Chip color="success">{filesize(data.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s</Chip>
 
       <Chip color="info">{data.speed.scale.toFixed(2)}x</Chip>
     </>

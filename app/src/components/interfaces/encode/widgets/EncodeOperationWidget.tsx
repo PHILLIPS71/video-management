@@ -86,7 +86,10 @@ const EncodeOperationWidget: React.FC<EncodeOperationWidgetProps> = ({ $key }) =
             </Table.Cell>
             <Table.Cell className="text-right">
               <Typography.Text>
-                <Chip color="danger" title={dayjs(data.updated_at).format('L LT')}>
+                <Chip
+                  className="text-pink-500 bg-pink-500/20 border-pink-500"
+                  title={dayjs(data.updated_at).format('L LT')}
+                >
                   {dayjs(data.updated_at).fromNow()}
                 </Chip>
               </Typography.Text>

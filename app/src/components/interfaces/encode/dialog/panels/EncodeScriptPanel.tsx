@@ -56,7 +56,7 @@ const EncodeScriptPanel: React.FC<EncodeScriptPanelProps> = ({ $key }) => {
         </Card.Header>
 
         <Card.Body className="overflow-y-auto">
-          <EncodeOutputWidget $key={data} />
+          <EncodeOutputWidget isAnchored $key={data} />
         </Card.Body>
       </Card>
     </>
