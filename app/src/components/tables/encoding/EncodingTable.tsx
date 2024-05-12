@@ -8,9 +8,7 @@ import type { EncodingTableRefetchQuery } from '@/__generated__/EncodingTableRef
 import { Button, Link, Table } from '@giantnodes/react'
 import { IconProgressX } from '@tabler/icons-react'
 import React from 'react'
-import { graphql, useMutation, usePaginationFragment, useSubscription } from 'react-relay'
-
-import { EncodeBadges } from '@/components/ui'
+import { graphql, useMutation, usePaginationFragment } from 'react-relay'
 
 const FRAGMENT = graphql`
   fragment EncodingTableFragment on Query
@@ -31,7 +29,6 @@ const FRAGMENT = graphql`
               name
             }
           }
-          ...EncodeBadgesFragment
         }
       }
       pageInfo {
@@ -59,26 +56,6 @@ const MUTATION = graphql`
   }
 `
 
-const PROGRESSED_SUBSCRIPTION = graphql`
-  subscription EncodingTableProgressedSubscription {
-    encode_progressed {
-      percent
-    }
-  }
-`
-
-const SPEED_SUBSCRIPTION = graphql`
-  subscription EncodingTableSpeedSubscription {
-    encode_speed_change {
-      speed {
-        frames
-        bitrate
-        scale
-      }
-    }
-  }
-`
-
 type EncodeEntry = NonNullable<NonNullable<EncodingTableFragment$data['incomplete']>['edges']>[0]['node']
 
 type EncodingTableProps = {
@@ -92,16 +69,6 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
   )
 
   const [commit] = useMutation<EncodingTable_EncodeCancelMutation>(MUTATION)
-
-  useSubscription({
-    subscription: PROGRESSED_SUBSCRIPTION,
-    variables: {},
-  })
-
-  useSubscription({
-    subscription: SPEED_SUBSCRIPTION,
-    variables: {},
-  })
 
   const cancel = React.useCallback(
     (entry: EncodeEntry) => {
@@ -134,8 +101,6 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
               </Table.Cell>
               <Table.Cell>
                 <div className="flex flex-row justify-end gap-2">
-                  <EncodeBadges $key={item.node} />
-
                   <Button color="neutral" size="xs" onPress={() => cancel(item.node)}>
                     <IconProgressX size={16} />
                   </Button>

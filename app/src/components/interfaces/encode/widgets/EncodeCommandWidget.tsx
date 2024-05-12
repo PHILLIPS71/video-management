@@ -2,7 +2,7 @@ import type { EncodeCommandWidgetFragment$key } from '@/__generated__/EncodeComm
 
 import { graphql, useFragment } from 'react-relay'
 
-import CodeBlock from '@/components/ui/code-block/CodeBlock'
+import { CodeBlock } from '@/components/ui'
 
 const FRAGMENT = graphql`
   fragment EncodeCommandWidgetFragment on Encode {

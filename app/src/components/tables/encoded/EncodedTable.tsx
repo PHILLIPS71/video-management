@@ -5,8 +5,6 @@ import { Button, Link, Table } from '@giantnodes/react'
 import React from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
 
-import { EncodeBadges } from '@/components/ui'
-
 const FRAGMENT = graphql`
   fragment EncodedTableFragment on Query
   @refetchable(queryName: "EncodedTableRefetchQuery")
@@ -26,7 +24,6 @@ const FRAGMENT = graphql`
               name
             }
           }
-          ...EncodeBadgesFragment
         }
       }
       pageInfo {
@@ -62,9 +59,7 @@ const EncodedTable: React.FC<EncodedTableProps> = ({ $key }) => {
               <Table.Cell>
                 <Link href={`/encode/${item.node.id}`}>{item.node.file.path_info.name}</Link>
               </Table.Cell>
-              <Table.Cell>
-                <EncodeBadges $key={item.node} />
-              </Table.Cell>
+              <Table.Cell>Tbd</Table.Cell>
             </Table.Row>
           )}
         </Table.Body>

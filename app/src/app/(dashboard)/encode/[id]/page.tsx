@@ -53,12 +53,6 @@ const EncodePage: React.FC<EncodePageProps> = ({ params }) => {
     <div className="max-w-6xl mx-auto ">
       <div className="flex flex-col lg:flex-row gap-3">
         <div className="flex flex-col grow gap-3">
-          <Card>
-            <Card.Body>
-              <FileSystemBreadcrumb $key={query.encode.file} />
-            </Card.Body>
-          </Card>
-
           {query.encode.failure_reason && (
             <Alert color="danger">
               <IconAlertCircleFilled size={16} />
@@ -70,6 +64,12 @@ const EncodePage: React.FC<EncodePageProps> = ({ params }) => {
               </Alert.Body>
             </Alert>
           )}
+
+          <Card>
+            <Card.Body>
+              <FileSystemBreadcrumb $key={query.encode.file} />
+            </Card.Body>
+          </Card>
 
           <Card>
             <Card.Header>

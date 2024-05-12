@@ -1,12 +1,14 @@
 import type { EncodeScriptPanelFragment$key } from '@/__generated__/EncodeScriptPanelFragment.graphql'
 
-import { Card, Typography } from '@giantnodes/react'
+import { Alert, Card, Typography } from '@giantnodes/react'
+import { IconAlertCircleFilled } from '@tabler/icons-react'
 import { graphql, useFragment } from 'react-relay'
 
 import { EncodeCommandWidget, EncodeOperationWidget, EncodeOutputWidget } from '@/components/interfaces/encode'
 
 const FRAGMENT = graphql`
   fragment EncodeScriptPanelFragment on Encode {
+    failure_reason
     ...EncodeOperationWidgetFragment
     ...EncodeCommandWidgetFragment
     ...EncodeOutputWidgetFragment
@@ -22,6 +24,18 @@ const EncodeScriptPanel: React.FC<EncodeScriptPanelProps> = ({ $key }) => {
 
   return (
     <>
+      {data.failure_reason && (
+        <Alert color="danger">
+          <IconAlertCircleFilled size={16} />
+          <Alert.Body>
+            <Alert.Heading>The encode operation encountered an error</Alert.Heading>
+            <Alert.List>
+              <Alert.Item>{data.failure_reason}</Alert.Item>
+            </Alert.List>
+          </Alert.Body>
+        </Alert>
+      )}
+
       <Card className="flex-none">
         <EncodeOperationWidget $key={data} />
       </Card>
