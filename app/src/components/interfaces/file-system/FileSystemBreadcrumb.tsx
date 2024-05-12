@@ -1,11 +1,11 @@
-import type { ExploreBreadcrumbsFragment$key } from '@/__generated__/ExploreBreadcrumbsFragment.graphql'
+import type { FileSystemBreadcrumbFragment$key } from '@/__generated__/FileSystemBreadcrumbFragment.graphql'
 
 import { Breadcrumb, Link } from '@giantnodes/react'
 import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
 const FRAGMENT = graphql`
-  fragment ExploreBreadcrumbsFragment on FileSystemDirectory {
+  fragment FileSystemBreadcrumbFragment on FileSystemEntry {
     library {
       slug
       path_info {
@@ -20,11 +20,11 @@ const FRAGMENT = graphql`
   }
 `
 
-type ExploreBreadcrumbsProps = {
-  $key: ExploreBreadcrumbsFragment$key
+type FileSystemBreadcrumbProps = {
+  $key: FileSystemBreadcrumbFragment$key
 }
 
-const ExploreBreadcrumbs: React.FC<ExploreBreadcrumbsProps> = ({ $key }) => {
+const FileSystemBreadcrumb: React.FC<FileSystemBreadcrumbProps> = ({ $key }) => {
   const data = useFragment(FRAGMENT, $key)
 
   const directories = React.useMemo<Map<string, string>>(() => {
@@ -73,4 +73,4 @@ const ExploreBreadcrumbs: React.FC<ExploreBreadcrumbsProps> = ({ $key }) => {
   )
 }
 
-export default ExploreBreadcrumbs
+export default FileSystemBreadcrumb

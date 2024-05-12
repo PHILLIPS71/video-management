@@ -1,1 +1,1 @@
-export { default as EncodeBadges } from '@/components/ui/encode-badges/EncodeBadges'
+export { default as CodeBlock } from '@/components/ui/code-block/CodeBlock'

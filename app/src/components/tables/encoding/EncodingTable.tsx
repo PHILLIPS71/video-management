@@ -5,12 +5,10 @@ import type {
 } from '@/__generated__/EncodingTableFragment.graphql'
 import type { EncodingTableRefetchQuery } from '@/__generated__/EncodingTableRefetchQuery.graphql'
 
-import { Button, Table, Typography } from '@giantnodes/react'
+import { Button, Link, Table } from '@giantnodes/react'
 import { IconProgressX } from '@tabler/icons-react'
 import React from 'react'
-import { graphql, useMutation, usePaginationFragment, useSubscription } from 'react-relay'
-
-import { EncodeBadges } from '@/components/ui'
+import { graphql, useMutation, usePaginationFragment } from 'react-relay'
 
 const FRAGMENT = graphql`
   fragment EncodingTableFragment on Query
@@ -31,7 +29,6 @@ const FRAGMENT = graphql`
               name
             }
           }
-          ...EncodeBadgesFragment
         }
       }
       pageInfo {
@@ -59,19 +56,6 @@ const MUTATION = graphql`
   }
 `
 
-const SUBSCRIPTION = graphql`
-  subscription EncodingTableSubscription {
-    encode_speed_change {
-      percent
-      speed {
-        frames
-        bitrate
-        scale
-      }
-    }
-  }
-`
-
 type EncodeEntry = NonNullable<NonNullable<EncodingTableFragment$data['incomplete']>['edges']>[0]['node']
 
 type EncodingTableProps = {
@@ -85,11 +69,6 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
   )
 
   const [commit] = useMutation<EncodingTable_EncodeCancelMutation>(MUTATION)
-
-  useSubscription({
-    subscription: SUBSCRIPTION,
-    variables: {},
-  })
 
   const cancel = React.useCallback(
     (entry: EncodeEntry) => {
@@ -118,12 +97,10 @@ const EncodingTable: React.FC<EncodingTableProps> = ({ $key }) => {
           {(item) => (
             <Table.Row id={item.node.id}>
               <Table.Cell>
-                <Typography.Paragraph>{item.node.file.path_info.name}</Typography.Paragraph>
+                <Link href={`/encode/${item.node.id}`}>{item.node.file.path_info.name}</Link>
               </Table.Cell>
               <Table.Cell>
                 <div className="flex flex-row justify-end gap-2">
-                  <EncodeBadges $key={item.node} />
-
                   <Button color="neutral" size="xs" onPress={() => cancel(item.node)}>
                     <IconProgressX size={16} />
                   </Button>

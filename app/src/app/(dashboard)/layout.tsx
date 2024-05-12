@@ -2,9 +2,16 @@ import React from 'react'
 
 import DefaultLayout from '@/components/layouts/dashboard/DashboardLayout'
 
-type DashboardLayoutProps = React.PropsWithChildren
+type DashboardSegmentLayoutProps = React.PropsWithChildren & {
+  dialog: React.ReactNode
+}
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => <DefaultLayout>{children}</DefaultLayout>
+const DashboardSegmentLayout: React.FC<DashboardSegmentLayoutProps> = ({ children, dialog }) => (
+  <DefaultLayout>
+    {children}
+    {dialog}
+  </DefaultLayout>
+)
 
 export const dynamic = 'force-dynamic'
-export default DashboardLayout
+export default DashboardSegmentLayout

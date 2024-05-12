@@ -18,6 +18,9 @@ public class EncodeType : ObjectType<Encode>
             .Field(p => p.File);
 
         descriptor
+            .Field(p => p.Recipe);
+
+        descriptor
             .Field(p => p.Status);
 
         descriptor
@@ -27,7 +30,10 @@ public class EncodeType : ObjectType<Encode>
             .Field(p => p.Speed);
 
         descriptor
-            .Field(p => p.FfmpegCommand);
+            .Field(p => p.Command);
+
+        descriptor
+            .Field(p => p.Output);
 
         descriptor
             .Field(p => p.Machine);

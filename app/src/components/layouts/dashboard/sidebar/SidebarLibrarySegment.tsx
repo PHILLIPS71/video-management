@@ -9,7 +9,6 @@ import type { AvatarProps } from '@giantnodes/react'
 
 import { Avatar, Navigation } from '@giantnodes/react'
 import { IconFolderCheck, IconFolderExclamation, IconFolderQuestion, IconFolderX } from '@tabler/icons-react'
-import Link from 'next/link'
 import { graphql, usePaginationFragment } from 'react-relay'
 
 const FRAGMENT = graphql`
@@ -78,16 +77,14 @@ const SidebarLibrarySegment: React.FC<SidebarLibrarySegmentProps> = ({ $key }) =
     <>
       {data?.libraries?.edges?.map((edge) => (
         <Navigation.Item key={edge.node.id}>
-          <Link legacyBehavior passHref href={`/library/${edge.node.slug}/explore`}>
-            <Navigation.Link>
-              <Avatar radius="md" size="sm">
-                <Avatar.Notification color={getDriveStatusColor(edge.node.status)} />
-                <Avatar.Icon icon={getDriveStatusIcon(edge.node.status)} />
-              </Avatar>
+          <Navigation.Link href={`/library/${edge.node.slug}/explore`}>
+            <Avatar radius="md" size="sm">
+              <Avatar.Notification color={getDriveStatusColor(edge.node.status)} />
+              <Avatar.Icon icon={getDriveStatusIcon(edge.node.status)} />
+            </Avatar>
 
-              {edge.node.name}
-            </Navigation.Link>
-          </Link>
+            {edge.node.name}
+          </Navigation.Link>
         </Navigation.Item>
       ))}
 

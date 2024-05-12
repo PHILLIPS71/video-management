@@ -35,20 +35,20 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
   const route = router.split('/')[1]
 
   return (
-    <Navigation orientation="vertical" size="lg" {...rest}>
+    <Navigation isBordered orientation="vertical" size="lg" {...rest}>
       <Navigation.Brand>
         <Image priority alt="giantnodes logo" height={40} src="/images/giantnodes-logo.png" width={128} />
       </Navigation.Brand>
 
       <Navigation.Segment>
-        <Navigation.Item>
-          <Navigation.Link href="/" isSelected={route === ''}>
+        <Navigation.Item isSelected={route === ''}>
+          <Navigation.Link href="/">
             <IconGauge size={20} /> Dashboard
           </Navigation.Link>
         </Navigation.Item>
 
-        <Navigation.Item>
-          <Navigation.Link href="/recipes" isSelected={route === 'recipes'}>
+        <Navigation.Item isSelected={route === 'recipes'}>
+          <Navigation.Link href="/recipes">
             <IconTransform size={20} /> Recipes
           </Navigation.Link>
         </Navigation.Item>
@@ -68,8 +68,8 @@ const Sidebar: React.FC<SidebarProps> = ({ $key, ...rest }) => {
       </Navigation.Segment>
 
       <Navigation.Segment className="mt-auto">
-        <Navigation.Item>
-          <Navigation.Link href="/settings/general" isSelected={route === 'settings'}>
+        <Navigation.Item isSelected={route === 'settings'}>
+          <Navigation.Link href="/settings/general">
             <IconSettings size={20} /> Settings
           </Navigation.Link>
         </Navigation.Item>

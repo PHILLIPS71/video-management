@@ -86,6 +86,21 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
             }
         };
 
+        conversion.OnDataReceived += async (_, args) =>
+        {
+            if (string.IsNullOrWhiteSpace(args.Data))
+                return;
+
+            var @event = new EncodeOperationOutputtedEvent
+            {
+                JobId = context.JobId,
+                CorrelationId = context.Job.CorrelationId,
+                Data = args.Data
+            };
+
+            await context.Publish(@event, context.CancellationToken);
+        };
+
         ConversionProgressEventArgs? progress = null;
         conversion.OnProgress += async (_, args) =>
         {

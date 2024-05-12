@@ -8,20 +8,15 @@ import React, { Suspense } from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 import { useLibraryContext } from '@/app/(libraries)/library/[slug]/use-library.hook'
-import {
-  ExploreBreadcrumbs,
-  ExploreContext,
-  ExploreControls,
-  ExploreTable,
-  useExplore,
-} from '@/components/interfaces/explore'
+import { ExploreContext, ExploreControls, ExploreTable, useExplore } from '@/components/interfaces/explore'
+import { FileSystemBreadcrumb } from '@/components/interfaces/file-system'
 import { ResolutionWidget } from '@/components/widgets'
 
 const QUERY = graphql`
   query page_LibrarySlugExploreQuery($where: FileSystemDirectoryFilterInput, $order: [FileSystemEntrySortInput!]) {
     file_system_directory(where: $where) {
       id
-      ...ExploreBreadcrumbsFragment
+      ...FileSystemBreadcrumbFragment
       ...ExploreControlsFragment
       ...ExploreTableFragment @arguments(order: $order)
     }
@@ -82,13 +77,13 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
   const context = useExplore({ directory: query.file_system_directory.id })
 
   return (
-    <div className="flex lg:flex-row flex-col gap-3">
+    <div className="flex flex-col lg:flex-row gap-3">
       <ExploreContext.Provider value={context}>
-        <div className="flex flex-col flex-1 gap-3">
+        <div className="flex flex-col grow gap-3">
           <Card>
             <Card.Header>
               <Suspense fallback="LOADING...">
-                <ExploreBreadcrumbs $key={query.file_system_directory} />
+                <FileSystemBreadcrumb $key={query.file_system_directory} />
               </Suspense>
             </Card.Header>
           </Card>
@@ -109,10 +104,10 @@ const LibraryExplorePage: React.FC<LibraryExplorePageProps> = ({ params }) => {
         </div>
       </ExploreContext.Provider>
 
-      <div className="flex flex-col gap-3">
-        <Card className="h-fit lg:w-80">
+      <div className="flex flex-col gap-3 min-w-80">
+        <Card>
           <Card.Header>
-            <Typography.Text as="strong">Resolution</Typography.Text>
+            <Typography.Text>Resolution</Typography.Text>
           </Card.Header>
 
           <Card.Body>
