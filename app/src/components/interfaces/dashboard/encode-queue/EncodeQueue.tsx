@@ -6,7 +6,7 @@ import type {
 import type { EncodeQueueRefetchQuery } from '@/__generated__/EncodeQueueRefetchQuery.graphql'
 
 import { Button, Link, Table } from '@giantnodes/react'
-import { IconProgressX } from '@tabler/icons-react'
+import { IconCircleX } from '@tabler/icons-react'
 import React from 'react'
 import { graphql, useMutation, usePaginationFragment } from 'react-relay'
 
@@ -64,10 +64,10 @@ type EncodeQueueProps = {
 }
 
 const EncodeQueue: React.FC<EncodeQueueProps> = ({ $key }) => {
-  const { data, hasNext, loadNext } = usePaginationFragment<EncodeQueueRefetchQuery, EncodeQueueFragment_query$key>(
-    FRAGMENT,
-    $key
-  )
+  const { data, hasNext, isLoadingNext, loadNext } = usePaginationFragment<
+    EncodeQueueRefetchQuery,
+    EncodeQueueFragment_query$key
+  >(FRAGMENT, $key)
 
   const [commit] = useMutation<EncodeQueueCancelMutation>(MUTATION)
 
@@ -86,7 +86,7 @@ const EncodeQueue: React.FC<EncodeQueueProps> = ({ $key }) => {
 
   return (
     <>
-      <Table headingless aria-label="encode table">
+      <Table headingless aria-label="encode queue" size="sm">
         <Table.Head>
           <Table.Column key="name" isRowHeader>
             name
@@ -121,7 +121,7 @@ const EncodeQueue: React.FC<EncodeQueueProps> = ({ $key }) => {
                     item.node.status !== 'FAILED' && (
                       <div className="flex flex-row justify-end gap-2">
                         <Button color="neutral" size="xs" onPress={() => cancel(item.node)}>
-                          <IconProgressX size={16} />
+                          <IconCircleX size={16} />
                         </Button>
                       </div>
                     )}
@@ -134,7 +134,7 @@ const EncodeQueue: React.FC<EncodeQueueProps> = ({ $key }) => {
 
       {hasNext && (
         <div className="flex flex-row items-center justify-center p-2">
-          <Button size="xs" onPress={() => loadNext(8)}>
+          <Button isLoading={isLoadingNext} size="xs" onPress={() => loadNext(8)}>
             Show more
           </Button>
         </div>
