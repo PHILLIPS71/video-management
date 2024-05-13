@@ -19,6 +19,6 @@ public class EncodeQueueFindMany
             .OrderByDescending(x => x.Status == EncodeStatus.Encoding)
             .ThenByDescending(x => x.Status == EncodeStatus.Queued)
             .ThenByDescending(x => x.Status == EncodeStatus.Submitted)
-            .ThenBy(x => x.CompletedAt ?? x.CancelledAt ?? x.FailedAt ?? x.CreatedAt);
+            .ThenByDescending(x => x.CompletedAt ?? x.CancelledAt ?? x.FailedAt ?? x.CreatedAt);
     }
 }
