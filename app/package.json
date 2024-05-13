@@ -29,7 +29,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@giantnodes/react": "1.0.0-canary.16",
+    "@giantnodes/react": "1.0.0-canary.17",
     "@hookform/resolvers": "^3.3.4",
     "@tabler/icons-react": "^3.3.0",
     "clsx": "^2.1.1",
