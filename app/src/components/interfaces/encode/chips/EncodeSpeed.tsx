@@ -50,11 +50,13 @@ const EncodeSpeed: React.FC<EncodeSpeedProps> = ({ $key }) => {
 
   return (
     <>
-      <Chip color="warning">{data.speed.frames} fps</Chip>
+      <Chip className="text-emerald-500 bg-emerald-500/20 border-emerald-500">{data.speed.frames} fps</Chip>
 
-      <Chip color="success">{filesize(data.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s</Chip>
+      <Chip className="text-emerald-500 bg-emerald-500/20 border-emerald-500">
+        {filesize(data.speed.bitrate * 0.125, { bits: true }).toLowerCase()}/s
+      </Chip>
 
-      <Chip color="info">{data.speed.scale.toFixed(2)}x</Chip>
+      <Chip className="text-emerald-500 bg-emerald-500/20 border-emerald-500">{data.speed.scale.toFixed(2)}x</Chip>
     </>
   )
 }

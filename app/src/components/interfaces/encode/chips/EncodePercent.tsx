@@ -45,7 +45,7 @@ const EncodePercent: React.FC<EncodePercentProps> = ({ $key }) => {
     return undefined
   }
 
-  return <Chip color="brand">{percent(data.percent)}</Chip>
+  return <Chip className="text-cyan-500 bg-cyan-500/20 border-cyan-500">{percent(data.percent)}</Chip>
 }
 
 export default EncodePercent
