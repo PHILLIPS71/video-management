@@ -38,7 +38,7 @@ const EncodeDuration: React.FC<EncodeDurationChipProps> = ({ $key }) => {
   }, [data.cancelled_at, data.completed_at, data.failed_at, data.status])
 
   return (
-    <Chip color="info" title={dayjs(date).format('L LT')}>
+    <Chip color="indigo" title={dayjs(date).format('L LT')}>
       {dayjs.duration(dayjs(date).diff(data.created_at)).format('H[h] m[m] s[s]')}
     </Chip>
   )

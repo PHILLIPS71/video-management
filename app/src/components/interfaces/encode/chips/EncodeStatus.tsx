@@ -24,20 +24,8 @@ const EncodeStatus: React.FC<EncodeStatusChipProps> = ({ $key }) => {
 
   const color = React.useMemo<ChipProps['color']>(() => {
     switch (data.status) {
-      case 'SUBMITTED':
-        return 'info'
-
-      case 'QUEUED':
-        return 'info'
-
-      case 'ENCODING':
-        return 'success'
-
-      case 'DEGRADED':
-        return 'warning'
-
       case 'COMPLETED':
-        return 'success'
+        return 'brand'
 
       case 'CANCELLED':
         return 'neutral'
@@ -46,7 +34,7 @@ const EncodeStatus: React.FC<EncodeStatusChipProps> = ({ $key }) => {
         return 'danger'
 
       default:
-        return 'neutral'
+        return 'warning'
     }
   }, [data.status])
 
