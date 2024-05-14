@@ -22,6 +22,9 @@ const FRAGMENT = graphql`
           id
           status
           file {
+            library {
+              slug
+            }
             path_info {
               name
             }
@@ -98,7 +101,9 @@ const EncodeQueue: React.FC<EncodeQueueProps> = ({ $key }) => {
           {(item) => (
             <Table.Row id={item.node.id}>
               <Table.Cell>
-                <Link href={`/encode/${item.node.id}`}>{item.node.file.path_info.name}</Link>
+                <Link href={`/library/${item.node.file.library.slug}/encode/${item.node.id}`}>
+                  {item.node.file.path_info.name}
+                </Link>
               </Table.Cell>
               <Table.Cell>
                 <div className="flex flex-row justify-end gap-1">

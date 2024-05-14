@@ -11,13 +11,18 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
-type ApplicationLayoutProps = React.PropsWithChildren
+type ApplicationLayoutProps = React.PropsWithChildren & {
+  dialog: React.ReactNode
+}
 
-const ApplicationLayout: React.FC<ApplicationLayoutProps> = ({ children }) => (
+const ApplicationLayout: React.FC<ApplicationLayoutProps> = ({ children, dialog }) => (
   <html lang="en">
     <head />
     <body className={clsx([inter.variable, 'bg-background'])}>
-      <ApplicationProviders>{children}</ApplicationProviders>
+      <ApplicationProviders>
+        {children}
+        {dialog}
+      </ApplicationProviders>
     </body>
   </html>
 )
