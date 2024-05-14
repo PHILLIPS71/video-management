@@ -51,10 +51,13 @@ const SidebarLibrarySegment: React.FC<SidebarLibrarySegmentProps> = ({ $key }) =
     switch (status) {
       case 'ONLINE':
         return <IconFolderCheck size={14} />
+
       case 'DEGRADED':
         return <IconFolderExclamation size={14} />
+
       case 'OFFLINE':
         return <IconFolderX size={14} />
+
       default:
         return <IconFolderQuestion size={14} />
     }
@@ -64,10 +67,13 @@ const SidebarLibrarySegment: React.FC<SidebarLibrarySegmentProps> = ({ $key }) =
     switch (status) {
       case 'ONLINE':
         return 'success'
+
       case 'DEGRADED':
         return 'warning'
+
       case 'OFFLINE':
         return 'danger'
+
       default:
         return 'neutral'
     }
