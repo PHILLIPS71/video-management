@@ -1,48 +1,26 @@
-'use client'
+import type { Metadata } from 'next'
 
-import type { layout_LibrarySlugPageLayoutQuery } from '@/__generated__/layout_LibrarySlugPageLayoutQuery.graphql'
-
-import { notFound } from 'next/navigation'
 import React from 'react'
-import { graphql, useLazyLoadQuery } from 'react-relay'
 
-import { LibraryContext, useLibrary } from '@/app/(libraries)/library/[slug]/use-library.hook'
+import LibraryProvider from '@/app/(libraries)/library/[slug]/provider'
 import LibraryLayout from '@/components/layouts/library/LibraryLayout'
 
-const QUERY = graphql`
-  query layout_LibrarySlugPageLayoutQuery($where: LibraryFilterInput) {
-    library(where: $where) {
-      ...useLibraryFragment
-    }
-  }
-`
-
-type LibrarySlugPageLayoutProps = React.PropsWithChildren & {
+type LibraryLayoutProps = React.PropsWithChildren & {
   params: {
     slug: string
   }
 }
 
-const LibrarySlugPageLayout: React.FC<LibrarySlugPageLayoutProps> = ({ children, params }) => {
-  const query = useLazyLoadQuery<layout_LibrarySlugPageLayoutQuery>(QUERY, {
-    where: {
-      slug: {
-        eq: params.slug,
-      },
-    },
-  })
-
-  if (query.library == null) {
-    notFound()
+export async function generateMetadata({ params }: LibraryLayoutProps): Promise<Metadata> {
+  return {
+    title: params.slug.replaceAll('-', ' '),
   }
-
-  const context = useLibrary({ $key: query.library })
-
-  return (
-    <LibraryContext.Provider value={context}>
-      <LibraryLayout>{children}</LibraryLayout>
-    </LibraryContext.Provider>
-  )
 }
 
-export default LibrarySlugPageLayout
+const LibrarySlugLayout: React.FC<LibraryLayoutProps> = ({ children, params }) => (
+  <LibraryProvider slug={params.slug}>
+    <LibraryLayout>{children}</LibraryLayout>
+  </LibraryProvider>
+)
+
+export default LibrarySlugLayout
