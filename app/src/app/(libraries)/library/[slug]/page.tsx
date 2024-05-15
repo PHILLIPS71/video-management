@@ -32,8 +32,8 @@ const LibraryDashboard = () => {
   })
 
   return (
-    <Card className="max-w-6xl mx-auto">
-      <Card.Header>Tasks</Card.Header>
+    <Card className="max-w-4xl">
+      <Card.Header>Queue</Card.Header>
 
       <Suspense>
         <EncodeQueue $key={query} />

@@ -26,6 +26,7 @@ const EncodeDuration: React.FC<EncodeDurationChipProps> = ({ $key }) => {
     switch (data.status) {
       case 'COMPLETED':
         return data.completed_at
+
       case 'CANCELLED':
         return data.cancelled_at
 

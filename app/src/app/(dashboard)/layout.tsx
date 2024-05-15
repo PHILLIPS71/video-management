@@ -1,17 +1,15 @@
+import type { Metadata } from 'next'
+
 import React from 'react'
 
 import DefaultLayout from '@/components/layouts/dashboard/DashboardLayout'
 
-type DashboardSegmentLayoutProps = React.PropsWithChildren & {
-  dialog: React.ReactNode
+type DashboardLayoutProps = React.PropsWithChildren
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
 }
 
-const DashboardSegmentLayout: React.FC<DashboardSegmentLayoutProps> = ({ children, dialog }) => (
-  <DefaultLayout>
-    {children}
-    {dialog}
-  </DefaultLayout>
-)
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => <DefaultLayout>{children}</DefaultLayout>
 
-export const dynamic = 'force-dynamic'
-export default DashboardSegmentLayout
+export default DashboardLayout

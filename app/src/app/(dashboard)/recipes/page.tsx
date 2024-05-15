@@ -21,31 +21,29 @@ const RecipeListPage: React.FC = () => {
   })
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="flex flex-col gap-6">
-        <div className="flex lg:flex-row flex-col gap-3">
-          <Typography.HeadingLevel>
-            <div className="flex-grow">
-              <Typography.Heading level={3}>Recipes</Typography.Heading>
-              <Typography.Paragraph variant="subtitle">
-                Recipes are a set of predefined configurations that will be sent to ffmpeg during an encoding operation.
-              </Typography.Paragraph>
-            </div>
+    <div className="flex flex-col gap-6">
+      <div className="flex lg:flex-row flex-col gap-3">
+        <Typography.HeadingLevel>
+          <div className="flex-grow">
+            <Typography.Heading level={3}>Recipes</Typography.Heading>
+            <Typography.Paragraph variant="subtitle">
+              Recipes are a set of predefined configurations that will be sent to ffmpeg during an encoding operation.
+            </Typography.Paragraph>
+          </div>
 
-            <div className="mt-auto ml-auto">
-              <RecipeDialog>
-                <Button size="xs">Create new recipe</Button>
-              </RecipeDialog>
-            </div>
-          </Typography.HeadingLevel>
-        </div>
-
-        <Card>
-          <Suspense>
-            <RecipeTable $key={query} />
-          </Suspense>
-        </Card>
+          <div className="mt-auto ml-auto">
+            <RecipeDialog>
+              <Button size="xs">Create new recipe</Button>
+            </RecipeDialog>
+          </div>
+        </Typography.HeadingLevel>
       </div>
+
+      <Card>
+        <Suspense>
+          <RecipeTable $key={query} />
+        </Suspense>
+      </Card>
     </div>
   )
 }

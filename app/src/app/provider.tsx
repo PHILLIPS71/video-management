@@ -10,9 +10,9 @@ import { environment } from '@/libraries/relay/environment'
 
 import '@/libraries/dayjs'
 
-type ApplicationProvidersProps = React.PropsWithChildren
+type AppProviderProps = React.PropsWithChildren
 
-const ApplicationProviders: React.FC<ApplicationProvidersProps> = ({ children }) => {
+const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const router = useRouter()
 
   return (
@@ -26,4 +26,4 @@ const ApplicationProviders: React.FC<ApplicationProvidersProps> = ({ children })
   )
 }
 
-export default ApplicationProviders
+export default AppProvider
