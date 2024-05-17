@@ -80,8 +80,8 @@ devDependencies:
     specifier: ^15.5.13
     version: 15.5.13
   '@types/relay-runtime':
-    specifier: ^14.1.23
-    version: 14.1.23
+    specifier: ^14.1.24
+    version: 14.1.24
   '@typescript-eslint/eslint-plugin':
     specifier: ^7.9.0
     version: 7.9.0(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)(typescript@5.4.5)
@@ -1916,7 +1916,7 @@ packages:
     resolution: {integrity: sha512-VTntVQJhlwQYNUlbNgGf8RYy7EtQPRZqsD/w2Si0ygZspJXuNlVdRkklWMFN99EMRhHDpqlNHD8i3wIs7QRz9g==}
     dependencies:
       '@types/react': 18.3.2
-      '@types/relay-runtime': 14.1.23
+      '@types/relay-runtime': 14.1.24
     dev: true
 
   /@types/react-syntax-highlighter@15.5.13:
@@ -1932,8 +1932,8 @@ packages:
       csstype: 3.1.2
     dev: true
 
-  /@types/relay-runtime@14.1.23:
-    resolution: {integrity: sha512-tP2l6YLI2HJ11UzEB7j4IWeADyiPIKTehdeyHsyOzNBu7WvKsyf4kAZDmsB2NPaXp9Lud+KEJbRi/VW+jEDYCA==}
+  /@types/relay-runtime@14.1.24:
+    resolution: {integrity: sha512-ta7vPoFXtEG1wu0Mk7sTngzhmfNGnIe8cDiy3yBEm8pJcGpv55YY/+vWrd9gYd9OQht8rALZpXIYSOLzS/0PVg==}
     dev: true
 
   /@types/unist@2.0.10:
