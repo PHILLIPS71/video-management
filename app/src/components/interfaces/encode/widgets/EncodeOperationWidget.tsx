@@ -1,7 +1,9 @@
 import type { EncodeOperationWidgetFragment$key } from '@/__generated__/EncodeOperationWidgetFragment.graphql'
 
 import { Chip, Table, Typography } from '@giantnodes/react'
+import { IconCpu } from '@tabler/icons-react'
 import dayjs from 'dayjs'
+import React from 'react'
 import { graphql, useFragment } from 'react-relay'
 
 import { EncodePercent, EncodeSpeed, EncodeStatus } from '@/components/interfaces/encode'
@@ -13,6 +15,7 @@ const FRAGMENT = graphql`
     machine {
       name
       user_name
+      processor_type
     }
     ...EncodePercentFragment
     ...EncodeStatusFragment
@@ -65,6 +68,9 @@ const EncodeOperationWidget: React.FC<EncodeOperationWidgetProps> = ({ $key }) =
               <>
                 <Chip color="info">{data.machine?.name}</Chip>
                 <Chip color="info">{data.machine?.user_name}</Chip>
+                <Chip color="info">
+                  {data.machine.processor_type === 'CPU' ? <IconCpu size={16} /> : data.machine.processor_type}
+                </Chip>
               </>
             )}
           </Table.Cell>
@@ -86,10 +92,7 @@ const EncodeOperationWidget: React.FC<EncodeOperationWidgetProps> = ({ $key }) =
             </Table.Cell>
             <Table.Cell className="text-right">
               <Typography.Text>
-                <Chip
-                  className="text-pink-500 bg-pink-500/20 border-pink-500"
-                  title={dayjs(data.updated_at).format('L LT')}
-                >
+                <Chip color="pink" title={dayjs(data.updated_at).format('L LTS')}>
                   {dayjs(data.updated_at).fromNow()}
                 </Chip>
               </Typography.Text>

@@ -41,13 +41,13 @@ const EncodeStatus: React.FC<EncodeStatusChipProps> = ({ $key }) => {
   const title = React.useMemo<string | undefined>(() => {
     switch (data.status) {
       case 'COMPLETED':
-        return dayjs(data.completed_at).format('L LT')
+        return dayjs(data.completed_at).format('L LTS')
 
       case 'CANCELLED':
-        return dayjs(data.cancelled_at).format('L LT')
+        return dayjs(data.cancelled_at).format('L LTS')
 
       case 'FAILED':
-        return dayjs(data.failed_at).format('L LT')
+        return dayjs(data.failed_at).format('L LTS')
 
       default:
         return undefined

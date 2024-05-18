@@ -1,5 +1,6 @@
 using Giantnodes.Infrastructure.Uow.Services;
 using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Repositories;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes.Values;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using MassTransit;
@@ -34,7 +35,11 @@ public class EncodeOperationOutputtedDataActivity : IStateMachineActivity<Encode
         using var uow = await _uow.BeginAsync(context.CancellationToken);
         var encode = await _repository.SingleAsync(x => x.Id == context.Saga.EncodeId);
 
-        encode.AppendOutputLog(context.Message.Data);
+        var speed = context.Message.Speed;
+        if (speed.HasValue)
+            encode.SetSpeed(new EncodeSpeed(speed.Value.Frames, speed.Value.Bitrate, speed.Value.Scale));
+
+        encode.AppendOutputLog(context.Message.Output);
 
         await uow.CommitAsync(context.CancellationToken);
         await next.Execute(context);
