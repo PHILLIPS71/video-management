@@ -11,5 +11,8 @@ public class MachineType : ObjectType<Machine>
 
         descriptor
             .Field(x => x.UserName);
+
+        descriptor
+            .Field(x => x.ProcessorType);
     }
 }

@@ -5,17 +5,16 @@ using Giantnodes.Infrastructure.Faults;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Jobs;
 using MassTransit;
+using Polly;
 using Serilog;
 using Xabe.FFmpeg;
 using Xabe.FFmpeg.Events;
+using Xabe.FFmpeg.Exceptions;
 
 namespace Giantnodes.Service.Encoder.Application.Components.Encoding.Jobs;
 
 public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
 {
-    private const double PublishDelaySeconds = 1;
-    private const string RegexNumberGroup = "([+-]?[0-9]*[.]?[0-9]*)";
-
     private readonly IFileSystem _fs;
 
     public EncodeFileConsumer(IFileSystem fs)
@@ -32,6 +31,54 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
             return;
         }
 
+        try
+        {
+            var accelerated = context.Job.UseHardwareAcceleration;
+
+            await Policy<IConversionResult>
+                .Handle<ConversionException>(_=> accelerated)
+                .RetryAsync(1, onRetry: (result, count, ctx) =>
+                {
+                    Log.Warning("Encode {0} encountered a conversion exception and will retry without hardware acceleration", context.JobId);
+                    accelerated = false;
+                })
+                .ExecuteAsync(async () =>
+                {
+                    var conversion = await context.ToConversion(file, accelerated);
+                    var @event = new EncodeOperationEncodeBuiltEvent
+                    {
+                        JobId = context.JobId,
+                        CorrelationId = context.Job.CorrelationId,
+                        FFmpegCommand = conversion.Build(),
+                        MachineName = Environment.MachineName,
+                        MachineUserName = Environment.UserName,
+                        UsingHardwareAcceleration = accelerated
+                    };
+
+                    await context.Publish(@event, context.CancellationToken);
+                    return await conversion.Start();
+                });
+        }
+        catch (OperationCanceledException)
+        {
+            var info = _fs.FileInfo.New(context.Job.OutputFilePath);
+            if (!info.Exists)
+                throw;
+
+            info.Delete();
+            Log.Information("Encode {0} was cancelled and file {1} was deleted.", context.JobId, info.FullName);
+            throw;
+        }
+    }
+}
+
+internal static class JobContextExtensions
+{
+    internal static async Task<IConversion> ToConversion(
+        this JobContext<EncodeFile.Job> context,
+        IFileInfo file,
+        bool accelerate)
+    {
         var media = await FFmpeg.GetMediaInfo(file.FullName, context.CancellationToken);
 
         var videos = media
@@ -54,7 +101,7 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
         if (context.Job.Quality.HasValue)
             conversion.AddParameter($"-crf {context.Job.Quality.Value}");
 
-        if (context.Job.UseHardwareAcceleration)
+        if (accelerate)
         {
             var decoder = media.VideoStreams.First().Codec;
             var encoder = context.Job.Codec;
@@ -63,39 +110,27 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
                 .UseHardwareAcceleration(nameof(HardwareAccelerator.auto), decoder, encoder);
         }
 
-        var stopwatch = new Stopwatch();
-        conversion.OnDataReceived += async (_, args) =>
-        {
-            if (string.IsNullOrWhiteSpace(args.Data) || args.Data.Contains("N/A"))
-                return;
-
-            if (stopwatch.IsRunning && stopwatch.Elapsed <= TimeSpan.FromSeconds(PublishDelaySeconds))
-                return;
-
-            try
-            {
-                if (!TryCreateEvent(context, args.Data, out var @event) || @event == null)
-                    return;
-
-                await context.Publish(@event, options => options.Durable = false, context.CancellationToken);
-                stopwatch.Restart();
-            }
-            catch (FormatException ex)
-            {
-                Log.Error(ex, "Encode data {0} with job id {1} was unable to be parsed.", args.Data, context.JobId);
-            }
-        };
-
         conversion.OnDataReceived += async (_, args) =>
         {
             if (string.IsNullOrWhiteSpace(args.Data))
                 return;
 
+            EncodeOperationOutputtedEvent.ConversionSpeed? speed = null;
+            try
+            {
+                speed = args.ToSpeed();
+            }
+            catch (FormatException ex)
+            {
+                Log.Error(ex, "Encode {0} was unable to parse output: {1}.", context.JobId, args.Data);
+            }
+
             var @event = new EncodeOperationOutputtedEvent
             {
                 JobId = context.JobId,
                 CorrelationId = context.Job.CorrelationId,
-                Data = args.Data
+                Output = args.Data,
+                Speed = speed
             };
 
             await context.Publish(@event, context.CancellationToken);
@@ -114,63 +149,49 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
                 Percent = args.Percent / 100.0f
             };
 
-            await context.Publish(@event, ctx => ctx.Durable = false, context.CancellationToken);
+            await context.Publish(@event, context.CancellationToken);
 
             progress = args;
-            Log.Information("Encode progress on file {0} with job id {1} is {2:P}.", context.Job.OutputFilePath, context.JobId, args.Percent / 100.0f);
+            Log.Information("Encode {0} on file {1} progressed to {2:P}.", context.JobId, context.Job.OutputFilePath, args.Percent / 100.0f);
         };
 
-        try
-        {
-            var @event = new EncodeOperationEncodeBuiltEvent
-            {
-                JobId = context.JobId,
-                CorrelationId = context.Job.CorrelationId,
-                FFmpegCommand = conversion.Build(),
-                MachineName = Environment.MachineName,
-                MachineUserName = Environment.UserName,
-            };
-
-            await context.Publish(@event, context.CancellationToken);
-            await conversion.Start(context.CancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            var info = _fs.FileInfo.New(context.Job.OutputFilePath);
-            if (!info.Exists)
-                throw;
-
-            info.Delete();
-            Log.Information("Encode with job id {0} was cancelled and file {1} was deleted.", context.JobId, info.FullName);
-            throw;
-        }
+        return conversion;
     }
+}
 
-    private static bool TryCreateEvent(JobContext<EncodeFile.Job> context, string stout, out EncodeOperationEncodeHeartbeatEvent? @event)
+internal static partial class DataReceivedEventArgsExtensions
+{
+    [GeneratedRegex("bitrate=[ ]*([+-]?[0-9]*[.]?[0-9]*)")]
+    private static partial Regex BitrateRegex();
+
+    [GeneratedRegex("fps=[ ]*([+-]?[0-9]*[.]?[0-9]*)")]
+    private static partial Regex FpsRegex();
+
+    [GeneratedRegex("speed=[ ]*([+-]?[0-9]*[.]?[0-9]*)x")]
+    private static partial Regex SpeedRegex();
+
+    internal static EncodeOperationOutputtedEvent.ConversionSpeed? ToSpeed(this DataReceivedEventArgs args)
     {
-        @event = null;
-
-        var fps = Regex.Match(stout, $"fps=[ ]*{RegexNumberGroup}");
+        if (string.IsNullOrWhiteSpace(args.Data) || args.Data.Contains("N/A"))
+            return null;
+        
+        var fps = FpsRegex().Match(args.Data);
         if (!fps.Success)
-            return false;
+            return null;
 
-        var bitrate = Regex.Match(stout, $"bitrate=[ ]*{RegexNumberGroup}");
+        var bitrate = BitrateRegex().Match(args.Data);
         if (!bitrate.Success)
-            return false;
+            return null;
 
-        var speed = Regex.Match(stout, $"speed=[ ]*{RegexNumberGroup}x");
+        var speed = SpeedRegex().Match(args.Data);
         if (!speed.Success)
-            return false;
+            return null;
 
-        @event = new EncodeOperationEncodeHeartbeatEvent
+        return new EncodeOperationOutputtedEvent.ConversionSpeed
         {
-            JobId = context.JobId,
-            CorrelationId = context.Job.CorrelationId,
             Frames = float.Parse(fps.Groups[1].Value),
             Bitrate = (long)float.Parse(bitrate.Groups[1].Value) * 1000L,
             Scale = float.Parse(speed.Groups[1].Value)
         };
-
-        return true;
     }
 }

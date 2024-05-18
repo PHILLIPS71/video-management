@@ -11,4 +11,6 @@ public sealed record EncodeOperationEncodeBuiltEvent : IntegrationEvent
     public required string MachineName { get; init; }
 
     public required string MachineUserName { get; init; }
+
+    public required bool UsingHardwareAcceleration { get; init; }
 }

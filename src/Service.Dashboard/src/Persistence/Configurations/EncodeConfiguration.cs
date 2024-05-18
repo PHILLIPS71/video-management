@@ -20,6 +20,11 @@ public class EncodeConfiguration : IEntityTypeConfiguration<Encode>
             .OwnsOne(p => p.Speed);
 
         builder
-            .OwnsOne(p => p.Machine);
+            .OwnsOne(p => p.Machine, machine =>
+            {
+                machine
+                    .Property(p => p.ProcessorType)
+                    .HasConversion<string>();
+            });
     }
 }
