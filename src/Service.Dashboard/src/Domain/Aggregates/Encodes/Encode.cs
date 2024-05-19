@@ -16,6 +16,8 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
 {
     private readonly List<EncodeSnapshot> _snapshots = new();
 
+    private EncodeStatus _status;
+
     /// <summary>
     /// The file being encoded.
     /// </summary>
@@ -34,7 +36,17 @@ public class Encode : AggregateRoot<Guid>, ITimestampableEntity
     /// <summary>
     /// The current status of the encoding process.
     /// </summary>
-    public EncodeStatus Status { get; private set; }
+    public EncodeStatus Status
+    {
+        get => _status;
+        private set
+        {
+            if (Status != value)
+                DomainEvents.Add(new EncodeStatusChangedEvent { EncodeId = Id, FromStatus = Status, ToStatus = value });
+
+            _status = value;
+        }
+    }
 
     /// <summary>
     /// The machine performing the encoding.

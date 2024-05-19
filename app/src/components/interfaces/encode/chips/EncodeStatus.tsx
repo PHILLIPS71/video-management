@@ -4,14 +4,23 @@ import type { ChipProps } from '@giantnodes/react'
 import { Chip } from '@giantnodes/react'
 import dayjs from 'dayjs'
 import React from 'react'
-import { graphql, useFragment } from 'react-relay'
+import { graphql, useFragment, useSubscription } from 'react-relay'
 
 const FRAGMENT = graphql`
   fragment EncodeStatusFragment on Encode {
+    id
     status
     failed_at
     cancelled_at
     completed_at
+  }
+`
+
+const SUBSCRIPTION = graphql`
+  subscription EncodeStatusSubscription($where: EncodeFilterInput) {
+    encode_status_changed(where: $where) {
+      ...EncodeSpeedFragment
+    }
   }
 `
 
@@ -21,6 +30,19 @@ type EncodeStatusChipProps = {
 
 const EncodeStatus: React.FC<EncodeStatusChipProps> = ({ $key }) => {
   const data = useFragment(FRAGMENT, $key)
+
+  useSubscription({
+    subscription: SUBSCRIPTION,
+    variables: {
+      variables: {
+        where: {
+          id: {
+            eq: data.id,
+          },
+        },
+      },
+    },
+  })
 
   const color = React.useMemo<ChipProps['color']>(() => {
     switch (data.status) {
