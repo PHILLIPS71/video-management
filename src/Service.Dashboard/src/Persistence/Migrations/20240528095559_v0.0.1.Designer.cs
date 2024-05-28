@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240413010042_v0.0.1")]
+    [Migration("20240528095559_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("dashboard")
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -36,12 +36,17 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("cancelled_at");
 
+                    b.Property<string>("Command")
+                        .HasColumnType("text")
+                        .HasColumnName("command");
+
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("completed_at");
 
-                    b.Property<byte[]>("ConcurrencyToken")
-                        .HasColumnType("bytea")
+                    b.Property<Guid>("ConcurrencyToken")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid")
                         .HasColumnName("concurrency_token");
 
                     b.Property<DateTime>("CreatedAt")
@@ -60,13 +65,13 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("failure_reason");
 
-                    b.Property<string>("FfmpegCommand")
-                        .HasColumnType("text")
-                        .HasColumnName("ffmpeg_command");
-
                     b.Property<Guid>("FileId")
                         .HasColumnType("uuid")
                         .HasColumnName("file_id");
+
+                    b.Property<string>("Output")
+                        .HasColumnType("text")
+                        .HasColumnName("output");
 
                     b.Property<float?>("Percent")
                         .HasPrecision(3, 2)
@@ -143,8 +148,9 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<byte[]>("ConcurrencyToken")
-                        .HasColumnType("bytea")
+                    b.Property<Guid>("ConcurrencyToken")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid")
                         .HasColumnName("concurrency_token");
 
                     b.Property<DateTime>("CreatedAt")
@@ -188,8 +194,9 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<byte[]>("ConcurrencyToken")
-                        .HasColumnType("bytea")
+                    b.Property<Guid>("ConcurrencyToken")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid")
                         .HasColumnName("concurrency_token");
 
                     b.Property<DateTime>("CreatedAt")
@@ -243,8 +250,9 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("codec");
 
-                    b.Property<byte[]>("ConcurrencyToken")
-                        .HasColumnType("bytea")
+                    b.Property<Guid>("ConcurrencyToken")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid")
                         .HasColumnName("concurrency_token");
 
                     b.Property<int?>("Container")
@@ -648,6 +656,11 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                                 .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("machine_name");
+
+                            b1.Property<string>("ProcessorType")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("machine_processor_type");
 
                             b1.Property<string>("UserName")
                                 .IsRequired()
