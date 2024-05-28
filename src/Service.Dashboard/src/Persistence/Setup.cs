@@ -1,6 +1,6 @@
 ﻿using EntityFramework.Exceptions.PostgreSQL;
+using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
-using Giantnodes.Service.Dashboard.Persistence.HostedServices;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
