@@ -2,17 +2,19 @@ using System.Diagnostics;
 using System.IO.Abstractions;
 using Giantnodes.Service.Dashboard.Persistence.Sagas;
 using MassTransit;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Service.Dashboard.Application.Components.Encodes.Sagas.Activities;
 
 public class FileCleanUpActivity : IStateMachineActivity<EncodeSagaState>
 {
     private readonly IFileSystem _fs;
+    private readonly ILogger<FileCleanUpActivity> _logger;
 
-    public FileCleanUpActivity(IFileSystem fs)
+    public FileCleanUpActivity(IFileSystem fs, ILogger<FileCleanUpActivity> logger)
     {
         _fs = fs;
+        _logger = logger;
     }
 
     public void Probe(ProbeContext context)
@@ -74,6 +76,6 @@ public class FileCleanUpActivity : IStateMachineActivity<EncodeSagaState>
         _fs.FileStream.New(file.FullName, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose | FileOptions.Asynchronous);
         stopwatch.Stop();
 
-        Log.Information("Successfully deleted source file {0} for encode {1} in {2:000ms}", file.FullName, context.Saga.EncodeId, stopwatch.ElapsedMilliseconds);
+        _logger.LogInformation("successfully deleted source file {FileName} for encode {Id} in {Duration:000ms}", file.FullName, context.Saga.EncodeId, stopwatch.ElapsedMilliseconds);
     }
 }

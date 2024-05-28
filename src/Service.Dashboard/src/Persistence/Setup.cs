@@ -1,4 +1,5 @@
 ﻿using EntityFramework.Exceptions.PostgreSQL;
+using Giantnodes.Infrastructure.EntityFrameworkCore;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ public static class Setup
                     .UseSnakeCaseNamingConvention()
                     .UseExceptionProcessor();
             });
-        
+
         services
             .AddOptions<SqlTransportOptions>()
             .Configure(options =>
@@ -46,6 +47,9 @@ public static class Setup
 
         services
             .AddPostgresMigrationHostedService();
+
+        services
+            .AddHostedService<MigratorHostedService<ApplicationDbContext>>();
 
         return services;
     }

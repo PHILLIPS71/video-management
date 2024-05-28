@@ -6,36 +6,32 @@ using Microsoft.Extensions.Hosting;
 
 namespace Giantnodes.Service.Dashboard.Infrastructure.HostedServices;
 
-public class FileSystemWatcherBackgroundService : BackgroundService
+public sealed class FileSystemWatcherBackgroundService : BackgroundService
 {
-    private readonly IServiceProvider _provider;
+    private readonly IServiceScopeFactory _factory;
     private readonly ILibraryMonitoringService _monitoring;
 
-    public FileSystemWatcherBackgroundService(IServiceProvider provider, ILibraryMonitoringService monitoring)
+    public FileSystemWatcherBackgroundService(IServiceScopeFactory factory, ILibraryMonitoringService monitoring)
     {
-        _provider = provider;
+        _factory = factory;
         _monitoring = monitoring;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        using (var scope = _provider.CreateScope())
-        {
-            var service = scope.ServiceProvider.GetRequiredService<IUnitOfWorkService>();
-            var repository = scope.ServiceProvider.GetRequiredService<ILibraryRepository>();
+        using var scope = _factory.CreateScope();
+        var service = scope.ServiceProvider.GetRequiredService<IUnitOfWorkService>();
+        var repository = scope.ServiceProvider.GetRequiredService<ILibraryRepository>();
 
-            using (var uow = await service.BeginAsync(stoppingToken))
-            {
-                var libraries = await repository.ToListAsync(x => x.IsWatched, stoppingToken);
+        using var uow = await service.BeginAsync(stoppingToken);
+        var libraries = await repository.ToListAsync(x => x.IsWatched, stoppingToken);
 
-                var tasks = libraries
-                    .Where(library => library.IsWatched)
-                    .Select(library => _monitoring.TryMonitorAsync(library))
-                    .ToList();
+        var tasks = libraries
+            .Where(library => library.IsWatched)
+            .Select(library => _monitoring.TryMonitorAsync(library))
+            .ToList();
 
-                await Task.WhenAll(tasks);
-                await uow.CommitAsync(stoppingToken);
-            }
-        }
+        await Task.WhenAll(tasks);
+        await uow.CommitAsync(stoppingToken);
     }
 }

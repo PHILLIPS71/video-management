@@ -5,7 +5,7 @@ using Giantnodes.Service.Encoder.Application.Contracts.Probing.Events;
 using Giantnodes.Service.Encoder.Application.Contracts.Probing.Jobs;
 using MassTransit;
 using MassTransit.Events;
-using Serilog;
+using Microsoft.Extensions.Logging;
 using Xabe.FFmpeg;
 
 namespace Giantnodes.Service.Encoder.Application.Components.Probing.Jobs;
@@ -13,10 +13,12 @@ namespace Giantnodes.Service.Encoder.Application.Components.Probing.Jobs;
 public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
 {
     private readonly IFileSystem _fs;
+    private readonly ILogger<ProbeFileSystemConsumer> _logger;
 
-    public ProbeFileSystemConsumer(IFileSystem fs)
+    public ProbeFileSystemConsumer(IFileSystem fs, ILogger<ProbeFileSystemConsumer> logger)
     {
         _fs = fs;
+        _logger = logger;
     }
 
     public async Task Run(JobContext<ProbeFileSystem.Job> context)
@@ -74,7 +76,7 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
                             .ToArray()
                     }, context.CancellationToken);
 
-                    Log.Information("Successfully probed file {0} with job id {1} in {2:000ms}.", media.Path, context.JobId, interval.ElapsedMilliseconds);
+                    _logger.LogInformation("successfully probed file {FilePath} with job id {JobId} in {Duration:000ms}.", media.Path, context.JobId, interval.ElapsedMilliseconds);
                 }
                 catch (Exception ex)
                 {
@@ -86,7 +88,7 @@ public class ProbeFileSystemConsumer : IJobConsumer<ProbeFileSystem.Job>
                         Exception = new FaultExceptionInfo(ex),
                     }, context.CancellationToken);
 
-                    Log.Error("Failed to probe file {0} with job id {1}.", file.FullName, context.JobId);
+                    _logger.LogError(ex, "failed to probe file {FileName} with job id {JobId}.", file.FullName, context.JobId);
                 }
             }))
             .ToList();

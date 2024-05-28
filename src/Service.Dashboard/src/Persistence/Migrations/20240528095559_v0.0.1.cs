@@ -77,7 +77,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     is_watched = table.Column<bool>(type: "boolean", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
+                    concurrency_token = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,7 +151,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
+                    concurrency_token = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -175,7 +175,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
-                    concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
+                    concurrency_token = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -213,7 +213,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
-                    concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
+                    concurrency_token = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -245,10 +245,12 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     speed_bitrate = table.Column<long>(type: "bigint", nullable: true),
                     speed_scale = table.Column<float>(type: "real", nullable: true),
                     status = table.Column<string>(type: "text", nullable: false),
-                    percent = table.Column<float>(type: "real", precision: 3, scale: 2, nullable: true),
-                    ffmpeg_command = table.Column<string>(type: "text", nullable: true),
                     machine_name = table.Column<string>(type: "text", nullable: true),
                     machine_user_name = table.Column<string>(type: "text", nullable: true),
+                    machine_processor_type = table.Column<string>(type: "text", nullable: true),
+                    percent = table.Column<float>(type: "real", precision: 3, scale: 2, nullable: true),
+                    command = table.Column<string>(type: "text", nullable: true),
+                    output = table.Column<string>(type: "text", nullable: true),
                     started_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     failed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     failure_reason = table.Column<string>(type: "text", nullable: true),
@@ -257,7 +259,7 @@ namespace Giantnodes.Service.Dashboard.Persistence.Migrations
                     completed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    concurrency_token = table.Column<byte[]>(type: "bytea", nullable: true)
+                    concurrency_token = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
