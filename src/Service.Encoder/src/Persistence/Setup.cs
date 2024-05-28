@@ -1,4 +1,5 @@
-﻿using Giantnodes.Service.Encoder.Persistence.DbContexts;
+﻿using Giantnodes.Infrastructure.EntityFrameworkCore;
+using Giantnodes.Service.Encoder.Persistence.DbContexts;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -41,6 +42,9 @@ public static class Setup
 
         services
             .AddPostgresMigrationHostedService();
+
+        services
+            .AddHostedService<MigratorHostedService<ApplicationDbContext>>();
 
         return services;
     }
