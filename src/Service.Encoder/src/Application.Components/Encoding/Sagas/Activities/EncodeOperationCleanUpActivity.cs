@@ -2,17 +2,19 @@
 using System.IO.Abstractions;
 using Giantnodes.Service.Encoder.Persistence.Sagas;
 using MassTransit;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Service.Encoder.Application.Components.Encoding.Sagas.Activities;
 
 public class EncodeOperationCleanUpActivity : IStateMachineActivity<EncodeOperationSagaState>
 {
     private readonly IFileSystem _fs;
+    private readonly ILogger<EncodeOperationCleanUpActivity> _logger;
 
-    public EncodeOperationCleanUpActivity(IFileSystem fs)
+    public EncodeOperationCleanUpActivity(IFileSystem fs, ILogger<EncodeOperationCleanUpActivity> logger)
     {
         _fs = fs;
+        _logger = logger;
     }
 
     public void Probe(ProbeContext context)
@@ -71,6 +73,8 @@ public class EncodeOperationCleanUpActivity : IStateMachineActivity<EncodeOperat
         tmp.Delete();
         stopwatch.Stop();
 
-        Log.Information("Successfully removed {0} with job id {1} in {2:000ms} due to operation failure.", context.Saga.TempFilePath, context.Saga.JobId, stopwatch.ElapsedMilliseconds);
+        _logger.LogInformation(
+            "Successfully removed {TempFilePath} with job id {JobId} in {Duration:000ms} due to operation failure.",
+            context.Saga.TempFilePath, context.Saga.JobId, stopwatch.ElapsedMilliseconds);
     }
 }

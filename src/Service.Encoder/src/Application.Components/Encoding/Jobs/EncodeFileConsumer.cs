@@ -5,8 +5,8 @@ using Giantnodes.Infrastructure.Faults;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Events;
 using Giantnodes.Service.Encoder.Application.Contracts.Encoding.Jobs;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using Polly;
-using Serilog;
 using Xabe.FFmpeg;
 using Xabe.FFmpeg.Events;
 using Xabe.FFmpeg.Exceptions;
@@ -16,10 +16,12 @@ namespace Giantnodes.Service.Encoder.Application.Components.Encoding.Jobs;
 public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
 {
     private readonly IFileSystem _fs;
+    private readonly ILogger<EncodeFileConsumer> _logger;
 
-    public EncodeFileConsumer(IFileSystem fs)
+    public EncodeFileConsumer(IFileSystem fs, ILogger<EncodeFileConsumer> logger)
     {
         _fs = fs;
+        _logger = logger;
     }
 
     public async Task Run(JobContext<EncodeFile.Job> context)
@@ -39,12 +41,12 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
                 .Handle<ConversionException>(_=> accelerated)
                 .RetryAsync(1, onRetry: (result, count, ctx) =>
                 {
-                    Log.Warning("Encode {0} encountered a conversion exception and will retry without hardware acceleration", context.JobId);
+                    _logger.LogWarning("encode {JobId} encountered a conversion exception and will retry without hardware acceleration", context.JobId);
                     accelerated = false;
                 })
                 .ExecuteAsync(async () =>
                 {
-                    var conversion = await context.ToConversion(file, accelerated);
+                    var conversion = await context.ToConversion(file, accelerated, _logger);
                     var @event = new EncodeOperationEncodeBuiltEvent
                     {
                         JobId = context.JobId,
@@ -59,14 +61,14 @@ public class EncodeFileConsumer : IJobConsumer<EncodeFile.Job>
                     return await conversion.Start();
                 });
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
             var info = _fs.FileInfo.New(context.Job.OutputFilePath);
             if (!info.Exists)
                 throw;
 
             info.Delete();
-            Log.Information("Encode {0} was cancelled and file {1} was deleted.", context.JobId, info.FullName);
+            _logger.LogInformation(ex, "encode {JobId} was cancelled and file {FileName} was deleted.", context.JobId, info.FullName);
             throw;
         }
     }
@@ -77,7 +79,8 @@ internal static class JobContextExtensions
     internal static async Task<IConversion> ToConversion(
         this JobContext<EncodeFile.Job> context,
         IFileInfo file,
-        bool accelerate)
+        bool accelerate,
+        ILogger<EncodeFileConsumer> logger)
     {
         var media = await FFmpeg.GetMediaInfo(file.FullName, context.CancellationToken);
 
@@ -122,7 +125,7 @@ internal static class JobContextExtensions
             }
             catch (FormatException ex)
             {
-                Log.Error(ex, "Encode {0} was unable to parse output: {1}.", context.JobId, args.Data);
+                logger.LogError(ex, "encode {JobId} was unable to parse output: {Data}.", context.JobId, args.Data);
             }
 
             var @event = new EncodeOperationOutputtedEvent
@@ -152,7 +155,7 @@ internal static class JobContextExtensions
             await context.Publish(@event, context.CancellationToken);
 
             progress = args;
-            Log.Information("Encode {0} on file {1} progressed to {2:P}.", context.JobId, context.Job.OutputFilePath, args.Percent / 100.0f);
+            logger.LogInformation("encode {JobId} on file {FilePath} progressed to {Percent:P}.", context.JobId, context.Job.OutputFilePath, args.Percent / 100.0f);
         };
 
         return conversion;

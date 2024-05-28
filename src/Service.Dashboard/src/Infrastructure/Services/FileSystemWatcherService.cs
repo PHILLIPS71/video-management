@@ -2,7 +2,7 @@ using System.IO.Abstractions;
 using System.Reactive.Linq;
 using Giantnodes.Service.Dashboard.Domain.Services;
 using MassTransit;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Giantnodes.Service.Dashboard.Infrastructure.Services;
 
@@ -14,12 +14,18 @@ public class FileSystemWatcherService : IFileSystemWatcherService
     private readonly IFileSystemWatcherFactory _factory;
     private readonly IFileSystemService _fileSystemService;
     private readonly IBus _bus;
+    private readonly ILogger<FileSystemWatcherService> _logger;
 
-    public FileSystemWatcherService(IFileSystemWatcherFactory factory, IFileSystemService fileSystemService, IBus bus)
+    public FileSystemWatcherService(
+        IFileSystemWatcherFactory factory,
+        IFileSystemService fileSystemService,
+        IBus bus,
+        ILogger<FileSystemWatcherService> logger)
     {
         _factory = factory;
         _fileSystemService = fileSystemService;
         _bus = bus;
+        _logger = logger;
     }
 
     /// <inheritdoc />
@@ -37,7 +43,7 @@ public class FileSystemWatcherService : IFileSystemWatcherService
         }
         catch (DirectoryNotFoundException ex)
         {
-            Log.Warning(ex, "cannot watch path {0} as it cannot be found or accessed.", path);
+            _logger.LogWarning(ex, "cannot watch path {Path} as it cannot be found or accessed.", path);
             return false;
         }
     }
