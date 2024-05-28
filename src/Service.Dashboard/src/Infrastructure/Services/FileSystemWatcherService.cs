@@ -35,9 +35,9 @@ public class FileSystemWatcherService : IFileSystemWatcherService
             _watching.Add(path, watcher);
             return true;
         }
-        catch (DirectoryNotFoundException)
+        catch (DirectoryNotFoundException ex)
         {
-            Log.Warning("Cannot watch path {0} as it cannot be found or accessed.", path);
+            Log.Warning(ex, "cannot watch path {0} as it cannot be found or accessed.", path);
             return false;
         }
     }
