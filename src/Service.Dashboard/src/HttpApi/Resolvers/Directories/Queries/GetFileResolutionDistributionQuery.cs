@@ -28,7 +28,6 @@ public class GetFileResolutionDistributionQuery
 {
     [Error<DomainException>]
     [Error<ValidationException>]
-    [UseSorting]
     public async Task<IQueryable<FileResolutionDistribution>> FileResolutionDistribution(
         [Service] IRequestClient<GetFileResolutionDistribution.Query> request,
         [ID] Guid directoryId,
