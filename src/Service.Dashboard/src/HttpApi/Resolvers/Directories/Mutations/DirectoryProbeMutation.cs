@@ -6,7 +6,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Directories.Mutations;
 
-[ExtendObjectType(OperationTypeNames.Mutation)]
+[MutationType]
 public class DirectoryProbeMutation
 {
     [Error<DomainException>]

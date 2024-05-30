@@ -1,11 +1,11 @@
-using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
 using Giantnodes.Service.Dashboard.Domain.Values;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Files.Objects;
 
-public class AudioStreamType : ObjectType<AudioStream>
+[ObjectType<AudioStream>]
+public static partial class AudioStreamType
 {
-    protected override void Configure(IObjectTypeDescriptor<AudioStream> descriptor)
+    static partial void Configure(IObjectTypeDescriptor<AudioStream> descriptor)
     {
         descriptor
             .Field(p => p.Index);

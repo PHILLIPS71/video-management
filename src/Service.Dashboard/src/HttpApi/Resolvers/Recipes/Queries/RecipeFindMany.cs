@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Recipes.Queries;
 
-[ExtendObjectType(OperationTypeNames.Query)]
+[QueryType]
 public class RecipeFindMany
 {
     [UsePaging]

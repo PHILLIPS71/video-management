@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Mutations;
 
-[ExtendObjectType(OperationTypeNames.Mutation)]
+[MutationType]
 public class EncodeSubmitMutation
 {
     [Error<DomainException>]

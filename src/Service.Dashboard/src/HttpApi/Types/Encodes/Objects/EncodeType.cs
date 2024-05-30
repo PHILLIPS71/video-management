@@ -4,15 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Encodes.Objects;
 
-public class EncodeType : ObjectType<Encode>
+[ObjectType<Encode>]
+public static partial class EncodeType
 {
-    protected override void Configure(IObjectTypeDescriptor<Encode> descriptor)
+    static partial void Configure(IObjectTypeDescriptor<Encode> descriptor)
     {
         descriptor
-            .ImplementsNode()
-            .IdField(p => p.Id)
-            .ResolveNode((context, id) =>
-                context.Service<ApplicationDbContext>().Encodes.SingleOrDefaultAsync(x => x.Id == id));
+            .Field(p => p.Id);
 
         descriptor
             .Field(p => p.File);
@@ -61,9 +59,13 @@ public class EncodeType : ObjectType<Encode>
 
         descriptor
             .Field(p => p.Snapshots)
-            // .UsePaging()
-            // .UseProjection()
+            .UsePaging()
+            .UseProjection()
             .UseFiltering()
             .UseSorting();
     }
+
+    [NodeResolver]
+    internal static Task<Encode?> GetEncodeById(Guid id, ApplicationDbContext database, CancellationToken cancellation)
+        => database.Encodes.SingleOrDefaultAsync(x => x.Id == id, cancellation);
 }

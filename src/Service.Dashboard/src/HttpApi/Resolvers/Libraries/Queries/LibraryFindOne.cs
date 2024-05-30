@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Libraries.Queries;
 
-[ExtendObjectType(OperationTypeNames.Query)]
+[QueryType]
 public class LibraryFindOne
 {
     [UseFirstOrDefault]

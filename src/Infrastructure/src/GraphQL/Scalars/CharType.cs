@@ -3,7 +3,7 @@ using HotChocolate.Types;
 
 namespace Giantnodes.Infrastructure.GraphQL.Scalars;
 
-public class CharType : ScalarType<char, StringValueNode>
+public sealed class CharType : ScalarType<char, StringValueNode>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CharType"/> class.

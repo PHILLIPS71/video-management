@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Directories.Queries;
 
-[ExtendObjectType(OperationTypeNames.Query)]
+[QueryType]
 public class FileSystemDirectoryFindOne
 {
     [GraphQLType<ListType<FileSystemEntryType>>]

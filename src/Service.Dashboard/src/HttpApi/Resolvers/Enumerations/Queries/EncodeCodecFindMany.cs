@@ -3,7 +3,7 @@ using Giantnodes.Service.Dashboard.Domain.Enumerations;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Enumerations.Queries;
 
-[ExtendObjectType(OperationTypeNames.Query)]
+[QueryType]
 public class EncodeCodecFindMany
 {
     [UsePaging]

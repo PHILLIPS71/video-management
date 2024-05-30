@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Recipes.Mutations;
 
-[ExtendObjectType(OperationTypeNames.Mutation)]
+[MutationType]
 public class RecipeUpdateMutation
 {
     [Error<DomainException>]

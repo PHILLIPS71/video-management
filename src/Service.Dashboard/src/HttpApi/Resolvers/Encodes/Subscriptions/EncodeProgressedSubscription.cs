@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Subscriptions;
 
-[ExtendObjectType(OperationTypeNames.Subscription)]
+[SubscriptionType]
 public class EncodeProgressedSubscription
 {
     [Subscribe]

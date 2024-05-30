@@ -5,17 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Files.Objects;
 
-public class FileSystemFileType : ObjectType<FileSystemFile>
+[ObjectType<FileSystemFile>]
+public static partial class FileSystemFileType
 {
-    protected override void Configure(IObjectTypeDescriptor<FileSystemFile> descriptor)
+    static partial void Configure(IObjectTypeDescriptor<FileSystemFile> descriptor)
     {
         descriptor.Implements<FileSystemEntryType>();
-
-        descriptor
-            .ImplementsNode()
-            .IdField(p => p.Id)
-            .ResolveNode((context, id) =>
-                context.Service<ApplicationDbContext>().FileSystemFiles.SingleOrDefaultAsync(x => x.Id == id));
 
         descriptor
             .Field(p => p.Id);
@@ -40,30 +35,37 @@ public class FileSystemFileType : ObjectType<FileSystemFile>
 
         descriptor
             .Field(p => p.VideoStreams)
-            // .UsePaging()
-            // .UseProjection()
+            .UsePaging()
+            .UseProjection()
             .UseFiltering()
             .UseSorting();
 
         descriptor
             .Field(p => p.AudioStreams)
-            // .UsePaging()
-            // .UseProjection()
+            .UsePaging()
+            .UseProjection()
             .UseFiltering()
             .UseSorting();
 
         descriptor
             .Field(p => p.SubtitleStreams)
-            // .UsePaging()
-            // .UseProjection()
+            .UsePaging()
+            .UseProjection()
             .UseFiltering()
             .UseSorting();
 
         descriptor
             .Field(p => p.Encodes)
-            // .UsePaging()
-            // .UseProjection()
+            .UsePaging()
+            .UseProjection()
             .UseFiltering()
             .UseSorting();
     }
+
+    [NodeResolver]
+    internal static Task<FileSystemFile?> GetFileSystemFileById(
+        Guid id,
+        ApplicationDbContext database,
+        CancellationToken cancellation)
+        => database.FileSystemFiles.SingleOrDefaultAsync(x => x.Id == id, cancellation);
 }

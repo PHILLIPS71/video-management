@@ -4,16 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Encodes.Objects;
 
-public class EncodeSnapshotType : ObjectType<EncodeSnapshot>
+[ObjectType<EncodeSnapshot>]
+public static partial class EncodeSnapshotType
 {
-    protected override void Configure(IObjectTypeDescriptor<EncodeSnapshot> descriptor)
+    static partial void Configure(IObjectTypeDescriptor<EncodeSnapshot> descriptor)
     {
-        descriptor
-            .ImplementsNode()
-            .IdField(p => p.Id)
-            .ResolveNode((context, id) =>
-                context.Service<ApplicationDbContext>().EncodeSnapshots.SingleOrDefaultAsync(x => x.Id == id));
-
         descriptor
             .Field(p => p.Size);
 
@@ -47,4 +42,11 @@ public class EncodeSnapshotType : ObjectType<EncodeSnapshot>
             .UseFiltering()
             .UseSorting();
     }
+
+    [NodeResolver]
+    internal static Task<EncodeSnapshot?> GetEncodeSnapshotById(
+        Guid id,
+        ApplicationDbContext database,
+        CancellationToken cancellation)
+        => database.EncodeSnapshots.SingleOrDefaultAsync(x => x.Id == id, cancellation);
 }

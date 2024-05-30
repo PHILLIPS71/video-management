@@ -4,16 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Recipes.Objects;
 
-public class RecipeType : ObjectType<Recipe>
+[ObjectType<Recipe>]
+public static partial class RecipeType
 {
-    protected override void Configure(IObjectTypeDescriptor<Recipe> descriptor)
+    static partial void Configure(IObjectTypeDescriptor<Recipe> descriptor)
     {
-        descriptor
-            .ImplementsNode()
-            .IdField(p => p.Id)
-            .ResolveNode((context, id) =>
-                context.Service<ApplicationDbContext>().Recipes.SingleOrDefaultAsync(x => x.Id == id));
-
         descriptor
             .Field(p => p.Name);
 
@@ -36,14 +31,16 @@ public class RecipeType : ObjectType<Recipe>
             .Field(p => p.UseHardwareAcceleration);
 
         descriptor
-            .Field("is_encodable")
-            .Type<BooleanType>()
-            .Resolve(x => x.Parent<Recipe>().IsEncodable());
-
-        descriptor
             .Field(p => p.CreatedAt);
 
         descriptor
             .Field(p => p.UpdatedAt);
     }
+
+    [NodeResolver]
+    internal static Task<Recipe?> GetRecipeById(Guid id, ApplicationDbContext database, CancellationToken cancellation)
+        => database.Recipes.SingleOrDefaultAsync(x => x.Id == id, cancellation);
+
+    internal static bool IsEncodable([Parent] Recipe recipe)
+        => recipe.IsEncodable();
 }

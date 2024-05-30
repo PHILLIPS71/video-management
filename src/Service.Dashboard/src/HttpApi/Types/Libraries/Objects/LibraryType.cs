@@ -1,19 +1,16 @@
-﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
+﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Encodes;
+using Giantnodes.Service.Dashboard.Domain.Aggregates.Libraries;
+using Giantnodes.Service.Dashboard.HttpApi.Types.Entries.Interfaces;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Libraries.Objects;
 
-public class LibraryType : ObjectType<Library>
+[ObjectType<Library>]
+public static partial class LibraryType
 {
-    protected override void Configure(IObjectTypeDescriptor<Library> descriptor)
+    static partial void Configure(IObjectTypeDescriptor<Library> descriptor)
     {
-        descriptor
-            .ImplementsNode()
-            .IdField(p => p.Id)
-            .ResolveNode((context, id) =>
-                context.Service<ApplicationDbContext>().Libraries.SingleOrDefaultAsync(x => x.Id == id));
-
         descriptor
             .Field(p => p.Id);
 
@@ -34,8 +31,23 @@ public class LibraryType : ObjectType<Library>
 
         descriptor
             .Field(p => p.Entries)
+            .Type<ListType<FileSystemEntryType>>()
             .UseProjection()
             .UseFiltering()
             .UseSorting();
     }
+
+    [NodeResolver]
+    internal static Task<Library?> GetLibraryById(
+        Guid id,
+        ApplicationDbContext database,
+        CancellationToken cancellation)
+        => database.Libraries.SingleOrDefaultAsync(x => x.Id == id, cancellation);
+
+    [UsePaging]
+    [UseProjection]
+    [UseFiltering]
+    [UseSorting]
+    internal static IQueryable<Encode> Encodes([Parent] Library library, ApplicationDbContext database)
+        => database.Encodes.AsNoTracking().Where(x => x.File.Library.Id == library.Id);
 }

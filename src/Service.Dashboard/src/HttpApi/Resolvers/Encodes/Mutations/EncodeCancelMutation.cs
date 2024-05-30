@@ -1,3 +1,4 @@
+using Giantnodes.Infrastructure.Faults;
 using Giantnodes.Infrastructure.Faults.Exceptions;
 using Giantnodes.Infrastructure.Faults.Types;
 using Giantnodes.Infrastructure.Validation.Exceptions;
@@ -8,7 +9,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Mutations;
 
-[ExtendObjectType(OperationTypeNames.Mutation)]
+[MutationType]
 public class EncodeCancelMutation
 {
     [Error<DomainException>]

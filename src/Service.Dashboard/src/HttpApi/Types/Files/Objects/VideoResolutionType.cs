@@ -2,9 +2,10 @@ using Giantnodes.Service.Dashboard.Domain.Enumerations;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Files.Objects;
 
-public class VideoResolutionType : ObjectType<VideoResolution>
+[ObjectType<VideoResolution>]
+public static partial class VideoResolutionType
 {
-    protected override void Configure(IObjectTypeDescriptor<VideoResolution> descriptor)
+    static partial void Configure(IObjectTypeDescriptor<VideoResolution> descriptor)
     {
         descriptor
             .Field(p => p.Name);

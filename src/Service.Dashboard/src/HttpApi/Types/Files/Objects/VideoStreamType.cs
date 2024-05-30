@@ -1,11 +1,11 @@
-﻿using Giantnodes.Service.Dashboard.Domain.Aggregates.Entries.Files.Values;
-using Giantnodes.Service.Dashboard.Domain.Values;
+﻿using Giantnodes.Service.Dashboard.Domain.Values;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Files.Objects;
 
-public class VideoStreamType : ObjectType<VideoStream>
+[ObjectType<VideoStream>]
+public static partial class VideoStreamType
 {
-    protected override void Configure(IObjectTypeDescriptor<VideoStream> descriptor)
+    static partial void Configure(IObjectTypeDescriptor<VideoStream> descriptor)
     {
         descriptor
             .Field(p => p.Index);

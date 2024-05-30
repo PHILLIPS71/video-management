@@ -3,9 +3,10 @@ using Giantnodes.Service.Dashboard.Domain.Values;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Types.Files.Objects;
 
-public class VideoQualityType : ObjectType<VideoQuality>
+[ObjectType<VideoQuality>]
+public static partial class VideoQualityType
 {
-    protected override void Configure(IObjectTypeDescriptor<VideoQuality> descriptor)
+    static partial void Configure(IObjectTypeDescriptor<VideoQuality> descriptor)
     {
         descriptor
             .Field(p => p.Width);
