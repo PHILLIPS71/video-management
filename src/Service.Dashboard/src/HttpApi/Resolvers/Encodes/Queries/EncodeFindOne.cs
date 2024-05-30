@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Queries;
 
 [QueryType]
-public class EncodeFindOne
+internal sealed class EncodeFindOne
 {
     [UseFirstOrDefault]
     [UseProjection]

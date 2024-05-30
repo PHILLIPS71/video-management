@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Subscriptions;
 
 [SubscriptionType]
-public class EncodeOutputtedSubscription
+internal sealed class EncodeOutputtedSubscription
 {
     [Subscribe]
     [Topic(nameof(EncodeOutputtedEvent))]

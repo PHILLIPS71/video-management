@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Recipes.Mutations;
 
 [MutationType]
-public class RecipeDeleteMutation
+internal sealed class RecipeDeleteMutation
 {
     [Error<DomainException>]
     [Error<ValidationException>]

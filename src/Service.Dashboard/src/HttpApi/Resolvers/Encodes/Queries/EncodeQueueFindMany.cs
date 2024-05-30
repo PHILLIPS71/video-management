@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Queries;
 
 [QueryType]
-public class EncodeQueueFindMany
+internal sealed class EncodeQueueFindMany
 {
     [UsePaging]
     [UseProjection]

@@ -4,7 +4,7 @@ using Giantnodes.Service.Dashboard.Domain.Enumerations;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Enumerations.Queries;
 
 [QueryType]
-public class EncodeTuneFindMany
+internal sealed class EncodeTuneFindMany
 {
     [UsePaging]
     [UseFiltering]

@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Recipes.Queries;
 
 [QueryType]
-public class RecipeFindMany
+internal sealed class RecipeFindMany
 {
     [UsePaging]
-    // [UseProjection] using projection cannot translate Recipe.Codec.Tunes preventing is_encodable working
+    [UseProjection]
     [UseFiltering]
     [UseSorting]
     public IQueryable<Recipe> Recipes([Service] ApplicationDbContext database)

@@ -10,7 +10,7 @@ using MassTransit;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Mutations;
 
 [MutationType]
-public class EncodeCancelMutation
+internal sealed class EncodeCancelMutation
 {
     [Error<DomainException>]
     [Error<ValidationException>]

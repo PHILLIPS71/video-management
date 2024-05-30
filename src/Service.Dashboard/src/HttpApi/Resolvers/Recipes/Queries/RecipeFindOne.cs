@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Recipes.Queries;
 
 [QueryType]
-public class RecipeFindOne
+internal sealed class RecipeFindOne
 {
     [UseFirstOrDefault]
     [UseProjection]

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Subscriptions;
 
 [SubscriptionType]
-public class EncodeStatusChangedSubscription
+internal sealed class EncodeStatusChangedSubscription
 {
     [Subscribe]
     [Topic(nameof(EncodeStatusChangedEvent))]

@@ -8,7 +8,7 @@ using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Directories.Queries;
 
-public readonly record struct FileResolutionDistribution(VideoResolution? Resolution, int Count);
+internal readonly record struct FileResolutionDistribution(VideoResolution? Resolution, int Count);
 
 [ObjectType<FileResolutionDistribution>]
 public static partial class FileResolutionDistributionType
@@ -24,7 +24,7 @@ public static partial class FileResolutionDistributionType
 }
 
 [QueryType]
-public class GetFileResolutionDistributionQuery
+internal sealed class GetFileResolutionDistributionQuery
 {
     [Error<DomainException>]
     [Error<ValidationException>]

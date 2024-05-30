@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Libraries.Mutations;
 
 [MutationType]
-public class LibraryCreateMutation
+internal sealed class LibraryCreateMutation
 {
     [Error<DomainException>]
     [Error<ValidationException>]

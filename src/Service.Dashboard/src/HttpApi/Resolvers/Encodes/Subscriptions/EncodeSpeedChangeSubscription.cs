@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Encodes.Subscriptions;
 
 [SubscriptionType]
-public class EncodeSpeedChangeSubscription
+internal sealed class EncodeSpeedChangeSubscription
 {
     [Subscribe]
     [Topic(nameof(EncodeSpeedChangedEvent))]

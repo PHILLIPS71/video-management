@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Giantnodes.Service.Dashboard.HttpApi.Resolvers.Libraries.Queries;
 
 [QueryType]
-public class LibraryFindMany
+internal sealed class LibraryFindMany
 {
     [UsePaging]
     [UseProjection]
