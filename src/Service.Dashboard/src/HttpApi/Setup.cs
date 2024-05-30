@@ -6,14 +6,13 @@ using Giantnodes.Service.Dashboard.HttpApi.Cors;
 using Giantnodes.Service.Dashboard.Persistence.DbContexts;
 using HotChocolate.Data.Filters;
 using HotChocolate.Types.Descriptors;
-using HotChocolate.Types.Pagination;
 using MassTransit;
 
 namespace Giantnodes.Service.Dashboard.HttpApi;
 
-public static class HttpApiServiceRegistration
+public static class Setup
 {
-    public static void AddHttpApiServices(this IServiceCollection services)
+    public static void SetupHttpApiServices(this IServiceCollection services)
     {
         services.AddCors().ConfigureOptions<CorsConfigureOptions>();
         services.AddMassTransitServices();
@@ -75,22 +74,17 @@ public static class HttpApiServiceRegistration
     {
         services
             .AddGraphQLServer()
-            .ModifyOptions(opt => opt.DefaultFieldBindingFlags = FieldBindingFlags.Default)
-            .SetPagingOptions(new PagingOptions { IncludeTotalCount = true })
-            .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled)
-            .AddInMemorySubscriptions()
+            .ModifyOptions(options => options.DefaultFieldBindingFlags = FieldBindingFlags.Default)
             .AddType<CharType>()
             .AddConvention<IFilterConvention, CharFilterConvention>()
             .AddConvention<INamingConventions, SnakeCaseNamingConvention>()
             .AddGlobalObjectIdentification()
+            .AddInMemorySubscriptions()
             .AddMutationConventions()
-            .AddQueryFieldToMutationPayloads()
             .AddHttpApiTypes()
-            .AddQueryType()
-            .AddMutationType()
-            .AddSubscriptionType()
             .AddProjections()
             .AddFiltering()
-            .AddSorting();
+            .AddSorting()
+            .InitializeOnStartup();
     }
 }

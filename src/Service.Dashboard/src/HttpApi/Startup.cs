@@ -24,7 +24,7 @@ public class Startup
             .SetupPersistence(_configuration)
             .SetupInfrastructure()
             .SetupApplicationComponents()
-            .AddHttpApiServices();
+            .SetupHttpApiServices();
     }
 
     public void Configure(IApplicationBuilder app)
