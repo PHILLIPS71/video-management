@@ -23,7 +23,7 @@ public static class GuardAgainstOutOfRangeExtensions
         string? message = null)
         where T : Enumeration
     {
-        if (Enumeration.TryParse<T>(input.Id) != null)
+        if (Enumeration.TryParse<T>(input.Id, out _))
             return input;
 
         if (string.IsNullOrEmpty(message))

@@ -3,9 +3,9 @@
 namespace Giantnodes.Infrastructure;
 
 /// <summary>
-/// Abstract base class for enumerations with an integer identifier and a name.
+/// Abstract base record for enumerations with an integer identifier and a name.
 /// </summary>
-public abstract class Enumeration : IComparable
+public abstract record Enumeration
 {
     /// <summary>
     /// Gets the identifier of the enumeration.
@@ -34,15 +34,6 @@ public abstract class Enumeration : IComparable
     /// <inheritdoc/>
     public override int GetHashCode() => Id.GetHashCode();
 
-    /// <inheritdoc/>
-    public override bool Equals(object? obj)
-    {
-        if (obj is not Enumeration enumeration)
-            return false;
-
-        return GetType() == obj.GetType() && Id.Equals(enumeration.Id);
-    }
-
     /// <summary>
     /// Gets all values of the enumeration type.
     /// </summary>
@@ -56,66 +47,94 @@ public abstract class Enumeration : IComparable
             .Cast<T>();
     }
 
-    /// <inheritdoc/>
-    public int CompareTo(object? obj)
-    {
-        if (obj is not Enumeration enumeration)
-            throw new ArgumentException($"'{obj}' is not of type {typeof(Enumeration)}");
-
-        return Id.CompareTo(enumeration.Id);
-    }
-
     /// <summary>
-    /// Parses an enumeration value based on a predicate.
+    /// Parses an enumeration based on a predicate.
     /// </summary>
     /// <typeparam name="TEnumeration">The type of the enumeration.</typeparam>
-    /// <typeparam name="TValue">The type of the value used for parsing.</typeparam>
-    /// <param name="value">The value to parse.</param>
     /// <param name="predicate">The predicate to match against enumeration items.</param>
     /// <returns>The matching enumeration item.</returns>
-    public static TEnumeration Parse<TEnumeration, TValue>(TValue value, Func<TEnumeration, bool> predicate)
+    /// <exception cref="ArgumentException">Thrown when the provided reference does not match any enumeration value.</exception>
+    public static TEnumeration Parse<TEnumeration>(Func<TEnumeration, bool> predicate)
         where TEnumeration : Enumeration
     {
         var match = GetAll<TEnumeration>().FirstOrDefault(predicate);
         if (match == null)
-            throw new InvalidOperationException($"'{value}' is not a valid name in {typeof(TEnumeration)}");
+            throw new ArgumentException($"The provided predicate did not match any value in {typeof(TEnumeration)}.", nameof(predicate));
 
         return match;
+    }
+    
+    /// <summary>
+    /// Parses an enumeration value based on its name or identifier value.
+    /// </summary>
+    /// <typeparam name="TEnumeration">The type of the enumeration.</typeparam>
+    /// <param name="reference">The name or identifier value to parse.</param>
+    /// <returns>The matching enumeration value.</returns>
+    /// <exception cref="ArgumentException">Thrown when the provided reference does not match any enumeration value.</exception>
+    public static TEnumeration ParseByValueOrName<TEnumeration>(string reference)
+        where TEnumeration : Enumeration
+    {
+        return Parse<TEnumeration>(item => item.Name == reference || item.Id.ToString() == reference);
     }
 
     /// <summary>
     /// Attempts to parse an enumeration value based on its identifier.
     /// </summary>
-    /// <typeparam name="TValue">The type of the enumeration.</typeparam>
+    /// <typeparam name="TEnumeration">The type of the enumeration.</typeparam>
     /// <param name="id">The identifier to parse.</param>
-    /// <returns>The parsed enumeration item, or null if parsing fails.</returns>
-    public static TValue? TryParse<TValue>(int id)
-        where TValue : Enumeration
+    /// <param name="enumeration">Outputs the enumeration value if the string was successfully parsed; otherwise, the default value for the enumeration type.</param>
+    /// <returns>True if the string was successfully parsed; otherwise, false.</returns>
+    public static bool TryParse<TEnumeration>(int id, out TEnumeration enumeration)
+        where TEnumeration : Enumeration
     {
         try
         {
-            return Parse<TValue, int>(id, item => item.Id == id);
+            enumeration = Parse<TEnumeration>(item => item.Id == id);
+            return true;
         }
-        catch (InvalidOperationException)
+        catch (ArgumentException)
         {
-            return null;
+            enumeration = default!;
+            return false;
         }
     }
 
     /// <summary>
     /// Attempts to parse an enumeration value based on its name.
     /// </summary>
-    /// <typeparam name="TValue">The type of the enumeration.</typeparam>
+    /// <typeparam name="TEnumeration">The type of the enumeration.</typeparam>
     /// <param name="name">The name to parse.</param>
-    /// <returns>The parsed enumeration item, or null if parsing fails.</returns>
-    public static TValue? TryParse<TValue>(string name)
-        where TValue : Enumeration
+    /// <param name="enumeration">outputs the enumeration value if the string was successfully parsed; otherwise, null.</param>
+    /// <returns>True if the string was successfully parsed; otherwise, false.</returns>
+    public static bool TryParse<TEnumeration>(string name, out TEnumeration? enumeration)
+        where TEnumeration : Enumeration
     {
         try
         {
-            return Parse<TValue, string>(name, item => item.Name == name);
+            enumeration = Parse<TEnumeration>(item => item.Name == name);
+            return true;
         }
-        catch (InvalidOperationException)
+        catch (ArgumentException)
+        {
+            enumeration = null;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to parse an enumeration based on its id or name.
+    /// </summary>
+    /// <typeparam name="TEnumeration">The type of the enumeration.</typeparam>
+    /// <param name="reference">The id or name to try parse.</param>
+    /// <returns>The parsed enumeration item, or null if parsing fails.</returns>
+    public static TEnumeration? TryParseByValueOrName<TEnumeration>(string reference)
+        where TEnumeration : Enumeration
+    {
+        try
+        {
+            return Parse<TEnumeration>(item => item.Name == reference || item.Id.ToString() == reference);
+        }
+        catch (ArgumentException)
         {
             return null;
         }

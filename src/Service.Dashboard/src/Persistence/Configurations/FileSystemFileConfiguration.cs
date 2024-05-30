@@ -24,7 +24,7 @@ public class FileSystemFileConfiguration : IEntityTypeConfiguration<FileSystemFi
                             .Property(p => p.Resolution)
                             .HasConversion(
                                 value => value.Id,
-                                value => Enumeration.Parse<VideoResolution, int>(value, item => item.Id == value));
+                                value => Enumeration.ParseByValueOrName<VideoResolution>(value.ToString()));
                     });
             });
 

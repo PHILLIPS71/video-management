@@ -33,39 +33,30 @@ public class RecipeUpdateConsumer : IConsumer<RecipeUpdate.Command>
         }
 
         VideoFileContainer? container = null;
-        if (context.Message.Container.HasValue)
+        if (context.Message.Container.HasValue &&
+            !Enumeration.TryParse<VideoFileContainer>(context.Message.Container.Value, out container))
         {
-            container = Enumeration.TryParse<VideoFileContainer>(context.Message.Container.Value);
-            if (container == null)
-            {
-                await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.Container));
-                return;
-            }
+            await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.Container));
+            return;
         }
 
-        var codec = Enumeration.TryParse<EncodeCodec>(context.Message.Codec);
-        if (codec == null)
+        if (!Enumeration.TryParse<EncodeCodec>(context.Message.Codec, out var codec))
         {
             await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.Codec));
             return;
         }
 
-        var preset = Enumeration.TryParse<EncodePreset>(context.Message.Preset);
-        if (preset == null)
+        if (!Enumeration.TryParse<EncodePreset>(context.Message.Preset, out var preset))
         {
             await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.Preset));
             return;
         }
 
         EncodeTune? tune = null;
-        if (context.Message.Tune.HasValue)
+        if (context.Message.Tune.HasValue && !Enumeration.TryParse<EncodeTune>(context.Message.Tune.Value, out tune))
         {
-            tune = Enumeration.TryParse<EncodeTune>(context.Message.Tune.Value);
-            if (tune == null)
-            {
-                await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.Tune));
-                return;
-            }
+            await context.RejectAsync(FaultKind.NotFound, nameof(context.Message.Tune));
+            return;
         }
 
         recipe.SetName(context.Message.Name);

@@ -2,7 +2,7 @@ using Giantnodes.Infrastructure;
 
 namespace Giantnodes.Service.Dashboard.Domain.Enumerations;
 
-public sealed class EncodeTune : Enumeration
+public sealed record EncodeTune : Enumeration
 {
     public string Value { get; init; }
 

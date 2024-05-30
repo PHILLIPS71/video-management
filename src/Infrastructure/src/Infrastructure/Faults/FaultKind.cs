@@ -1,6 +1,6 @@
 ﻿namespace Giantnodes.Infrastructure.Faults;
 
-public class FaultKind : Enumeration
+public record FaultKind : Enumeration
 {
     public static readonly FaultKind Validation =
         new(100, FaultType.InvalidRequest, "validation_fault", "one or more validation issues occurred");

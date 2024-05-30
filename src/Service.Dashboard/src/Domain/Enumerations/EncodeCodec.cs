@@ -2,22 +2,15 @@ using Giantnodes.Infrastructure;
 
 namespace Giantnodes.Service.Dashboard.Domain.Enumerations;
 
-public sealed class EncodeCodec : Enumeration
+public sealed record EncodeCodec : Enumeration
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="EncodeQuality"/> struct with specified parameters.
     /// </summary>
-    /// <param name="min">The minimum quality value.</param>
-    /// <param name="max">The maximum quality value.</param>
-    /// <param name="default">The default quality value.</param>
-    public readonly struct EncodeQuality(int min, int max, int @default)
-    {
-        public int Min { get; init; } = min;
-
-        public int Max { get; init; } = max;
-
-        public int Default { get; init; } = @default;
-    }
+    /// <param name="Min">The minimum quality value.</param>
+    /// <param name="Max">The maximum quality value.</param>
+    /// <param name="Default">The default quality value.</param>
+    public readonly record struct EncodeQuality(int Min, int Max, int Default);
 
     public string Value { get; init; }
 

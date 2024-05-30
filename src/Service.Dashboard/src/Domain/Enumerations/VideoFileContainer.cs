@@ -2,7 +2,7 @@
 
 namespace Giantnodes.Service.Dashboard.Domain.Enumerations;
 
-public sealed class VideoFileContainer : Enumeration
+public sealed record VideoFileContainer : Enumeration
 {
     public string Extension { get; init; }
 

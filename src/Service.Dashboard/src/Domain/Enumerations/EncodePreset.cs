@@ -2,7 +2,7 @@ using Giantnodes.Infrastructure;
 
 namespace Giantnodes.Service.Dashboard.Domain.Enumerations;
 
-public sealed class EncodePreset : Enumeration
+public sealed record EncodePreset : Enumeration
 {
     public string Value { get; init; }
 

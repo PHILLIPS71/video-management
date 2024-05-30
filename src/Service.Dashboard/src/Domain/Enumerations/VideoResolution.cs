@@ -2,7 +2,7 @@ using Giantnodes.Infrastructure;
 
 namespace Giantnodes.Service.Dashboard.Domain.Enumerations;
 
-public sealed class VideoResolution : Enumeration
+public sealed record VideoResolution : Enumeration
 {
     public string Abbreviation { get; init; }
 
