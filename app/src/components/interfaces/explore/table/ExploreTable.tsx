@@ -16,14 +16,16 @@ const FRAGMENT = graphql`
   @argumentDefinitions(order: { type: "[FileSystemEntrySortInput!]" }) {
     scanned_at
     entries(order: $order) {
-      __typename
-      id
-      size
-      ... on FileSystemDirectory {
-        ...ExploreTableDirectoryFragment
-      }
-      ... on FileSystemFile {
-        ...ExploreTableFileFragment
+      nodes {
+        __typename
+        id
+        size
+        ... on FileSystemDirectory {
+          ...ExploreTableDirectoryFragment
+        }
+        ... on FileSystemFile {
+          ...ExploreTableFileFragment
+        }
       }
     }
   }
@@ -59,7 +61,7 @@ const ExploreTable: React.FC<ExploreTableProps> = ({ $key }) => {
         </Table.Column>
       </Table.Head>
 
-      <Table.Body items={data.entries}>
+      <Table.Body items={data.entries?.nodes ?? []}>
         {(item) => (
           <Table.Row id={item.id}>
             <Table.Cell>

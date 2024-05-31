@@ -6,8 +6,8 @@ import React from 'react'
 import { graphql, useLazyLoadQuery } from 'react-relay'
 
 const FRAGMENT = graphql`
-  query ResolutionWidgetQuery($directory_id: ID!, $order: [FileResolutionDistributionSortInput!]) {
-    file_resolution_distribution(directory_id: $directory_id, order: $order) {
+  query ResolutionWidgetQuery($directory_id: ID!) {
+    file_resolution_distribution(directory_id: $directory_id) {
       resolution {
         abbreviation
       }
@@ -25,7 +25,6 @@ const ResolutionWidget: React.FC<ResolutionWidgetProps> = ({ directory }) => {
 
   const data = useLazyLoadQuery<ResolutionWidgetQuery>(FRAGMENT, {
     directory_id: directory,
-    order: [{ count: 'DESC' }],
   })
 
   const total = React.useMemo<number>(

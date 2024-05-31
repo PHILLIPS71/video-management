@@ -16,14 +16,16 @@ const FRAGMENT = graphql`
       directory_path
     }
     video_streams {
-      index
-      codec
-      quality {
-        aspect_ratio
-        width
-        height
-        resolution {
-          abbreviation
+      nodes {
+        index
+        codec
+        quality {
+          aspect_ratio
+          width
+          height
+          resolution {
+            abbreviation
+          }
         }
       }
     }
@@ -42,7 +44,7 @@ const ExploreTableFile: React.FC<ExploreTableFileProps> = ({ $key }) => {
       <IconFile size={20} />
       <Typography.Paragraph>{data.path_info.name}</Typography.Paragraph>
 
-      {data.video_streams?.map((stream) => (
+      {data.video_streams?.nodes?.map((stream) => (
         <React.Fragment key={stream.index}>
           <Chip color="info" size="sm">
             {stream.codec}

@@ -10,8 +10,10 @@ import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recha
 const FRAGMENT = graphql`
   fragment EncodeSizeWidgetFragment on Encode {
     snapshots {
-      size
-      created_at
+      nodes {
+        size
+        created_at
+      }
     }
   }
 `
@@ -24,18 +26,18 @@ const EncodeSizeWidget: React.FC<EncodeSizeWidgetProps> = ({ $key }) => {
   const data = useFragment(FRAGMENT, $key)
 
   const bars = React.useMemo(() => {
-    const snapshots = data.snapshots.toSorted((a, b) => a.created_at - b.created_at)
+    const snapshots = data.snapshots?.nodes?.toSorted((a, b) => a.created_at - b.created_at)
 
     const output = [
       {
         name: 'Original',
-        size: snapshots.at(0)?.size,
+        size: snapshots?.at(0)?.size,
         fill: 'hsl(var(--twc-info) / 0.2)',
         stroke: 'hsl(var(--twc-info))',
       },
       {
         name: 'New',
-        size: snapshots.length === 1 ? 0 : snapshots.at(snapshots.length - 1)?.size,
+        size: snapshots?.length === 1 ? 0 : snapshots?.at(snapshots.length - 1)?.size,
         fill: 'hsl(var(--twc-brand) / 0.2)',
         stroke: 'hsl(var(--twc-brand))',
       },
@@ -78,6 +80,7 @@ const EncodeSizeWidget: React.FC<EncodeSizeWidgetProps> = ({ $key }) => {
           tickFormatter={(tick) => filesize(tick, { base: 2 })}
           type="number"
         />
+
         <YAxis
           dataKey="name"
           fontSize={14}
