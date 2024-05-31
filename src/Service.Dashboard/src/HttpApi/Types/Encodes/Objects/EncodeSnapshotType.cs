@@ -10,6 +10,9 @@ public static partial class EncodeSnapshotType
     static partial void Configure(IObjectTypeDescriptor<EncodeSnapshot> descriptor)
     {
         descriptor
+            .Field(p => p.Id);
+
+        descriptor
             .Field(p => p.Size);
 
         descriptor
@@ -43,10 +46,24 @@ public static partial class EncodeSnapshotType
             .UseSorting();
     }
 
-    [NodeResolver]
-    internal static Task<EncodeSnapshot?> GetEncodeSnapshotById(
-        Guid id,
+    [DataLoader]
+    internal static Task<Dictionary<Guid, EncodeSnapshot>> GetEncodeSnapshotByIdAsync(
+        IReadOnlyList<Guid> keys,
         ApplicationDbContext database,
+        CancellationToken cancellation = default)
+    {
+        return database
+            .EncodeSnapshots
+            .Where(x => keys.Contains(x.Id))
+            .ToDictionaryAsync(x => x.Id, cancellation);
+    }
+
+    [NodeResolver]
+    internal static Task<EncodeSnapshot> GetEncodeSnapshotByIdAsync(
+        Guid id,
+        EncodeSnapshotByIdDataLoader dataloader,
         CancellationToken cancellation)
-        => database.EncodeSnapshots.SingleOrDefaultAsync(x => x.Id == id, cancellation);
+    {
+        return dataloader.LoadAsync(id, cancellation);
+    }
 }

@@ -30,7 +30,7 @@ public static partial class EncodeCodecType
     }
 
     [NodeResolver]
-    internal static EncodeCodec? GetById(int id)
+    internal static EncodeCodec? GetEncodeCodecById(int id)
     {
         return Enumeration.TryParseByValueOrName<EncodeCodec>(id.ToString());
     }

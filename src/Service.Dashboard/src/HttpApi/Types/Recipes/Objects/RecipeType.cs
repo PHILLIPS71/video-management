@@ -10,6 +10,9 @@ public static partial class RecipeType
     static partial void Configure(IObjectTypeDescriptor<Recipe> descriptor)
     {
         descriptor
+            .Field(p => p.Id);
+
+        descriptor
             .Field(p => p.Name);
 
         descriptor
@@ -37,9 +40,26 @@ public static partial class RecipeType
             .Field(p => p.UpdatedAt);
     }
 
+    [DataLoader]
+    internal static Task<Dictionary<Guid, Recipe>> GetRecipeByIdAsync(
+        IReadOnlyList<Guid> keys,
+        ApplicationDbContext database,
+        CancellationToken cancellation = default)
+    {
+        return database
+            .Recipes
+            .Where(x => keys.Contains(x.Id))
+            .ToDictionaryAsync(x => x.Id, cancellation);
+    }
+
     [NodeResolver]
-    internal static Task<Recipe?> GetRecipeById(Guid id, ApplicationDbContext database, CancellationToken cancellation)
-        => database.Recipes.SingleOrDefaultAsync(x => x.Id == id, cancellation);
+    internal static Task<Recipe> GetRecipeByIdAsync(
+        Guid id,
+        IRecipeByIdDataLoader dataloader,
+        CancellationToken cancellation)
+    {
+        return dataloader.LoadAsync(id, cancellation);
+    }
 
     internal static bool IsEncodable([Parent] Recipe recipe)
         => recipe.IsEncodable();

@@ -22,7 +22,7 @@ public static partial class EncodePresetType
     }
 
     [NodeResolver]
-    internal static EncodePreset? GetById(int id)
+    internal static EncodePreset? GetEncodePresetById(int id)
     {
         return Enumeration.TryParseByValueOrName<EncodePreset>(id.ToString());
     }

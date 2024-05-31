@@ -22,7 +22,7 @@ public static partial class EncodeTuneType
     }
 
     [NodeResolver]
-    internal static EncodeTune? GetById(int id)
+    internal static EncodeTune? GetEncodeTuneById(int id)
     {
         return Enumeration.TryParseByValueOrName<EncodeTune>(id.ToString());
     }

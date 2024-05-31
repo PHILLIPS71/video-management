@@ -62,10 +62,24 @@ public static partial class FileSystemFileType
             .UseSorting();
     }
 
-    [NodeResolver]
-    internal static Task<FileSystemFile?> GetFileSystemFileById(
-        Guid id,
+    [DataLoader]
+    internal static Task<Dictionary<Guid, FileSystemFile>> GetFileSystemFileByIdAsync(
+        IReadOnlyList<Guid> keys,
         ApplicationDbContext database,
+        CancellationToken cancellation = default)
+    {
+        return database
+            .FileSystemFiles
+            .Where(x => keys.Contains(x.Id))
+            .ToDictionaryAsync(x => x.Id, cancellation);
+    }
+
+    [NodeResolver]
+    internal static Task<FileSystemFile> GetFileSystemFileByIdAsync(
+        Guid id,
+        IFileSystemFileByIdDataLoader dataloader,
         CancellationToken cancellation)
-        => database.FileSystemFiles.SingleOrDefaultAsync(x => x.Id == id, cancellation);
+    {
+        return dataloader.LoadAsync(id, cancellation);
+    }
 }

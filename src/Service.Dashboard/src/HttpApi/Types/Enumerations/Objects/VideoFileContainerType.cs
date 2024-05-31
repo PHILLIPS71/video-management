@@ -19,7 +19,7 @@ public static partial class VideoFileContainerType
     }
 
     [NodeResolver]
-    internal static VideoFileContainer? GetById(int id)
+    internal static VideoFileContainer? GetVideoFileContainerById(int id)
     {
         return Enumeration.TryParseByValueOrName<VideoFileContainer>(id.ToString());
     }

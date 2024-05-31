@@ -37,12 +37,26 @@ public static partial class LibraryType
             .UseSorting();
     }
 
-    [NodeResolver]
-    internal static Task<Library?> GetLibraryById(
-        Guid id,
+    [DataLoader]
+    internal static Task<Dictionary<Guid, Library>> GetLibraryByIdAsync(
+        IReadOnlyList<Guid> keys,
         ApplicationDbContext database,
+        CancellationToken cancellation = default)
+    {
+        return database
+            .Libraries
+            .Where(x => keys.Contains(x.Id))
+            .ToDictionaryAsync(x => x.Id, cancellation);
+    }
+
+    [NodeResolver]
+    internal static Task<Library> GetLibraryByIdAsync(
+        Guid id,
+        ILibraryByIdDataLoader dataloader,
         CancellationToken cancellation)
-        => database.Libraries.SingleOrDefaultAsync(x => x.Id == id, cancellation);
+    {
+        return dataloader.LoadAsync(id, cancellation);
+    }
 
     [UsePaging]
     [UseProjection]

@@ -38,10 +38,24 @@ public static partial class FileSystemDirectoryType
             .UseSorting();
     }
 
-    [NodeResolver]
-    internal static Task<FileSystemDirectory?> GetFileSystemDirectoryById(
-        Guid id,
+    [DataLoader]
+    internal static Task<Dictionary<Guid, FileSystemDirectory>> GetFileSystemDirectoryByIdAsync(
+        IReadOnlyList<Guid> keys,
         ApplicationDbContext database,
+        CancellationToken cancellation = default)
+    {
+        return database
+            .FileSystemDirectories
+            .Where(x => keys.Contains(x.Id))
+            .ToDictionaryAsync(x => x.Id, cancellation);
+    }
+
+    [NodeResolver]
+    internal static Task<FileSystemDirectory> GetFileSystemDirectoryByIdAsync(
+        Guid id,
+        IFileSystemDirectoryByIdDataLoader dataloader,
         CancellationToken cancellation)
-        => database.FileSystemDirectories.SingleOrDefaultAsync(x => x.Id == id, cancellation);
+    {
+        return dataloader.LoadAsync(id, cancellation);
+    }
 }

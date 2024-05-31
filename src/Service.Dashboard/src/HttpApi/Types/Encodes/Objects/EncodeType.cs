@@ -65,7 +65,24 @@ public static partial class EncodeType
             .UseSorting();
     }
 
+    [DataLoader]
+    internal static Task<Dictionary<Guid, Encode>> GetEncodeByIdAsync(
+        IReadOnlyList<Guid> keys,
+        ApplicationDbContext database,
+        CancellationToken cancellation = default)
+    {
+        return database
+            .Encodes
+            .Where(x => keys.Contains(x.Id))
+            .ToDictionaryAsync(x => x.Id, cancellation);
+    }
+
     [NodeResolver]
-    internal static Task<Encode?> GetEncodeById(Guid id, ApplicationDbContext database, CancellationToken cancellation)
-        => database.Encodes.SingleOrDefaultAsync(x => x.Id == id, cancellation);
+    internal static Task<Encode> GetEncodeByIdAsync(
+        Guid id,
+        IEncodeByIdDataLoader dataloader,
+        CancellationToken cancellation)
+    {
+        return dataloader.LoadAsync(id, cancellation);
+    }
 }
