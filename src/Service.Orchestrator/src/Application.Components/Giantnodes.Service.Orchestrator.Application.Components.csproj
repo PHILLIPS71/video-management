@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Service.Encoder\src\Application.Contracts\Giantnodes.Service.Encoder.Application.Contracts.csproj" />
+        <ProjectReference Include="..\Application.Contracts\Giantnodes.Service.Orchestrator.Application.Contracts.csproj" />
+        <ProjectReference Include="..\Infrastructure\Giantnodes.Service.Orchestrator.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.1" />
+      <PackageReference Include="HotChocolate.Abstractions" Version="13.9.4" />
+      <PackageReference Include="MassTransit" Version="8.2.2" />
+    </ItemGroup>
+
+</Project>
