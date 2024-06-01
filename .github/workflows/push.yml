@@ -25,8 +25,8 @@ jobs:
         run: dotnet test --verbosity quiet
         working-directory: ./src/Infrastructure
 
-  dashboard:
-    name: "👷️  CI (Dashboard)"
+  orchestrator:
+    name: "👷️  CI (Orchestrator)"
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
@@ -40,12 +40,12 @@ jobs:
 
       - name: "🧪  Test"
         run: dotnet test --verbosity quiet
-        working-directory: ./src/Service.Dashboard
+        working-directory: ./src/Service.Orchestrator
 
       - name: "⬆️  GraphQL Schema (upload)"
         uses: ./.github/actions/schema
         with:
-          working-directory: src/Service.Dashboard/src/HttpApi
+          working-directory: src/Service.Orchestrator/src/HttpApi
 
   encoder:
     name: "👷️  CI (Encoder)"
@@ -68,7 +68,7 @@ jobs:
     name: "👷️  CI (App)"
     timeout-minutes: 20
     runs-on: ubuntu-latest
-    needs: [dashboard]
+    needs: [orchestrator]
     strategy:
       fail-fast: false
     steps:
