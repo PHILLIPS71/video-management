@@ -1,5 +1,6 @@
 using System.Reflection;
 using Giantnodes.Infrastructure.MassTransit.Filters;
+using Giantnodes.Service.Encoder.Application.Components.Settings;
 using Giantnodes.Service.Encoder.Persistence.DbContexts;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,12 @@ public static class ConsoleServiceRegistration
 {
     public static void AddConsoleServices(this IServiceCollection services)
     {
+        services
+            .AddOptions<LimitSettings>()
+            .BindConfiguration(LimitSettings.ConfigurationSection)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
         services.AddMassTransitServices();
     }
 
