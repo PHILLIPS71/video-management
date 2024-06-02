@@ -4,15 +4,13 @@ using MassTransit;
 
 namespace Giantnodes.Service.Encoder.Application.Components.Encoding.Definitions;
 
-public class EncodeJobStateMachineDefinition : SagaDefinition<EncodeOperationSagaState>
+public class EncodeOperationDefinition : SagaDefinition<EncodeOperationSagaState>
 {
     protected override void ConfigureSaga(
         IReceiveEndpointConfigurator endpointConfigurator,
         ISagaConfigurator<EncodeOperationSagaState> sagaConfigurator,
         IRegistrationContext context)
     {
-        endpointConfigurator.ConcurrentMessageLimit = 3;
-
         endpointConfigurator.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(3)));
         endpointConfigurator.UseEntityFrameworkOutbox<ApplicationDbContext>(context);
     }
