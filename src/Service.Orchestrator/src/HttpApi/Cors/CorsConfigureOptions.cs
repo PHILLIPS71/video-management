@@ -5,7 +5,7 @@ namespace Giantnodes.Service.Orchestrator.HttpApi.Cors;
 
 public class CorsConfigureOptions : IConfigureNamedOptions<CorsOptions>
 {
-    private const string ConfigurationSectionKey = "AllowedOrigins";
+    private const string ConfigurationSectionKey = "CorsOrigins";
 
     private readonly IConfiguration _configuration;
 
@@ -18,16 +18,16 @@ public class CorsConfigureOptions : IConfigureNamedOptions<CorsOptions>
     {
         var origins = _configuration.GetValue<string>(ConfigurationSectionKey);
         if (string.IsNullOrWhiteSpace(origins))
-            throw new InvalidOperationException($"The connection string '{ConfigurationSectionKey}' cannot be null or empty.");
+            throw new InvalidOperationException($"The configuration section '{ConfigurationSectionKey}' cannot be null or empty.");
 
-        options.AddDefaultPolicy(builder =>
-        {
-            builder
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials()
-                .WithOrigins(origins.Split(","));
-        });
+        options
+            .AddDefaultPolicy(builder =>
+            {
+                builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithOrigins(origins.Split(","));
+            });
     }
 
     public void Configure(string? name, CorsOptions options)
