@@ -77,7 +77,7 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                     is_watched = table.Column<bool>(type: "boolean", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    concurrency_token = table.Column<Guid>(type: "uuid", nullable: false)
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,7 +151,7 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                     deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    concurrency_token = table.Column<Guid>(type: "uuid", nullable: false)
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -175,7 +175,7 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
-                    concurrency_token = table.Column<Guid>(type: "uuid", nullable: false)
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -213,7 +213,7 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                     path_info_extension = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_path = table.Column<string>(type: "text", nullable: true),
                     path_info_directory_separator_char = table.Column<char>(type: "character(1)", nullable: false),
-                    concurrency_token = table.Column<Guid>(type: "uuid", nullable: false)
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -259,7 +259,7 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                     completed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    concurrency_token = table.Column<Guid>(type: "uuid", nullable: false)
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {

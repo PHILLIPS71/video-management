@@ -13,7 +13,7 @@ public static class Setup
     public static IServiceCollection SetupPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         services
-            .AddDbContext<ApplicationDbContext>(options =>
+            .AddDbContextPool<ApplicationDbContext>(options =>
             {
                 options
                     .UseNpgsql(configuration.GetConnectionString(name: "DatabaseConnection"), optionsBuilder =>
@@ -36,8 +36,6 @@ public static class Setup
                 options.Role = "transport";
                 options.Username = builder.Username;
                 options.Password = builder.Password;
-                options.AdminUsername = builder.Username;
-                options.AdminPassword = builder.Password;
             });
 
         services

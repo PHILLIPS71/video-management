@@ -1,8 +1,9 @@
+﻿using Giantnodes.Infrastructure.GraphQL.Scalars;
 using HotChocolate.Data.Filters;
 
-namespace Giantnodes.Infrastructure.GraphQL.Scalars;
+namespace Giantnodes.Infrastructure.GraphQL;
 
-public class CharFilterConvention : FilterConvention
+public sealed class GiantnodesFilterConvention : FilterConvention
 {
     protected override void Configure(IFilterConventionDescriptor descriptor)
     {
@@ -10,6 +11,10 @@ public class CharFilterConvention : FilterConvention
 
         descriptor.BindRuntimeType<char, CharOperationFilterInputType>();
         descriptor.BindRuntimeType<char?, CharOperationFilterInputType>();
+
+        descriptor.BindRuntimeType<uint, UnsignedIntOperationFilterInputType>();
+        descriptor.BindRuntimeType<uint?, UnsignedIntOperationFilterInputType>();
+
         descriptor.AddDefaults();
     }
 }

@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Giantnodes.Infrastructure.EntityFrameworkCore;
 
-public class ObjectHelper
+internal static class ObjectHelper
 {
     /// <summary>
     /// Sets the value of a property on an object using an expression representing the property.

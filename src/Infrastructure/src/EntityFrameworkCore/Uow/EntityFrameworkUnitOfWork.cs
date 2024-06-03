@@ -7,6 +7,10 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Giantnodes.Infrastructure.EntityFrameworkCore.Uow;
 
+/// <summary>
+/// Represents a unit of work implementation for Entity Framework Core.
+/// </summary>
+/// <typeparam name="TDbContext">The type of the DbContext class.</typeparam>
 public sealed class EntityFrameworkUnitOfWork<TDbContext> : UnitOfWork, ITransientDependency
     where TDbContext : DbContext
 {
@@ -19,6 +23,7 @@ public sealed class EntityFrameworkUnitOfWork<TDbContext> : UnitOfWork, ITransie
         _database = database;
     }
 
+    /// <inheritdoc />
     protected override async Task OnBeginAsync(UnitOfWorkOptions options, CancellationToken cancellation = default)
     {
         if (options.Timeout.HasValue)
@@ -32,6 +37,7 @@ public sealed class EntityFrameworkUnitOfWork<TDbContext> : UnitOfWork, ITransie
             _transaction = await _database.Database.BeginTransactionAsync(cancellation);
     }
 
+    /// <inheritdoc />
     protected override async Task OnCommitAsync(CancellationToken cancellation = default)
     {
         var events = _database
