@@ -9,7 +9,7 @@ public abstract class AggregateRoot : Entity, IAggregateRoot, IHasConcurrencyTok
 {
     public readonly ICollection<DomainEvent> DomainEvents = new List<DomainEvent>();
 
-    public byte[]? ConcurrencyToken { get; private set; }
+    public uint ConcurrencyToken { get; private set; }
 }
 
 /// <inheritdoc cref="IAggregateRoot{TKey}" />

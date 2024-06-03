@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240528095559_v0.0.1")]
+    [Migration("20240603100355_v0.0.1")]
     partial class v001
     {
         /// <inheritdoc />
@@ -44,10 +44,11 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("completed_at");
 
-                    b.Property<Guid>("ConcurrencyToken")
+                    b.Property<uint>("ConcurrencyToken")
                         .IsConcurrencyToken()
-                        .HasColumnType("uuid")
-                        .HasColumnName("concurrency_token");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -148,10 +149,11 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("ConcurrencyToken")
+                    b.Property<uint>("ConcurrencyToken")
                         .IsConcurrencyToken()
-                        .HasColumnType("uuid")
-                        .HasColumnName("concurrency_token");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -194,10 +196,11 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("ConcurrencyToken")
+                    b.Property<uint>("ConcurrencyToken")
                         .IsConcurrencyToken()
-                        .HasColumnType("uuid")
-                        .HasColumnName("concurrency_token");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -250,10 +253,11 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("codec");
 
-                    b.Property<Guid>("ConcurrencyToken")
+                    b.Property<uint>("ConcurrencyToken")
                         .IsConcurrencyToken()
-                        .HasColumnType("uuid")
-                        .HasColumnName("concurrency_token");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.Property<int?>("Container")
                         .HasColumnType("integer")
@@ -977,6 +981,12 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_name");
 
+                            b1.Property<uint>("_TableSharingConcurrencyTokenConvention_ConcurrencyToken")
+                                .IsConcurrencyToken()
+                                .ValueGeneratedOnAddOrUpdate()
+                                .HasColumnType("xid")
+                                .HasColumnName("xmin");
+
                             b1.HasKey("FileSystemDirectoryId");
 
                             b1.ToTable("file_system_directories", "orchestrator");
@@ -1075,6 +1085,12 @@ namespace Giantnodes.Service.Orchestrator.Persistence.Migrations
                                 .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("path_info_name");
+
+                            b1.Property<uint>("_TableSharingConcurrencyTokenConvention_ConcurrencyToken")
+                                .IsConcurrencyToken()
+                                .ValueGeneratedOnAddOrUpdate()
+                                .HasColumnType("xid")
+                                .HasColumnName("xmin");
 
                             b1.HasKey("FileSystemFileId");
 

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Giantnodes.Infrastructure.EntityFrameworkCore;
 
 #pragma warning disable S3011
+
 /// <summary>
 /// A custom implementation of <see cref="DbContext"/> that provides additional functionality for auditing,
 /// soft deletes, and concurrency handling.
@@ -17,9 +18,9 @@ namespace Giantnodes.Infrastructure.EntityFrameworkCore;
 public class GiantnodesDbContext<TDbContext> : DbContext
     where TDbContext : DbContext
 {
-    private static readonly MethodInfo? ConfigureAuditPropertiesMethodInfo
+    private static readonly MethodInfo? ConfigureGlobalPropertiesMethodInfo
         = typeof(GiantnodesDbContext<TDbContext>)
-            .GetMethod(nameof(ConfigureAuditProperties), BindingFlags.Instance | BindingFlags.NonPublic);
+            .GetMethod(nameof(ConfigureGlobalProperties), BindingFlags.Instance | BindingFlags.NonPublic);
 
     private static readonly MethodInfo? ConfigureIdValueGeneratedMethodInfo
         = typeof(GiantnodesDbContext<TDbContext>)
@@ -45,7 +46,7 @@ public class GiantnodesDbContext<TDbContext> : DbContext
 
         foreach (var type in modelBuilder.Model.GetEntityTypes())
         {
-            ConfigureAuditPropertiesMethodInfo?
+            ConfigureGlobalPropertiesMethodInfo?
                 .MakeGenericMethod(type.ClrType)
                 .Invoke(this, [modelBuilder, type]);
 
@@ -53,9 +54,9 @@ public class GiantnodesDbContext<TDbContext> : DbContext
                 .MakeGenericMethod(type.ClrType)
                 .Invoke(this, [modelBuilder, type]);
 
-            // ConfigureConcurrencyTokenMethodInfo?
-            //     .MakeGenericMethod(type.ClrType)
-            //     .Invoke(this, [modelBuilder, type]);
+            ConfigureConcurrencyTokenMethodInfo?
+                .MakeGenericMethod(type.ClrType)
+                .Invoke(this, [modelBuilder, type]);
         }
     }
 
@@ -82,12 +83,12 @@ public class GiantnodesDbContext<TDbContext> : DbContext
     }
 
     /// <summary>
-    /// Configures audit properties for the specified <typeparamref name="TEntity"/>.
+    /// Configures global properties for the specified <typeparamref name="TEntity"/>.
     /// </summary>
     /// <param name="builder">The builder being used to construct the model for this context.</param>
     /// <param name="mutable">The mutable entity type for the <typeparamref name="TEntity"/>.</param>
     /// <typeparam name="TEntity">The entity type to configure audit properties for.</typeparam>
-    protected void ConfigureAuditProperties<TEntity>(ModelBuilder builder, IMutableEntityType mutable)
+    protected void ConfigureGlobalProperties<TEntity>(ModelBuilder builder, IMutableEntityType mutable)
         where TEntity : class
     {
         if (mutable.IsOwned())
@@ -121,12 +122,11 @@ public class GiantnodesDbContext<TDbContext> : DbContext
     }
 
     /// <summary>
-    /// Configures the <see cref="IHasConcurrencyToken.ConcurrencyToken"/> property for entities implementing
-    /// <see cref="IHasConcurrencyToken"/> to be a row version, enabling optimistic concurrency control.
+    /// Configures the concurrency token property for the given entity type.
     /// </summary>
-    /// <param name="builder">The builder being used to construct the model for this context.</param>
-    /// <param name="mutable">The mutable entity type for the <typeparamref name="TEntity"/>.</param>
-    /// <typeparam name="TEntity">The entity type to configure the concurrency token property for.</typeparam>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <param name="builder">The model builder.</param>
+    /// <param name="mutable">The mutable entity type.</param>
     protected void ConfigureConcurrencyToken<TEntity>(ModelBuilder builder, IMutableEntityType mutable)
         where TEntity : class
     {
@@ -213,6 +213,7 @@ public class GiantnodesDbContext<TDbContext> : DbContext
                 continue;
 
             entry.Reload();
+
             ObjectHelper.SetProperty(entry.Entity, x => x.IsDeleted, _ => true);
             ObjectHelper.SetProperty(entry.Entity, x => x.DeletedAt, _ => DateTime.UtcNow);
         }
