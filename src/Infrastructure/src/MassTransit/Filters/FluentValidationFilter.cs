@@ -24,8 +24,7 @@ public class FluentValidationFilter<TMessage> : IFilter<ConsumeContext<TMessage>
             return;
         }
 
-        var message = context.Message;
-        var result = await _validator.ValidateAsync(message, context.CancellationToken);
+        var result = await _validator.ValidateAsync(context.Message, context.CancellationToken);
         if (result.IsValid)
         {
             await next.Send(context);
