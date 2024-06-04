@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  database:
+    image: postgres
+    container_name: database
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: giantnodes
+      POSTGRES_PASSWORD: password
+    volumes:
+      - /path/to/store/pgdata:/var/lib/postgresql/data/
+
+  orchestrator:
+    build:
+      context: .
+      dockerfile: src/Service.Orchestrator/src/HttpApi/Dockerfile
+    container_name: orchestrator
+    restart: unless-stopped
+    ports:
+      - 5623:5623
+    depends_on:
+      - database
+    environment:
+      ConnectionStrings__DatabaseConnection: "Host=database;Database=video-management;Username=giantnodes;Password=password;Include Error Detail=true"
+
+  encoder-1:
+    build:
+      context: .
+      dockerfile: src/Service.Encoder/src/Console/Dockerfile
+    container_name: encoder
+    restart: unless-stopped
+    ports:
+      - 5600:5600
+    depends_on:
+      - database
+    environment:
+      ConnectionStrings__DatabaseConnection: "Host=database;Database=video-management;Username=giantnodes;Password=password;Include Error Detail=true"
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    container_name: dashboard
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    depends_on:
+      - orchestrator
+    environment:
+      NEXT_PUBLIC_API_URI: http://localhost:5623

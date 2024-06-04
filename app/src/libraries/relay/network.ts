@@ -1,10 +1,11 @@
 import type { CacheConfig, GraphQLResponse, RequestParameters, SubscribeFunction, Variables } from 'relay-runtime'
 
 import { createClient } from 'graphql-ws'
+import { env } from 'next-runtime-env'
 import { Network, Observable, QueryResponseCache } from 'relay-runtime'
 
-const HTTP_ENDPOINT = `${process.env.NEXT_PUBLIC_API_URI}/graphql`
-const WS_ENDPOINT = `${process.env.NEXT_PUBLIC_API_WS_URI}/graphql`
+const HTTP_ENDPOINT = `${env('NEXT_PUBLIC_API_URI')}/graphql`
+const WS_ENDPOINT = `${env('NEXT_PUBLIC_API_WS_URI')}/graphql`
 const CACHE_TTL = 5 * 1000
 
 const IS_SERVER = typeof window === typeof undefined

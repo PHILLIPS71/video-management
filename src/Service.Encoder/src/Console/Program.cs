@@ -14,7 +14,7 @@ public static class Program
     {
         var host = CreateHostBuilder(args).Build();
 
-        FFmpeg.SetExecutablesPath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ffmpeg");
+        FFmpeg.SetExecutablesPath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create), "ffmpeg");
         await FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official, FFmpeg.ExecutablesPath);
 
         await host.RunAsync();

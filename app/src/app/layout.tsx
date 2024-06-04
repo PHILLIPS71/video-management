@@ -2,6 +2,7 @@ import '@/styles/global.css'
 
 import { clsx } from 'clsx'
 import { Inter } from 'next/font/google'
+import { PublicEnvScript } from 'next-runtime-env'
 import React from 'react'
 
 import ApplicationProviders from '@/app/provider'
@@ -17,7 +18,9 @@ type AppLayoutProps = React.PropsWithChildren & {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children, dialog }) => (
   <html lang="en">
-    <head />
+    <head>
+      <PublicEnvScript />
+    </head>
     <body className={clsx([inter.variable, 'bg-background'])}>
       <ApplicationProviders>
         {children}
