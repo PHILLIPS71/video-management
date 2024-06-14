@@ -32,7 +32,7 @@
     "@giantnodes/react": "1.0.0-canary.18",
     "@giantnodes/theme": "1.0.0-canary.18",
     "@hookform/resolvers": "^3.4.0",
-    "@tabler/icons-react": "^3.4.0",
+    "@tabler/icons-react": "^3.6.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.11",
     "filesize": "^10.1.2",
