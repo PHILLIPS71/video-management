@@ -58,7 +58,7 @@
     "@types/react-relay": "^16.0.6",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/relay-runtime": "^14.1.24",
-    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
     "@typescript-eslint/parser": "^7.9.0",
     "autoprefixer": "^10.4.19",
     "eslint": "8.57.0",
